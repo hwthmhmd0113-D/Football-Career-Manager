@@ -25,10 +25,11 @@ button,select,input{font:inherit;border-radius:9px;padding:10px}
 button{border:0;background:linear-gradient(120deg,#00b9ef,#0878b8);color:white;font-weight:bold;cursor:pointer}
 button.alt{background:#263d56}
 select,input{background:#081827;color:white;border:1px solid #35516b;width:100%;margin:5px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:9px}
-.club{padding:14px 8px;background:#1a3048;border:1px solid #2d4a65;border-radius:12px;text-align:center;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px}
+.club{padding:14px 8px;background:#1a3048;border:1px solid #2d4a65;border-radius:12px;text-align:center;cursor:pointer;color:white}
 .club.selected{border:2px solid var(--blue);background:#123d58}
-.club .crest{font-size:24px;font-weight:900;color:var(--gold);margin-bottom:7px}
+.crest{width:48px;height:48px;object-fit:contain;margin:0 auto 7px;display:block}
+.crestText{font-size:23px;font-weight:900;color:var(--gold);margin-bottom:7px}
 .hidden{display:none!important}
 .stats{display:grid;grid-template-columns:repeat(4,minmax(90px,1fr));gap:8px}
 .stat{background:#1a3048;border:1px solid #2a4963;padding:11px;border-radius:10px;color:var(--muted);font-size:11px}
@@ -39,6 +40,11 @@ nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#1a3048;padding:10px;border-radius:10px;margin:7px 0;flex-wrap:wrap}
 .row button{padding:7px 9px;font-size:11px}
 .row input{width:58px}
+.player{display:flex;align-items:center;gap:10px;min-width:0}
+.player img{width:43px;height:43px;object-fit:cover;border-radius:50%;background:#263d56}
+.playerInfo{min-width:0}
+.playerInfo b{display:block}
+.playerInfo small{display:block;margin-top:4px}
 .pitch{position:relative;width:min(100%,560px);margin:14px auto;aspect-ratio:1.25;background:repeating-linear-gradient(0deg,#176c48 0 70px,#1b754e 70px 140px);border:3px solid #dff6e9;border-radius:6px;overflow:hidden;touch-action:none}
 .pitch svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .token{position:absolute;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;border:2px solid white;background:#087eb8;display:grid;place-items:center;font-size:12px;font-weight:bold;box-shadow:0 3px 9px #0008;touch-action:none;z-index:2;user-select:none}
@@ -47,7 +53,10 @@ nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
 .tableline{display:grid;grid-template-columns:25px 1fr 35px 35px 40px;gap:5px;padding:9px 5px;border-bottom:1px solid #2b4055;font-size:12px}
 .tableline.me{background:#123b55;color:#6bdcff;border-radius:6px}
 .score{text-align:center;font-size:30px;font-weight:900;color:var(--gold)}
-.note{background:#10334a;border-radius:9px;padding:10px;color:#bceeff;font-size:12px}
+.note{background:#10334a;border-radius:9px;padding:10px;color:#bceeff;font-size:12px;margin:8px 0}
+.bar{height:8px;background:#263d56;border-radius:10px;overflow:hidden;margin:6px 0 12px}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,#00baf2,#e8c15b)}
+.rating{color:var(--gold);font-weight:bold}
 @media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.pitch{aspect-ratio:1.05}.token{width:39px;height:39px;font-size:10px}}
 @media(orientation:portrait){body:before{content:"For the best experience, rotate your phone horizontally.";display:block;text-align:center;background:#123b55;color:#bceeff;padding:7px;font-size:11px}}
 </style>
@@ -107,6 +116,17 @@ nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
 </div>
 </div>
 
+<div class="card">
+<h2>TEAM STRENGTH</h2>
+<div class="stats">
+<div class="stat">OVERALL<b id="overall">-</b></div>
+<div class="stat">ATTACK<b id="attack">-</b></div>
+<div class="stat">MIDFIELD<b id="midfield">-</b></div>
+<div class="stat">DEFENCE<b id="defence">-</b></div>
+</div>
+<div id="strengthBars"></div>
+</div>
+
 <nav id="tabs">
 <button class="active" data-tab="overview">HOME</button>
 <button data-tab="squad">SQUAD</button>
@@ -119,6 +139,7 @@ nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
 <div class="card">
 <h2>CLUB OVERVIEW</h2>
 <p id="nextMatch"></p>
+<p id="clubStyle"></p>
 <button data-goto="matches">GO TO MATCH CENTER</button>
 </div>
 <div class="card">
@@ -133,7 +154,11 @@ nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
 </section>
 
 <section id="squad" class="tab hidden">
-<div class="card"><h2>FIRST TEAM</h2><div id="squadList"></div></div>
+<div class="card">
+<h2>FIRST TEAM</h2>
+<p class="muted" id="squadCount"></p>
+<div id="squadList"></div>
+</div>
 </section>
 
 <section id="tactics" class="tab hidden">
@@ -144,6 +169,16 @@ nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
 <option>4-2-3-1</option>
 <option>4-4-2</option>
 </select>
+<h2>PLAYING STYLE</h2>
+<select id="style">
+<option value="possession">Possession Football</option>
+<option value="pressing">High Pressing</option>
+<option value="counter">Counter Attack</option>
+<option value="direct">Direct Football</option>
+<option value="balanced">Balanced</option>
+<option value="defensive">Deep Defence</option>
+</select>
+<div id="styleInfo" class="note"></div>
 <div class="note">Drag the player circles to adjust their positions.</div>
 <div class="pitch" id="pitch">
 <svg viewBox="0 0 600 480" preserveAspectRatio="none">
@@ -188,29 +223,101 @@ Italy:['Inter Milan','AC Milan','Juventus','Napoli','Roma'],
 France:['Paris Saint-Germain','Marseille','Monaco','Lyon']
 };
 
+const CRESTS={
+'Barcelona':'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg',
+'Real Madrid':'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg',
+'Atletico Madrid':'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg',
+'Manchester City':'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
+'Manchester United':'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
+'Liverpool':'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
+'Arsenal':'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
+'Chelsea':'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
+'Bayern Munich':'https://upload.wikimedia.org/wikipedia/en/1/1f/FC_Bayern_Munich_logo_%282017%29.svg',
+'Borussia Dortmund':'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg',
+'Juventus':'https://upload.wikimedia.org/wikipedia/commons/1/15/Juventus_FC_2017_logo.svg',
+'Inter Milan':'https://upload.wikimedia.org/wikipedia/en/0/05/FC_Internazionale_Milano_2021.svg',
+'AC Milan':'https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg',
+'Paris Saint-Germain':'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg'
+};
+
+/* Verified Barcelona 2026/27 first-team list */
 const BARCA=[
-['Joan Garcia','GK',82,1],
-['Jules Kounde','DF',85,23],
-['Pau Cubarsi','DF',83,5],
-['Ronald Araujo','DF',84,4],
-['Alejandro Balde','DF',82,3],
-['Pedri','MF',90,8],
-['Frenkie de Jong','MF',87,21],
-['Gavi','MF',84,6],
-['Lamine Yamal','FW',91,10],
-['Robert Lewandowski','FW',87,9],
-['Raphinha','FW',88,11],
-['Fermin Lopez','MF',82,16],
-['Dani Olmo','MF',85,20],
-['Eric Garcia','DF',80,24],
-['Wojciech Szczesny','GK',80,25],
-['Ferran Torres','FW',82,7],
-['Gerard Martin','DF',77,18],
-['Marc Casado','MF',79,17]
+['Joan Garcia','GK',84,1,'https://img.a.transfermarkt.technology/portrait/big/'],
+['João Cancelo','DF',84,2],
+['Alejandro Balde','DF',83,3],
+['Brian Fariñas','MF',70,4],
+['Pau Cubarsí','DF',86,5],
+['Gavi','MF',85,6],
+['Fermín López','MF',84,7],
+['Pedri','MF',92,8],
+['Gabriel Jesus','FW',85,9],
+['Lamine Yamal','FW',94,10],
+['Raphinha','FW',89,11],
+['Xavi Espart','DF',70,12],
+['Wojciech Szczęsny','GK',82,13],
+['Karim Adeyemi','FW',85,14],
+['Andreas Christensen','DF',83,15],
+['Rodri','MF',90,16],
+['Anthony Gordon','FW',85,17],
+['Gerard Martín','DF',78,18],
+['Roony Bardghji','FW',79,19],
+['Dani Olmo','MF',87,20],
+['Frenkie de Jong','MF',89,21],
+['Marc Bernal','MF',80,22],
+['Jules Koundé','DF',87,23],
+['Eric García','DF',80,24],
+['Dominik Livaković','GK',81,25],
+['Jesse Bisiwu','FW',68,27],
+['Hamza Abdelkarim','FW',70,29]
 ];
+
+/* Verified names shown on Real Madrid official first-team page */
+const MADRID=[
+['Thibaut Courtois','GK',90,1],
+['Andriy Lunin','GK',82,13],
+['Raúl Asencio','DF',79,2],
+['Éder Militão','DF',86,3],
+['Dean Huijsen','DF',84,4],
+['Jude Bellingham','MF',91,5],
+['Eduardo Camavinga','MF',86,6],
+['Federico Valverde','MF',90,8],
+['Kylian Mbappé','FW',95,10],
+['Trent Alexander-Arnold','DF',87,12],
+['Ibrahima Konaté','DF',86,16],
+['Marc Cucurella','DF',84,17],
+['Álvaro Carreras','DF',82,18],
+['Antonio Rüdiger','DF',87,22],
+['Ferland Mendy','DF',82,23],
+['Denzel Dumfries','DF',84,24],
+['Aurélien Tchouaméni','MF',87,14],
+['Arda Güler','MF',86,15],
+['Bernardo Silva','MF',88,20],
+['Brahim Díaz','FW',83,21],
+['Vinícius Júnior','FW',93,7],
+['Endrick','FW',80,9],
+['Rodrygo','FW',88,11],
+['Cristian Espí','FW',70,19],
+['Diomande','FW',75,25],
+['Thiago','MF',70,27]
+];
+
+const STYLE={
+possession:{name:'Possession Football',desc:'Short passes, ball control and patient build-up.',attack:1.08,defence:1.00},
+pressing:{name:'High Pressing',desc:'Aggressive pressure to win the ball high up the pitch.',attack:1.12,defence:.94},
+counter:{name:'Counter Attack',desc:'Fast transitions and exploiting space behind the defence.',attack:1.15,defence:1.02},
+direct:{name:'Direct Football',desc:'Quick forward passes and early attacks.',attack:1.10,defence:.96},
+balanced:{name:'Balanced',desc:'A balanced approach between attack and defence.',attack:1,defence:1},
+defensive:{name:'Deep Defence',desc:'Compact defensive shape and careful attacking.',attack:.88,defence:1.15}
+};
 
 const $=id=>document.getElementById(id);
 let chosen=null,career=null,drag=null;
+
+function crestHTML(name){
+const url=CRESTS[name];
+if(!url)return '<div class="crestText">'+name.split(' ').map(x=>x[0]).join('').slice(0,3)+'</div>';
+return '<img class="crest" src="'+url+'" alt="'+name+'" onerror="this.outerHTML=\'<div class=crestText>'+name.split(' ').map(x=>x[0]).join('').slice(0,3)+'</div>\'">';
+}
 
 function renderClubs(){
 const league=$('league').value;
@@ -223,7 +330,7 @@ LEAGUES[league].forEach(name=>{
 const el=document.createElement('button');
 el.type='button';
 el.className='club';
-el.innerHTML='<div class="crest">'+name.split(' ').map(x=>x[0]).join('').slice(0,3)+'</div><b>'+name+'</b>';
+el.innerHTML=crestHTML(name)+'<b>'+name+'</b>';
 el.addEventListener('click',()=>{
 document.querySelectorAll('.club').forEach(c=>c.classList.remove('selected'));
 el.classList.add('selected');
@@ -234,39 +341,29 @@ box.appendChild(el);
 });
 }
 
+function getRoster(club){
+if(club.name==='Barcelona')return BARCA;
+if(club.name==='Real Madrid')return MADRID;
+return null;
+}
+
 function newCareer(club){
-const source=club.name==='Barcelona'?BARCA:Array.from({length:18},(_,i)=>[
-['Goalkeeper','GK',78,1],
-['Defender 1','DF',76,2],
-['Defender 2','DF',76,3],
-['Defender 3','DF',75,4],
-['Defender 4','DF',75,5],
-['Midfielder 1','MF',78,6],
-['Midfielder 2','MF',77,7],
-['Midfielder 3','MF',76,8],
-['Forward 1','FW',80,9],
-['Forward 2','FW',79,10],
-['Forward 3','FW',78,11],
-['Substitute 1','MF',72,12],
-['Substitute 2','DF',72,13],
-['Substitute 3','FW',72,14],
-['Substitute 4','GK',70,15],
-['Substitute 5','MF',71,16],
-['Substitute 6','DF',70,17],
-['Substitute 7','FW',70,18]
-][i]);
+const source=getRoster(club);
+if(!source){
+$('homeMsg').textContent='A verified 2026/27 squad is not available for this club yet. No fictional players have been added.';
+return;
+}
 
 career={
 club,
 players:source.map(x=>({name:x[0],position:x[1],rating:x[2],number:x[3]})),
 starters:source.slice(0,11).map(x=>x[0]),
 positions:{},
+style:'balanced',
+formation:'4-3-3',
 played:0,wins:0,draws:0,losses:0,goals:0,points:0,results:[],
 table:(LEAGUES[club.league]||[club.name,'Rival FC','City FC','United FC']).map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}))
 };
-
-if(!career.table.some(t=>t.name===club.name))
-career.table.unshift({name:club.name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});
 
 const spots=[[50,91],[22,76],[42,78],[58,78],[78,76],[35,55],[50,60],[65,55],[20,25],[50,17],[80,25]];
 career.starters.forEach((n,i)=>career.positions[n]=spots[i]);
@@ -288,11 +385,10 @@ career.results=career.results||[];
 career.table=career.table||[];
 career.positions=career.positions||{};
 career.starters=career.starters||career.players.slice(0,11).map(p=>p.name);
+career.style=career.style||'balanced';
+career.formation=career.formation||'4-3-3';
 ['played','wins','draws','losses','goals','points'].forEach(k=>career[k]=career[k]||0);
-
-if(!career.table.length)
-career.table=(LEAGUES[career.club.league]||[career.club.name,'Rival FC']).map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}));
-
+if(!career.table.length)career.table=(LEAGUES[career.club.league]||[career.club.name,'Rival FC']).map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}));
 showGame();
 }catch(e){
 $('homeMsg').textContent='No saved career found on this device.';
@@ -304,6 +400,8 @@ $('home').classList.add('hidden');
 $('game').classList.remove('hidden');
 $('clubName').textContent=career.club.name;
 $('clubLeague').textContent=career.club.league+' · Season 2026/27';
+$('style').value=career.style;
+$('formation').value=career.formation;
 renderAll();
 goto('overview');
 }
@@ -314,6 +412,28 @@ $(id).classList.remove('hidden');
 document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
 if(id==='matches')renderMatches();
 if(id==='tactics')renderPitch();
+}
+
+function calculateStrength(){
+const players=career.players;
+const group=type=>players.filter(p=>p.position===type);
+const avg=list=>list.length?list.reduce((s,p)=>s+p.rating,0)/list.length:0;
+const attack=avg(group('FW'));
+const midfield=avg(group('MF'));
+const defence=avg(group('DF'));
+const overall=players.length?avg(players):0;
+return {attack,midfield,defence,overall};
+}
+
+function renderStrength(){
+const s=calculateStrength();
+$('overall').textContent=Math.round(s.overall);
+$('attack').textContent=Math.round(s.attack);
+$('midfield').textContent=Math.round(s.midfield);
+$('defence').textContent=Math.round(s.defence);
+$('strengthBars').innerHTML=[
+['Overall',s.overall],['Attack',s.attack],['Midfield',s.midfield],['Defence',s.defence]
+].map(x=>'<div class="muted">'+x[0]+' · '+Math.round(x[1])+'</div><div class="bar"><span style="width:'+Math.max(0,Math.min(100,x[1]))+'%"></span></div>').join('');
 }
 
 function renderAll(){
@@ -328,13 +448,29 @@ $('goals').textContent=career.goals;
 const sorted=[...career.table].sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga));
 $('position').textContent=(sorted.findIndex(t=>t.name===career.club.name)+1)+'/'+sorted.length;
 $('nextMatch').textContent='Next opponent: '+opponent();
+$('clubStyle').textContent='Playing style: '+STYLE[career.style].name;
 
+renderStrength();
+renderSquad();
+renderPitch();
+}
+
+function renderSquad(){
 $('squadList').innerHTML='';
+$('squadCount').textContent=career.players.length+' registered players';
 career.players.forEach(p=>{
 const row=document.createElement('div');
 row.className='row';
-const name=document.createElement('span');
-name.textContent=p.name+' · '+p.position+' · OVR '+p.rating;
+const info=document.createElement('div');
+info.className='player';
+const img=document.createElement('img');
+img.src='https://ui-avatars.com/api/?name='+encodeURIComponent(p.name)+'&background=263d56&color=ffffff&size=96';
+img.alt=p.name;
+const details=document.createElement('div');
+details.className='playerInfo';
+details.innerHTML='<b></b><small>'+p.position+' · OVR <span class="rating">'+p.rating+'</span></small>';
+details.querySelector('b').textContent=p.name;
+info.append(img,details);
 const num=document.createElement('input');
 num.type='number';num.min=1;num.max=99;num.value=p.number;
 num.addEventListener('change',()=>{
@@ -344,10 +480,9 @@ num.value=p.number;return;
 }
 p.number=n;save();renderPitch();
 });
-row.append(name,num);
+row.append(info,num);
 $('squadList').appendChild(row);
 });
-renderPitch();
 }
 
 function opponent(){
@@ -365,125 +500,4 @@ if(!p)return;
 const pos=career.positions[name]||[50,50];
 career.positions[name]=pos;
 const t=document.createElement('div');
-t.className='token';
-t.style.left=pos[0]+'%';
-t.style.top=pos[1]+'%';
-t.textContent=String(p.number);
-const label=document.createElement('em');
-label.textContent=name.split(' ').slice(-1)[0];
-t.appendChild(label);
-t.dataset.name=name;
-
-t.addEventListener('pointerdown',e=>{
-drag=name;
-t.classList.add('selected');
-t.setPointerCapture(e.pointerId);
-e.preventDefault();
-});
-
-t.addEventListener('pointermove',e=>{
-if(drag!==name)return;
-const r=$('pitch').getBoundingClientRect();
-const x=Math.max(4,Math.min(96,(e.clientX-r.left)/r.width*100));
-const y=Math.max(5,Math.min(95,(e.clientY-r.top)/r.height*100));
-career.positions[name]=[x,y];
-t.style.left=x+'%';
-t.style.top=y+'%';
-});
-
-t.addEventListener('pointerup',()=>{
-drag=null;
-t.classList.remove('selected');
-save();
-});
-
-box.appendChild(t);
-});
-}
-
-function renderMatches(){
-const opp=opponent();
-$('fixture').textContent=career.club.name+' VS '+opp+' · League match';
-
-$('table').innerHTML=
-'<div class="tableline"><b>#</b><b>CLUB</b><b>P</b><b>GD</b><b>PTS</b></div>'+
-[...career.table].sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)).map((t,i)=>
-'<div class="tableline '+(t.name===career.club.name?'me':'')+'"><span>'+(i+1)+'</span><span>'+t.name+'</span><span>'+t.p+'</span><span>'+(t.gf-t.ga)+'</span><b>'+t.pts+'</b></div>'
-).join('');
-
-$('results').innerHTML=career.results.length?
-career.results.slice().reverse().map(r=>'<div class="row">'+r.home+' '+r.hg+' - '+r.ag+' '+r.away+'</div>').join('')
-:'<p class="muted">No matches played yet.</p>';
-}
-
-function playMatch(){
-const opp=opponent();
-const my=career.table.find(t=>t.name===career.club.name);
-const other=career.table.find(t=>t.name===opp);
-
-const avg=career.players.filter(p=>career.starters.includes(p.name)).reduce((s,p)=>s+p.rating,0)/Math.max(1,career.starters.length);
-const strength=Math.max(.5,Math.min(2,(avg-55)/35));
-const hg=Math.min(5,Math.floor(Math.random()*3+Math.random()*strength));
-const ag=Math.min(5,Math.floor(Math.random()*3+Math.random()*.8));
-
-career.played++;
-career.goals+=hg;
-career.results.push({home:career.club.name,away:opp,hg,ag});
-
-my.p++;my.gf+=hg;my.ga+=ag;
-other.p++;other.gf+=ag;other.ga+=hg;
-
-if(hg>ag){
-career.wins++;career.points+=3;my.w++;my.pts+=3;other.l++;
-}else if(hg===ag){
-career.draws++;career.points++;my.d++;my.pts++;other.d++;other.pts++;
-}else{
-career.losses++;my.l++;other.w++;other.pts+=3;
-}
-
-$('matchMsg').innerHTML='<div class="card"><div class="kicker">FULL TIME</div><div class="score">'+hg+' - '+ag+'</div><div style="text-align:center">'+career.club.name+' · '+opp+'</div></div>';
-
-save();
-renderAll();
-renderMatches();
-}
-
-$('league').addEventListener('change',renderClubs);
-
-$('start').addEventListener('click',()=>{
-if(!chosen){$('homeMsg').textContent='Please select a club first.';return}
-newCareer(chosen);
-try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
-});
-
-$('continue').addEventListener('click',()=>{
-load();
-try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
-});
-
-$('create').addEventListener('click',()=>{
-const name=$('customName').value.trim();
-const league=$('customLeague').value.trim();
-if(!name||!league){$('homeMsg').textContent='Enter a club name and league.';return}
-newCareer({name,league});
-});
-
-$('play').addEventListener('click',playMatch);
-$('formation').addEventListener('change',()=>{renderPitch();save()});
-
-$('tabs').addEventListener('click',e=>{
-const b=e.target.closest('button[data-tab]');
-if(b)goto(b.dataset.tab);
-});
-
-document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>goto(b.dataset.goto)));
-
-$('back').addEventListener('click',()=>{
-$('game').classList.add('hidden');
-$('home').classList.remove('hidden');
-});
-
-renderClubs();
-</script>
-</body>
-                    </html>
+t.classNa
