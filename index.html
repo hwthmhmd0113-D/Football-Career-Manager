@@ -2,531 +2,488 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#071321">
+<link rel="manifest" href="manifest.json">
 <title>FCM - Football Career Manager</title>
 
 <style>
 *{box-sizing:border-box}
-:root{
---bg:#071321;--panel:#101f31;--panel2:#192c42;
---blue:#00b9f1;--gold:#e9c15b;--text:#f5f8fc;
---muted:#91a5ba;--green:#1b9b69;--red:#e35d68
-}
-body{
-margin:0;background:
-radial-gradient(ellipse at 50% -10%,#17405c 0%,transparent 48%),
-var(--bg);color:var(--text);font-family:Arial,sans-serif
-}
-button,input,select{font:inherit;border-radius:9px;padding:11px}
-button{
-border:0;background:linear-gradient(120deg,#00b9f1,#0877b8);
-color:white;font-weight:bold;cursor:pointer
-}
-button:active{transform:scale(.97)}
-button.secondary{background:#263b52;color:#dceafa}
-input,select{
-width:100%;background:#0a1929;color:white;
-border:1px solid #34506a;margin:6px 0
-}
+:root{--bg:#071321;--panel:#102238;--blue:#00baf2;--gold:#e8c15b;--text:#f4f8fc;--muted:#9bb0c4}
+body{margin:0;background:radial-gradient(ellipse at 50% 0,#173c59 0,transparent 48%),var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:#081625;border-bottom:1px solid #28445e}
+.logo{font-size:25px;font-weight:900;color:var(--blue);letter-spacing:2px}
+.by{font-size:10px;color:var(--muted);text-align:right}
+main{max-width:1100px;margin:auto;padding:14px}
+.hero{padding:20px;border-radius:17px;background:linear-gradient(110deg,#064263,#142c47);border:1px solid #28617d}
+.kicker{font-size:10px;letter-spacing:3px;color:#77dcff}
+.hero h1{font-size:clamp(23px,4vw,36px);margin:10px 0}
+.muted,small{color:var(--muted)}
+.card{background:linear-gradient(145deg,#152b42,#0d1c2d);border:1px solid #29445e;border-radius:15px;padding:15px;margin:13px 0}
+h2{font-size:17px;color:var(--blue);margin:0 0 13px}
+button,select,input{font:inherit;border-radius:9px;padding:10px}
+button{border:0;background:linear-gradient(120deg,#00b9ef,#0878b8);color:white;font-weight:bold;cursor:pointer}
+button.alt{background:#263d56}
+select,input{background:#081827;color:white;border:1px solid #35516b;width:100%;margin:5px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:9px}
+.club{padding:14px 8px;background:#1a3048;border:1px solid #2d4a65;border-radius:12px;text-align:center;cursor:pointer}
+.club.selected{border:2px solid var(--blue);background:#123d58}
+.club .crest{font-size:24px;font-weight:900;color:var(--gold);margin-bottom:7px}
 .hidden{display:none!important}
-header{
-position:sticky;top:0;z-index:20;background:#081625ed;
-border-bottom:1px solid #254057;padding:14px 17px;
-display:flex;align-items:center;justify-content:space-between;
-backdrop-filter:blur(12px)
-}
-.logo{font-size:23px;font-weight:900;color:var(--blue);letter-spacing:2px}
-.header-right{font-size:11px;color:var(--muted)}
-.container{max-width:1050px;margin:auto;padding:14px}
-.card{
-background:linear-gradient(145deg,#15283d,#0e1b2c);
-border:1px solid #263f58;border-radius:16px;
-padding:16px;margin-bottom:14px;
-box-shadow:0 8px 25px #0003
-}
-h1{font-size:27px;margin:8px 0}
-h2{font-size:18px;color:var(--blue);margin-top:0}
-h3{font-size:15px}
-p,small{color:var(--muted)}
-.hero{
-min-height:180px;border-radius:18px;padding:22px;
-background:linear-gradient(110deg,#063b5c,#102b47 65%,#13233a);
-border:1px solid #28617d;position:relative;overflow:hidden
-}
-.hero:after{
-content:"FCM";position:absolute;right:5px;bottom:-28px;
-font-size:100px;font-weight:900;color:#ffffff0b
-}
-.hero-label{color:#75d9ff;font-size:11px;letter-spacing:3px}
-.hero h1{font-size:30px;max-width:70%}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.stat{
-background:#1a3048;border:1px solid #294660;
-border-radius:12px;padding:13px;color:var(--muted);font-size:12px
-}
-.stat strong{display:block;color:var(--blue);font-size:22px;margin-top:6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px}
-.team{
-background:#1b3048;padding:16px 9px;border-radius:13px;
-text-align:center;border:2px solid transparent;cursor:pointer
-}
-.team.selected{border-color:var(--blue);background:#123e59}
-.badge{width:65px;height:65px;margin:auto}
-nav{
-display:flex;gap:6px;overflow-x:auto;margin:16px 0;
-padding:8px;background:#0b1a2a;border:1px solid #203a52;
-border-radius:13px;scrollbar-width:none
-}
-nav button{
-white-space:nowrap;background:transparent;color:#9eb2c7;
-padding:11px 13px;border:1px solid transparent
-}
-nav button.active{background:#073b58;color:#54d4ff;border-color:#087ca7}
-.player{
-background:#192e45;padding:12px;border-radius:11px;
-margin-bottom:9px;display:flex;justify-content:space-between;
-align-items:center;gap:8px;flex-wrap:wrap;border:1px solid #2b455e
-}
-.player button{padding:8px;font-size:11px}
-.player-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
-.sub-player{
-background:#1b3048;padding:10px;border-radius:10px;
-display:flex;justify-content:space-between;align-items:center;
-gap:5px;font-size:12px
-}
-.sub-player button{padding:7px;font-size:11px}
-.pitch{
-position:relative;width:100%;max-width:520px;margin:15px auto;
-background:#176b46;aspect-ratio:600/800;
-border:4px solid #d8f5e7;overflow:hidden;
-touch-action:none;border-radius:7px
-}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(90px,1fr));gap:8px}
+.stat{background:#1a3048;border:1px solid #2a4963;padding:11px;border-radius:10px;color:var(--muted);font-size:11px}
+.stat b{display:block;font-size:21px;color:var(--blue);margin-top:5px}
+nav{display:flex;gap:6px;overflow:auto;padding:8px;background:#0b1b2b;border:1px solid #263f57;border-radius:12px;margin:12px 0}
+nav button{white-space:nowrap;background:transparent;color:#a9bbcd;border:1px solid transparent}
+nav button.active{background:#073e5b;color:#70dcff;border-color:#087ca7}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#1a3048;padding:10px;border-radius:10px;margin:7px 0;flex-wrap:wrap}
+.row button{padding:7px 9px;font-size:11px}
+.row input{width:58px}
+.pitch{position:relative;width:min(100%,560px);margin:14px auto;aspect-ratio:1.25;background:repeating-linear-gradient(0deg,#176c48 0 70px,#1b754e 70px 140px);border:3px solid #dff6e9;border-radius:6px;overflow:hidden;touch-action:none}
 .pitch svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-#pitchPlayers{position:absolute;inset:0}
-.pitch-player{
-position:absolute;transform:translate(-50%,-50%);
-width:58px;height:58px;border-radius:50%;
-border:2px solid white;background:#087fbd;
-display:flex;align-items:center;justify-content:center;
-overflow:visible;touch-action:none;z-index:2;cursor:grab;
-box-shadow:0 3px 12px #0008
-}
-.pitch-player img{
-width:100%;height:100%;object-fit:cover;border-radius:50%;
-pointer-events:none
-}
-.pitch-player .fallback{font-size:19px;font-weight:bold}
-.pitch-player .shirt-number{
-position:absolute;bottom:-9px;background:#071a2b;
-border:1px solid var(--blue);border-radius:10px;
-padding:2px 5px;font-size:10px;white-space:nowrap
-}
-.pitch-player.selected{border:3px solid var(--gold);z-index:5}
-.pitch-player.captain:after{
-content:"C";position:absolute;right:-7px;top:-7px;
-background:var(--gold);color:#111;border-radius:50%;
-width:17px;height:17px;font-size:10px;display:grid;place-items:center
-}
-#playerInfo{background:#142941;border:1px solid #31516e;border-radius:12px;padding:14px;margin-top:10px}
-.match-card{
-background:linear-gradient(120deg,#142b43,#0b1c2e);
-border:1px solid #2a4963;border-radius:14px;padding:16px;margin-bottom:11px
-}
-.match-score{font-size:27px;font-weight:900;text-align:center;color:white;margin:12px}
-.match-teams{display:flex;align-items:center;justify-content:space-around;text-align:center}
-.match-teams strong{font-size:14px}
-.result{color:var(--gold);font-size:12px;text-align:center}
-.table-row{
-display:grid;grid-template-columns:28px 1fr 35px 35px 35px;
-gap:5px;padding:11px 7px;border-bottom:1px solid #293f55;
-font-size:12px;align-items:center
-}
-.table-row.head{color:var(--muted);font-weight:bold}
-.table-row.me{background:#123b53;border-radius:8px;color:#62d8ff}
-.player-card{
-background:linear-gradient(145deg,#1b3d59,#10243b);
-border:1px solid #37617e;border-radius:13px;padding:13px;
-text-align:center
-}
-.player-card strong{display:block;margin:7px 0}
-.rating{font-size:25px;color:var(--gold);font-weight:900}
-.notice{padding:12px;border-radius:10px;background:#123650;color:#a9e8ff;font-size:13px}
-@media(max-width:500px){
-.pitch-player{width:47px;height:47px}
-.hero h1{font-size:25px}
-.container{padding:10px}
-.table-row{grid-template-columns:23px 1fr 28px 28px 28px;font-size:11px}
-}
+.token{position:absolute;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;border:2px solid white;background:#087eb8;display:grid;place-items:center;font-size:12px;font-weight:bold;box-shadow:0 3px 9px #0008;touch-action:none;z-index:2;user-select:none}
+.token.selected{border:3px solid var(--gold)}
+.token em{position:absolute;top:44px;font-size:9px;font-style:normal;white-space:nowrap;background:#071321;color:white;border-radius:5px;padding:2px 4px}
+.tableline{display:grid;grid-template-columns:25px 1fr 35px 35px 40px;gap:5px;padding:9px 5px;border-bottom:1px solid #2b4055;font-size:12px}
+.tableline.me{background:#123b55;color:#6bdcff;border-radius:6px}
+.score{text-align:center;font-size:30px;font-weight:900;color:var(--gold)}
+.note{background:#10334a;border-radius:9px;padding:10px;color:#bceeff;font-size:12px}
+@media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.pitch{aspect-ratio:1.05}.token{width:39px;height:39px;font-size:10px}}
+@media(orientation:portrait){body:before{content:"For the best experience, rotate your phone horizontally.";display:block;text-align:center;background:#123b55;color:#bceeff;padding:7px;font-size:11px}}
 </style>
 </head>
 
 <body>
-
 <header>
 <div class="logo">FCM</div>
-<div class="header-right">FOOTBALL CAREER MANAGER<br>BY HWTA</div>
+<div class="by">FOOTBALL CAREER MANAGER<br>BY HWTA</div>
 </header>
 
-<div class="container">
-
+<main>
 <section id="home">
 <div class="hero">
-<div class="hero-label">YOUR FOOTBALL JOURNEY</div>
+<div class="kicker">YOUR FOOTBALL JOURNEY</div>
 <h1>Build Your Football Legacy</h1>
-<p>Choose your club. Manage your future.</p>
+<div class="muted">Choose your club and lead it to glory.</div>
 </div>
 
 <div class="card">
-<h2>Select League</h2>
-<select id="league" onchange="showTeams()">
-<option>Spain</option>
-<option>England</option>
-<option>Germany</option>
-<option>Italy</option>
-<option>France</option>
+<h2>SELECT LEAGUE</h2>
+<select id="league">
+<option value="Spain">Spain</option>
+<option value="England">England</option>
+<option value="Germany">Germany</option>
+<option value="Italy">Italy</option>
+<option value="France">France</option>
 </select>
-<div class="grid" id="teams"></div>
-<div id="selection" class="hidden">
-<p id="selectedName"></p>
-<button onclick="startCareer()">START CAREER</button>
-</div>
+<div id="clubs" class="grid"></div>
+<p id="chosen" class="muted">Select a club to continue.</p>
+<button id="start">START CAREER</button>
+<button class="alt" id="continue">CONTINUE CAREER</button>
+<p id="homeMsg" class="muted"></p>
 </div>
 
 <div class="card">
-<h2>Create Your Own Club</h2>
+<h2>CREATE A CLUB</h2>
 <input id="customName" placeholder="Club name">
-<input id="customCountry" placeholder="Country">
-<button onclick="createClub()">CREATE CLUB</button>
+<input id="customLeague" placeholder="Country / league">
+<button id="create">CREATE & START</button>
 </div>
-
-<button class="secondary" onclick="continueCareer()">CONTINUE CAREER</button>
-<p id="homeMessage"></p>
 </section>
 
-<section id="dashboard" class="hidden">
-
+<section id="game" class="hidden">
 <div class="hero">
-<div class="hero-label">MANAGER CAREER · 2026/27</div>
-<h1 id="clubTitle"></h1>
-<p id="clubLeague"></p>
-<div id="clubBadge" class="badge"></div>
+<div class="kicker">MANAGER CAREER · 2026/27</div>
+<h1 id="clubName">Club</h1>
+<div id="clubLeague" class="muted"></div>
 </div>
 
 <div class="card">
 <div class="stats">
-<div class="stat">BUDGET<strong id="budget"></strong></div>
-<div class="stat">SEASON<strong>2026/27</strong></div>
-<div class="stat">SQUAD<strong id="squadCount"></strong></div>
-<div class="stat">LEAGUE POSITION<strong id="clubPosition">-</strong></div>
+<div class="stat">BUDGET<b id="budget">€50M</b></div>
+<div class="stat">PLAYED<b id="played">0</b></div>
+<div class="stat">POINTS<b id="points">0</b></div>
+<div class="stat">POSITION<b id="position">-</b></div>
 </div>
 </div>
 
-<nav>
-<button onclick="openTab('overview',this)" class="active">HOME</button>
-<button onclick="openTab('squad',this)">SQUAD</button>
-<button onclick="openTab('tactics',this)">TACTICS</button>
-<button onclick="openTab('matches',this)">MATCHES</button>
-<button onclick="openTab('transfers',this)">TRANSFERS</button>
-<button onclick="openTab('academy',this)">ACADEMY</button>
+<nav id="tabs">
+<button class="active" data-tab="overview">HOME</button>
+<button data-tab="squad">SQUAD</button>
+<button data-tab="tactics">TACTICS</button>
+<button data-tab="matches">MATCHES</button>
+<button data-tab="transfers">TRANSFERS</button>
 </nav>
 
-<div id="overview" class="tab">
+<section id="overview" class="tab">
 <div class="card">
-<h2>Club Overview</h2>
-<p>Your journey starts here. Prepare your team for the next match.</p>
+<h2>CLUB OVERVIEW</h2>
+<p id="nextMatch"></p>
+<button data-goto="matches">GO TO MATCH CENTER</button>
+</div>
+<div class="card">
+<h2>SEASON RECORD</h2>
 <div class="stats">
-<div class="stat">MATCHES PLAYED<strong id="playedCount">0</strong></div>
-<div class="stat">WINS<strong id="winsCount">0</strong></div>
-<div class="stat">GOALS SCORED<strong id="goalsCount">0</strong></div>
-<div class="stat">POINTS<strong id="pointsCount">0</strong></div>
+<div class="stat">WINS<b id="wins">0</b></div>
+<div class="stat">DRAWS<b id="draws">0</b></div>
+<div class="stat">LOSSES<b id="losses">0</b></div>
+<div class="stat">GOALS<b id="goals">0</b></div>
 </div>
 </div>
+</section>
 
-<div class="card">
-<h2>Next Match</h2>
-<div id="nextMatch"></div>
-<button onclick="openTabByName('matches')">VIEW MATCH CENTER</button>
-</div>
+<section id="squad" class="tab hidden">
+<div class="card"><h2>FIRST TEAM</h2><div id="squadList"></div></div>
+</section>
 
+<section id="tactics" class="tab hidden">
 <div class="card">
-<h2>Quick Actions</h2>
-<button onclick="openTabByName('squad')">Manage Squad</button>
-<button class="secondary" onclick="openTabByName('tactics')">Team Tactics</button>
-</div>
-</div>
-
-<div id="squad" class="tab hidden">
-<div class="card">
-<h2>First Team Squad</h2>
-<div id="players"></div>
-</div>
-</div>
-
-<div id="tactics" class="tab hidden">
-<div class="card">
-<h2>Team Tactics</h2>
-<label>Formation</label>
-<select id="formation" onchange="changeFormation()">
+<h2>TACTICAL BOARD</h2>
+<select id="formation">
 <option>4-3-3</option>
 <option>4-2-3-1</option>
 <option>4-4-2</option>
-<option>3-4-3</option>
 </select>
-<label>Playing Style</label>
-<select id="style" onchange="saveTactics()">
-<option>Possession</option>
-<option>Counter Attack</option>
-<option>High Press</option>
-<option>Balanced</option>
-</select>
-<p>Touch and drag players to change their positions.</p>
+<div class="note">Drag the player circles to adjust their positions.</div>
 <div class="pitch" id="pitch">
-<svg viewBox="0 0 600 800" preserveAspectRatio="none">
-<rect x="10" y="10" width="580" height="780" fill="none" stroke="white" stroke-width="3"/>
-<line x1="10" y1="400" x2="590" y2="400" stroke="white" stroke-width="3"/>
-<circle cx="300" cy="400" r="75" fill="none" stroke="white" stroke-width="3"/>
-<circle cx="300" cy="400" r="4" fill="white"/>
-<rect x="150" y="10" width="300" height="120" fill="none" stroke="white" stroke-width="3"/>
-<rect x="220" y="10" width="160" height="45" fill="none" stroke="white" stroke-width="3"/>
-<rect x="150" y="670" width="300" height="120" fill="none" stroke="white" stroke-width="3"/>
-<rect x="220" y="745" width="160" height="45" fill="none" stroke="white" stroke-width="3"/>
+<svg viewBox="0 0 600 480" preserveAspectRatio="none">
+<rect x="8" y="8" width="584" height="464" fill="none" stroke="white" stroke-width="3"/>
+<line x1="8" y1="240" x2="592" y2="240" stroke="white" stroke-width="3"/>
+<circle cx="300" cy="240" r="65" fill="none" stroke="white" stroke-width="3"/>
+<rect x="190" y="8" width="220" height="75" fill="none" stroke="white" stroke-width="3"/>
+<rect x="190" y="397" width="220" height="75" fill="none" stroke="white" stroke-width="3"/>
 </svg>
-<div id="pitchPlayers"></div>
-</div>
-<div id="playerInfo">Select a player to view information.</div>
-<p id="tacticsMessage"></p>
-</div>
-<div class="card">
-<h2>Bench</h2>
-<div id="bench" class="player-list"></div>
+<div id="tokens"></div>
 </div>
 </div>
+</section>
 
-<div id="matches" class="tab hidden">
+<section id="matches" class="tab hidden">
 <div class="card">
 <h2>MATCH CENTER</h2>
-<p>Play your next league match. Results are simulated using your team rating.</p>
-<div id="matchCenter"></div>
-<button onclick="playMatch()">PLAY MATCH</button>
-<p id="matchMessage"></p>
+<p id="fixture"></p>
+<button id="play">PLAY MATCH</button>
+<div id="matchMsg"></div>
 </div>
-<div class="card">
-<h2>Recent Results</h2>
-<div id="results"></div>
-</div>
-<div class="card">
-<h2>League Table</h2>
-<div id="leagueTable"></div>
-</div>
-<div class="card">
-<h2>Player Statistics</h2>
-<div id="playerStats"></div>
-</div>
-</div>
-
-<div id="transfers" class="tab hidden">
-<div class="card"><h2>Transfer Market</h2><p>Transfer market development is coming soon.</p></div>
-</div>
-
-<div id="academy" class="tab hidden">
-<div class="card"><h2>Youth Academy</h2><p>Youth academy development is coming soon.</p></div>
-</div>
-
-<button class="secondary" onclick="backHome()">BACK TO CLUB SELECTION</button>
+<div class="card"><h2>LEAGUE TABLE</h2><div id="table"></div></div>
+<div class="card"><h2>RECENT RESULTS</h2><div id="results"></div></div>
 </section>
-</div>
+
+<section id="transfers" class="tab hidden">
+<div class="card"><h2>TRANSFER MARKET</h2><p class="muted">Transfer market features will be added in a future update.</p></div>
+</section>
+
+<button class="alt" id="back">BACK TO CLUB SELECTION</button>
+</section>
+</main>
 
 <script>
-const clubs={
-Spain:["Barcelona","Real Madrid","Atletico Madrid","Sevilla","Valencia","Real Sociedad","Villarreal","Athletic Bilbao"],
-England:["Manchester City","Manchester United","Liverpool","Arsenal","Chelsea","Tottenham","Newcastle United","Aston Villa"],
-Germany:["Bayern Munich","Borussia Dortmund","RB Leipzig","Bayer Leverkusen","Stuttgart"],
-Italy:["Inter Milan","AC Milan","Juventus","Napoli","Roma","Lazio"],
-France:["Paris Saint-Germain","Marseille","Lyon","Monaco","Lille"]
+'use strict';
+
+const LEAGUES={
+Spain:['Barcelona','Real Madrid','Atletico Madrid','Sevilla','Valencia','Real Sociedad','Villarreal','Athletic Club'],
+England:['Manchester City','Manchester United','Liverpool','Arsenal','Chelsea','Tottenham','Newcastle United','Aston Villa'],
+Germany:['Bayern Munich','Borussia Dortmund','RB Leipzig','Bayer Leverkusen'],
+Italy:['Inter Milan','AC Milan','Juventus','Napoli','Roma'],
+France:['Paris Saint-Germain','Marseille','Monaco','Lyon']
 };
 
-const playerPhotos={
-"Joan García":"https://www.fcbarcelona.com/photo-resources/2026/07/21/5d0c5826-9ec5-4625-a97b-3b8d0ca98418/01-Joan_Garcia.png?height=790&width=670",
-"João Cancelo":"https://www.fcbarcelona.com/photo-resources/2026/08/19/7d3f20c8-d349-42e6-90a5-d70a6a2f86b7/00-Cancelo.png?height=790&width=670",
-"Pau Cubarsí":"https://www.fcbarcelona.com/photo-resources/2026/07/21/a321161c-87a5-4d8d-b05e-b547e0080e98/02-Cubarsi.png?height=790&width=670",
-"Jules Koundé":"https://www.fcbarcelona.com/photo-resources/2026/07/21/6e0885df-ddcc-44c7-b55f-a421606004c0/23-Kounde.png?height=790&width=670",
-"Alejandro Balde":"https://www.fcbarcelona.com/photo-resources/2026/07/21/e6ad1688-d559-4991-a2a0-3c7fbfd1b14f/03-Balde.png?height=790&width=670",
-"Pedri":"https://www.fcbarcelona.com/photo-resources/2026/07/21/02b47c57-d919-47b7-8e39-d744c58c68dd/08-Pedri.png?height=790&width=670",
-"Gavi":"https://www.fcbarcelona.com/photo-resources/2026/07/21/816698d5-5eb4-4947-bcdb-a3771ce71398/06-Gavi.png?height=790&width=670",
-"Frenkie de Jong":"https://www.fcbarcelona.com/photo-resources/2026/07/21/3aefde9a-9253-46c3-a88a-c4cb647a4869/21-De_Jong.png?height=790&width=670",
-"Raphinha":"https://www.fcbarcelona.com/photo-resources/2026/07/21/799c94b4-fa33-4472-bb6b-4b537baf219c/11-Raphinha.png?height=790&width=670",
-"Gabriel Jesus":"https://www.fcbarcelona.com/photo-resources/2026/09/03/f8d954d8-3841-490c-9db0-1614995ec68d/09-Gabriel_Jesus.png?height=790&width=670",
-"Lamine Yamal":"https://www.fcbarcelona.com/photo-resources/2026/07/21/d8c055dc-f43e-4125-9789-34c86fb99a1c/10-Lamine.png?height=790&width=670"
-};
-
-const barcaPlayers=[
-["Joan García","GK",82,1],
-["João Cancelo","RB",83,2],
-["Alejandro Balde","LB",82,3],
-["Brian Fariñas","CM",70,4],
-["Pau Cubarsí","CB",83,5],
-["Gavi","CM",84,6],
-["Fermín López","CAM",83,7],
-["Pedri","CM",90,8],
-["Gabriel Jesus","ST",84,9],
-["Lamine Yamal","RW",91,10],
-["Raphinha","LW",88,11],
-["Xavi Espart","RB",70,12],
-["Wojciech Szczęsny","GK",80,13],
-["Karim Adeyemi","LW",85,14],
-["Andreas Christensen","CB",81,15],
-["Rodri","CDM",90,16],
-["Anthony Gordon","LW",84,17],
-["Gerard Martín","LB",77,18],
-["Roony Bardghji","RW",78,19],
-["Dani Olmo","CAM",85,20],
-["Frenkie de Jong","CM",87,21],
-["Marc Bernal","CDM",80,22],
-["Jules Koundé","CB",85,23],
-["Eric García","CB",80,24],
-["Dominik Livaković","GK",80,25],
-["Jesse Bisiwu","RW",68,27],
-["Hamza Abdelkarim","ST",68,29]
+const BARCA=[
+['Joan Garcia','GK',82,1],
+['Jules Kounde','DF',85,23],
+['Pau Cubarsi','DF',83,5],
+['Ronald Araujo','DF',84,4],
+['Alejandro Balde','DF',82,3],
+['Pedri','MF',90,8],
+['Frenkie de Jong','MF',87,21],
+['Gavi','MF',84,6],
+['Lamine Yamal','FW',91,10],
+['Robert Lewandowski','FW',87,9],
+['Raphinha','FW',88,11],
+['Fermin Lopez','MF',82,16],
+['Dani Olmo','MF',85,20],
+['Eric Garcia','DF',80,24],
+['Wojciech Szczesny','GK',80,25],
+['Ferran Torres','FW',82,7],
+['Gerard Martin','DF',77,18],
+['Marc Casado','MF',79,17]
 ];
 
-let selectedClub=null,career=null,dragging=null;
+const $=id=>document.getElementById(id);
+let chosen=null,career=null,drag=null;
 
-function badge(){
-return `<svg viewBox="0 0 100 115" width="65" height="65">
-<path d="M5 5H95V65Q85 95 50 110Q15 95 5 65Z" fill="#a50044" stroke="#edc34c" stroke-width="4"/>
-<path d="M8 8H92V35H8Z" fill="#f5d34c"/>
-<path d="M8 38H92V65H8Z" fill="#164078"/>
-<text x="50" y="29" text-anchor="middle" font-size="17" font-weight="bold" fill="#164078">FCB</text>
-<text x="50" y="59" text-anchor="middle" font-size="17" font-weight="bold" fill="white">BARÇA</text>
-</svg>`;
-}
+function renderClubs(){
+const league=$('league').value;
+const box=$('clubs');
+box.innerHTML='';
+chosen=null;
+$('chosen').textContent='Select a club to continue.';
 
-function showTeams(){
-let league=document.getElementById("league").value;
-let box=document.getElementById("teams");
-box.innerHTML="";selectedClub=null;
-document.getElementById("selection").classList.add("hidden");
-clubs[league].forEach(name=>{
-let card=document.createElement("div");
-card.className="team";
-card.innerHTML=(name==="Barcelona"?badge():`<div class="badge" style="display:grid;place-items:center;font-weight:bold;color:#5bd7ff">${name.slice(0,3).toUpperCase()}</div>`)+`<br><b>${name}</b>`;
-card.onclick=()=>{
-document.querySelectorAll(".team").forEach(x=>x.classList.remove("selected"));
-card.classList.add("selected");
-selectedClub={name,league,budget:50000000};
-document.getElementById("selectedName").textContent="Selected: "+name;
-document.getElementById("selection").classList.remove("hidden");
-};
-box.appendChild(card);
+LEAGUES[league].forEach(name=>{
+const el=document.createElement('button');
+el.type='button';
+el.className='club';
+el.innerHTML='<div class="crest">'+name.split(' ').map(x=>x[0]).join('').slice(0,3)+'</div><b>'+name+'</b>';
+el.addEventListener('click',()=>{
+document.querySelectorAll('.club').forEach(c=>c.classList.remove('selected'));
+el.classList.add('selected');
+chosen={name,league};
+$('chosen').textContent='Selected club: '+name;
+});
+box.appendChild(el);
 });
 }
 
-function createClub(){
-let name=document.getElementById("customName").value.trim();
-let country=document.getElementById("customCountry").value.trim();
-if(!name||!country){alert("Enter club name and country");return}
-selectedClub={name,league:country,budget:50000000};
-startCareer();
-}
-
-function startCareer(){
-if(!selectedClub)return;
-let squad=selectedClub.name==="Barcelona"
-?barcaPlayers.map(p=>({name:p[0],position:p[1],rating:p[2],number:p[3]}))
-:Array.from({length:11},(_,i)=>({
-name:["Goalkeeper","Defender 1","Defender 2","Defender 3","Defender 4","Midfielder 1","Midfielder 2","Midfielder 3","Forward 1","Forward 2","Forward 3"][i],
-position:["GK","CB","CB","LB","RB","CM","CM","CAM","LW","ST","RW"][i],
-rating:75,number:i+1
-}));
+function newCareer(club){
+const source=club.name==='Barcelona'?BARCA:Array.from({length:18},(_,i)=>[
+['Goalkeeper','GK',78,1],
+['Defender 1','DF',76,2],
+['Defender 2','DF',76,3],
+['Defender 3','DF',75,4],
+['Defender 4','DF',75,5],
+['Midfielder 1','MF',78,6],
+['Midfielder 2','MF',77,7],
+['Midfielder 3','MF',76,8],
+['Forward 1','FW',80,9],
+['Forward 2','FW',79,10],
+['Forward 3','FW',78,11],
+['Substitute 1','MF',72,12],
+['Substitute 2','DF',72,13],
+['Substitute 3','FW',72,14],
+['Substitute 4','GK',70,15],
+['Substitute 5','MF',71,16],
+['Substitute 6','DF',70,17],
+['Substitute 7','FW',70,18]
+][i]);
 
 career={
-club:selectedClub,players:squad,captain:"Pedri",
-formation:"4-3-3",style:"Possession",
-starters:selectedClub.name==="Barcelona"
-?["Joan García","João Cancelo","Pau Cubarsí","Jules Koundé","Alejandro Balde","Pedri","Gavi","Frenkie de Jong","Raphinha","Gabriel Jesus","Lamine Yamal"]
-:squad.map(p=>p.name),
-positions:{},played:0,wins:0,draws:0,losses:0,
-goalsFor:0,goalsAgainst:0,points:0,results:[],
-playerStats:{}
+club,
+players:source.map(x=>({name:x[0],position:x[1],rating:x[2],number:x[3]})),
+starters:source.slice(0,11).map(x=>x[0]),
+positions:{},
+played:0,wins:0,draws:0,losses:0,goals:0,points:0,results:[],
+table:(LEAGUES[club.league]||[club.name,'Rival FC','City FC','United FC']).map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}))
 };
-career.players.forEach(p=>career.playerStats[p.name]={goals:0,assists:0,appearances:0,rating:6.5});
-setDefaultPositions();initLeague();saveCareer();showDashboard();
+
+if(!career.table.some(t=>t.name===club.name))
+career.table.unshift({name:club.name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});
+
+const spots=[[50,91],[22,76],[42,78],[58,78],[78,76],[35,55],[50,60],[65,55],[20,25],[50,17],[80,25]];
+career.starters.forEach((n,i)=>career.positions[n]=spots[i]);
+
+save();
+showGame();
 }
 
-function setDefaultPositions(){
-let spots=[[50,91],[25,75],[42,78],[58,78],[75,75],[35,55],[50,61],[65,55],[20,27],[50,18],[80,27]];
-career.starters.forEach((name,i)=>{career.positions[name]=spots[i]||[50,50]});
+function save(){
+if(career)localStorage.setItem('FCM_CAREER',JSON.stringify(career));
 }
 
-function initLeague(){
-if(career.leagueTable&&career.leagueTable.length)return;
-let names=clubs[career.club.league]||[career.club.name,"City FC","United FC","Athletic FC","Sporting FC","Rovers FC","Dynamo FC","Olympic FC"];
-if(!names.includes(career.club.name))names=[career.club.name,...names];
-career.leagueTable=names.map(name=>({
-name,played:0,wins:0,draws:0,losses:0,gf:0,ga:0,points:0
-}));
-}
-
-function saveCareer(){
-localStorage.setItem("FCM_CAREER",JSON.stringify(career));
-}
-
-function continueCareer(){
-let saved=localStorage.getItem("FCM_CAREER");
-if(!saved){
-document.getElementById("homeMessage").textContent="No saved career found.";
-return;
-}
+function load(){
 try{
-career=JSON.parse(saved);
+const x=JSON.parse(localStorage.getItem('FCM_CAREER'));
+if(!x||!x.club||!x.players)throw 0;
+career=x;
+career.results=career.results||[];
+career.table=career.table||[];
 career.positions=career.positions||{};
 career.starters=career.starters||career.players.slice(0,11).map(p=>p.name);
-career.played=career.played||0;
-career.wins=career.wins||0;
-career.draws=career.draws||0;
-career.losses=career.losses||0;
-career.goalsFor=career.goalsFor||0;
-career.goalsAgainst=career.goalsAgainst||0;
-career.points=career.points||0;
-career.results=career.results||[];
-career.playerStats=career.playerStats||{};
+['played','wins','draws','losses','goals','points'].forEach(k=>career[k]=career[k]||0);
+
+if(!career.table.length)
+career.table=(LEAGUES[career.club.league]||[career.club.name,'Rival FC']).map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}));
+
+showGame();
+}catch(e){
+$('homeMsg').textContent='No saved career found on this device.';
+}
+}
+
+function showGame(){
+$('home').classList.add('hidden');
+$('game').classList.remove('hidden');
+$('clubName').textContent=career.club.name;
+$('clubLeague').textContent=career.club.league+' · Season 2026/27';
+renderAll();
+goto('overview');
+}
+
+function goto(id){
+document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
+$(id).classList.remove('hidden');
+document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+if(id==='matches')renderMatches();
+if(id==='tactics')renderPitch();
+}
+
+function renderAll(){
+$('budget').textContent='€50M';
+$('played').textContent=career.played;
+$('points').textContent=career.points;
+$('wins').textContent=career.wins;
+$('draws').textContent=career.draws;
+$('losses').textContent=career.losses;
+$('goals').textContent=career.goals;
+
+const sorted=[...career.table].sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga));
+$('position').textContent=(sorted.findIndex(t=>t.name===career.club.name)+1)+'/'+sorted.length;
+$('nextMatch').textContent='Next opponent: '+opponent();
+
+$('squadList').innerHTML='';
 career.players.forEach(p=>{
-career.playerStats[p.name]=career.playerStats[p.name]||{goals:0,assists:0,appearances:0,rating:6.5};
+const row=document.createElement('div');
+row.className='row';
+const name=document.createElement('span');
+name.textContent=p.name+' · '+p.position+' · OVR '+p.rating;
+const num=document.createElement('input');
+num.type='number';num.min=1;num.max=99;num.value=p.number;
+num.addEventListener('change',()=>{
+const n=+num.value;
+if(n<1||n>99||career.players.some(q=>q!==p&&q.number===n)){
+num.value=p.number;return;
+}
+p.number=n;save();renderPitch();
 });
-initLeague();saveCareer();showDashboard();
-}catch(e){alert("Could not load career");}
+row.append(name,num);
+$('squadList').appendChild(row);
+});
+renderPitch();
 }
 
-function showDashboard(){
-document.getElementById("home").classList.add("hidden");
-document.getElementById("dashboard").classList.remove("hidden");
-document.getElementById("clubTitle").textContent=career.club.name;
-document.getElementById("clubLeague").textContent=career.club.league;
-document.getElementById("budget").textContent="€"+(career.club.budget/1000000)+"M";
-document.getElementById("squadCount").textContent=career.players.length;
-document.getElementById("clubBadge").innerHTML=career.club.name==="Barcelona"?badge():"FCM";
-document.getElementById("formation").value=career.formation||"4-3-3";
-document.getElementById("style").value=career.style||"Possession";
-renderPlayers();renderPitch();updateOverview();renderMatchCenter();
-openTabByName("overview");
+function opponent(){
+const others=career.table.filter(t=>t.name!==career.club.name);
+return others.length?others[career.played%others.length].name:'Rival FC';
 }
 
-function renderPlayers(){
-let box=document.getElementById("players");box.innerHTML="";
-career.players.forEach((p,i)=>{
-let row=document.createElement("div");row.className="player";
-let info=document.createElement("div");
-info.innerHTML=`<b>${p.name}</b><br><small>${p.position} · Rating ${p.rating}</small>`;
-let controls=document.createElement("div");
-let number=document.createElement("input");
-number.type="number";number.min=1;number.max=99;
-number.value=p.number;number.style.width="65px";
-number.onchange=()=>{
-let v=Number(number.value);
-if(v<1||v>99||career.players.some((x,j)=>j!==i&&x.number===v)){
-alert("Invalid shirt number");number.value=p.number;return;
+function renderPitch(){
+if(!career)return;
+const box=$('tokens');
+box.innerHTML='';
+career.starters.forEach(name=>{
+const p=career.players.find(x=>x.name===name);
+if(!p)return;
+const pos=career.positions[name]||[50,50];
+career.positions[name]=pos;
+const t=document.createElement('div');
+t.className='token';
+t.style.left=pos[0]+'%';
+t.style.top=pos[1]+'%';
+t.textContent=String(p.number);
+const label=document.createElement('em');
+label.textContent=name.split(' ').slice(-1)[0];
+t.appendChild(label);
+t.dataset.name=name;
+
+t.addEventListener('pointerdown',e=>{
+drag=name;
+t.classList.add('selected');
+t.setPointerCapture(e.pointerId);
+e.preventDefault();
+});
+
+t.addEventListener('pointermove',e=>{
+if(drag!==name)return;
+const r=$('pitch').getBoundingClientRect();
+const x=Math.max(4,Math.min(96,(e.clientX-r.left)/r.width*100));
+const y=Math.max(5,Math.min(95,(e.clientY-r.top)/r.height*100));
+career.positions[name]=[x,y];
+t.style.left=x+'%';
+t.style.top=y+'%';
+});
+
+t.addEventListener('pointerup',()=>{
+drag=null;
+t.classList.remove('selected');
+save();
+});
+
+box.appendChild(t);
+});
 }
-p.number=v;saveCareer();renderPitch();
-};
-let captain=document.createElement("butto
+
+function renderMatches(){
+const opp=opponent();
+$('fixture').textContent=career.club.name+' VS '+opp+' · League match';
+
+$('table').innerHTML=
+'<div class="tableline"><b>#</b><b>CLUB</b><b>P</b><b>GD</b><b>PTS</b></div>'+
+[...career.table].sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)).map((t,i)=>
+'<div class="tableline '+(t.name===career.club.name?'me':'')+'"><span>'+(i+1)+'</span><span>'+t.name+'</span><span>'+t.p+'</span><span>'+(t.gf-t.ga)+'</span><b>'+t.pts+'</b></div>'
+).join('');
+
+$('results').innerHTML=career.results.length?
+career.results.slice().reverse().map(r=>'<div class="row">'+r.home+' '+r.hg+' - '+r.ag+' '+r.away+'</div>').join('')
+:'<p class="muted">No matches played yet.</p>';
+}
+
+function playMatch(){
+const opp=opponent();
+const my=career.table.find(t=>t.name===career.club.name);
+const other=career.table.find(t=>t.name===opp);
+
+const avg=career.players.filter(p=>career.starters.includes(p.name)).reduce((s,p)=>s+p.rating,0)/Math.max(1,career.starters.length);
+const strength=Math.max(.5,Math.min(2,(avg-55)/35));
+const hg=Math.min(5,Math.floor(Math.random()*3+Math.random()*strength));
+const ag=Math.min(5,Math.floor(Math.random()*3+Math.random()*.8));
+
+career.played++;
+career.goals+=hg;
+career.results.push({home:career.club.name,away:opp,hg,ag});
+
+my.p++;my.gf+=hg;my.ga+=ag;
+other.p++;other.gf+=ag;other.ga+=hg;
+
+if(hg>ag){
+career.wins++;career.points+=3;my.w++;my.pts+=3;other.l++;
+}else if(hg===ag){
+career.draws++;career.points++;my.d++;my.pts++;other.d++;other.pts++;
+}else{
+career.losses++;my.l++;other.w++;other.pts+=3;
+}
+
+$('matchMsg').innerHTML='<div class="card"><div class="kicker">FULL TIME</div><div class="score">'+hg+' - '+ag+'</div><div style="text-align:center">'+career.club.name+' · '+opp+'</div></div>';
+
+save();
+renderAll();
+renderMatches();
+}
+
+$('league').addEventListener('change',renderClubs);
+
+$('start').addEventListener('click',()=>{
+if(!chosen){$('homeMsg').textContent='Please select a club first.';return}
+newCareer(chosen);
+try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
+});
+
+$('continue').addEventListener('click',()=>{
+load();
+try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
+});
+
+$('create').addEventListener('click',()=>{
+const name=$('customName').value.trim();
+const league=$('customLeague').value.trim();
+if(!name||!league){$('homeMsg').textContent='Enter a club name and league.';return}
+newCareer({name,league});
+});
+
+$('play').addEventListener('click',playMatch);
+$('formation').addEventListener('change',()=>{renderPitch();save()});
+
+$('tabs').addEventListener('click',e=>{
+const b=e.target.closest('button[data-tab]');
+if(b)goto(b.dataset.tab);
+});
+
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>goto(b.dataset.goto)));
+
+$('back').addEventListener('click',()=>{
+$('game').classList.add('hidden');
+$('home').classList.remove('hidden');
+});
+
+renderClubs();
+</script>
+</body>
+                    </html>
