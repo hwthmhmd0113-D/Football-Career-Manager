@@ -3,82 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071321">
 <title>FCM - Football Career Manager</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080e1b;color:#fff;font-family:Arial}
-header{padding:16px;background:#101a2c;display:flex;justify-content:space-between}
-.logo{font-size:23px;color:#e8bd58;font-weight:bold}
-.container{max-width:1000px;margin:20px auto;padding:12px}
-.card{background:#111c30;border:1px solid #293951;border-radius:14px;padding:16px;margin-bottom:14px}
-h1{font-size:25px}
-p,small{color:#aab6c8}
-button,select,input{font:inherit;border-radius:8px;padding:11px}
-button{background:#e8bd58;border:0;font-weight:bold;cursor:pointer}
-.secondary{background:#293951;color:white}
-input,select{background:#0b1424;color:white;border:1px solid #34445e;width:100%;margin:7px 0}
+:root{
+--bg:#071321;--panel:#101f31;--panel2:#192c42;
+--blue:#00b9f1;--gold:#e9c15b;--text:#f5f8fc;
+--muted:#91a5ba;--green:#1b9b69;--red:#e35d68
+}
+body{
+margin:0;background:
+radial-gradient(ellipse at 50% -10%,#17405c 0%,transparent 48%),
+var(--bg);color:var(--text);font-family:Arial,sans-serif
+}
+button,input,select{font:inherit;border-radius:9px;padding:11px}
+button{
+border:0;background:linear-gradient(120deg,#00b9f1,#0877b8);
+color:white;font-weight:bold;cursor:pointer
+}
+button:active{transform:scale(.97)}
+button.secondary{background:#263b52;color:#dceafa}
+input,select{
+width:100%;background:#0a1929;color:white;
+border:1px solid #34506a;margin:6px 0
+}
 .hidden{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.team{background:#1b2941;padding:15px;border-radius:12px;text-align:center;border:2px solid transparent;cursor:pointer}
-.team.selected{border-color:#e8bd58}
+header{
+position:sticky;top:0;z-index:20;background:#081625ed;
+border-bottom:1px solid #254057;padding:14px 17px;
+display:flex;align-items:center;justify-content:space-between;
+backdrop-filter:blur(12px)
+}
+.logo{font-size:23px;font-weight:900;color:var(--blue);letter-spacing:2px}
+.header-right{font-size:11px;color:var(--muted)}
+.container{max-width:1050px;margin:auto;padding:14px}
+.card{
+background:linear-gradient(145deg,#15283d,#0e1b2c);
+border:1px solid #263f58;border-radius:16px;
+padding:16px;margin-bottom:14px;
+box-shadow:0 8px 25px #0003
+}
+h1{font-size:27px;margin:8px 0}
+h2{font-size:18px;color:var(--blue);margin-top:0}
+h3{font-size:15px}
+p,small{color:var(--muted)}
+.hero{
+min-height:180px;border-radius:18px;padding:22px;
+background:linear-gradient(110deg,#063b5c,#102b47 65%,#13233a);
+border:1px solid #28617d;position:relative;overflow:hidden
+}
+.hero:after{
+content:"FCM";position:absolute;right:5px;bottom:-28px;
+font-size:100px;font-weight:900;color:#ffffff0b
+}
+.hero-label{color:#75d9ff;font-size:11px;letter-spacing:3px}
+.hero h1{font-size:30px;max-width:70%}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.stat{
+background:#1a3048;border:1px solid #294660;
+border-radius:12px;padding:13px;color:var(--muted);font-size:12px
+}
+.stat strong{display:block;color:var(--blue);font-size:22px;margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px}
+.team{
+background:#1b3048;padding:16px 9px;border-radius:13px;
+text-align:center;border:2px solid transparent;cursor:pointer
+}
+.team.selected{border-color:var(--blue);background:#123e59}
 .badge{width:65px;height:65px;margin:auto}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stat{background:#1b2941;padding:14px;border-radius:10px}
-.stat strong{display:block;color:#e8bd58;font-size:22px;margin-top:7px}
-nav{display:flex;gap:8px;overflow:auto;margin:15px 0}
-nav button{white-space:nowrap}
-.player{background:#1b2941;padding:10px;border-radius:10px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.player button{padding:8px}
+nav{
+display:flex;gap:6px;overflow-x:auto;margin:16px 0;
+padding:8px;background:#0b1a2a;border:1px solid #203a52;
+border-radius:13px;scrollbar-width:none
+}
+nav button{
+white-space:nowrap;background:transparent;color:#9eb2c7;
+padding:11px 13px;border:1px solid transparent
+}
+nav button.active{background:#073b58;color:#54d4ff;border-color:#087ca7}
+.player{
+background:#192e45;padding:12px;border-radius:11px;
+margin-bottom:9px;display:flex;justify-content:space-between;
+align-items:center;gap:8px;flex-wrap:wrap;border:1px solid #2b455e
+}
+.player button{padding:8px;font-size:11px}
+.player-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
+.sub-player{
+background:#1b3048;padding:10px;border-radius:10px;
+display:flex;justify-content:space-between;align-items:center;
+gap:5px;font-size:12px
+}
+.sub-player button{padding:7px;font-size:11px}
 .pitch{
- position:relative;width:100%;max-width:520px;margin:15px auto;
- background:#267b48;aspect-ratio:600/800;
- border:4px solid white;overflow:hidden;touch-action:none
+position:relative;width:100%;max-width:520px;margin:15px auto;
+background:#176b46;aspect-ratio:600/800;
+border:4px solid #d8f5e7;overflow:hidden;
+touch-action:none;border-radius:7px
 }
 .pitch svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #pitchPlayers{position:absolute;inset:0}
 .pitch-player{
- position:absolute;transform:translate(-50%,-50%);
- width:58px;height:58px;border-radius:50%;
- border:2px solid white;background:#a71940;
- display:flex;align-items:center;justify-content:center;
- overflow:visible;touch-action:none;z-index:2;cursor:grab
+position:absolute;transform:translate(-50%,-50%);
+width:58px;height:58px;border-radius:50%;
+border:2px solid white;background:#087fbd;
+display:flex;align-items:center;justify-content:center;
+overflow:visible;touch-action:none;z-index:2;cursor:grab;
+box-shadow:0 3px 12px #0008
 }
 .pitch-player img{
- width:100%;height:100%;object-fit:cover;
- border-radius:50%;pointer-events:none
+width:100%;height:100%;object-fit:cover;border-radius:50%;
+pointer-events:none
 }
-.pitch-player .fallback{font-size:20px;font-weight:bold}
+.pitch-player .fallback{font-size:19px;font-weight:bold}
 .pitch-player .shirt-number{
- position:absolute;bottom:-9px;background:#a71940;
- border:1px solid white;border-radius:10px;
- padding:2px 5px;font-size:10px;white-space:nowrap
+position:absolute;bottom:-9px;background:#071a2b;
+border:1px solid var(--blue);border-radius:10px;
+padding:2px 5px;font-size:10px;white-space:nowrap
 }
-.pitch-player.selected{border:3px solid #e8bd58;z-index:5}
+.pitch-player.selected{border:3px solid var(--gold);z-index:5}
 .pitch-player.captain:after{
- content:"C";position:absolute;right:-7px;top:-7px;
- background:#e8bd58;color:#111;border-radius:50%;
- width:17px;height:17px;font-size:10px;display:grid;place-items:center
+content:"C";position:absolute;right:-7px;top:-7px;
+background:var(--gold);color:#111;border-radius:50%;
+width:17px;height:17px;font-size:10px;display:grid;place-items:center
 }
-.player-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
-.sub-player{background:#1b2941;padding:10px;border-radius:9px;display:flex;justify-content:space-between;align-items:center;gap:5px;font-size:13px}
-.sub-player button{padding:7px;font-size:11px}
-#playerInfo{background:#1b2941;border-radius:10px;padding:12px;margin-top:10px}
-@media(max-width:500px){.pitch-player{width:48px;height:48px}}
+#playerInfo{background:#142941;border:1px solid #31516e;border-radius:12px;padding:14px;margin-top:10px}
+.match-card{
+background:linear-gradient(120deg,#142b43,#0b1c2e);
+border:1px solid #2a4963;border-radius:14px;padding:16px;margin-bottom:11px
+}
+.match-score{font-size:27px;font-weight:900;text-align:center;color:white;margin:12px}
+.match-teams{display:flex;align-items:center;justify-content:space-around;text-align:center}
+.match-teams strong{font-size:14px}
+.result{color:var(--gold);font-size:12px;text-align:center}
+.table-row{
+display:grid;grid-template-columns:28px 1fr 35px 35px 35px;
+gap:5px;padding:11px 7px;border-bottom:1px solid #293f55;
+font-size:12px;align-items:center
+}
+.table-row.head{color:var(--muted);font-weight:bold}
+.table-row.me{background:#123b53;border-radius:8px;color:#62d8ff}
+.player-card{
+background:linear-gradient(145deg,#1b3d59,#10243b);
+border:1px solid #37617e;border-radius:13px;padding:13px;
+text-align:center
+}
+.player-card strong{display:block;margin:7px 0}
+.rating{font-size:25px;color:var(--gold);font-weight:900}
+.notice{padding:12px;border-radius:10px;background:#123650;color:#a9e8ff;font-size:13px}
+@media(max-width:500px){
+.pitch-player{width:47px;height:47px}
+.hero h1{font-size:25px}
+.container{padding:10px}
+.table-row{grid-template-columns:23px 1fr 28px 28px 28px;font-size:11px}
+}
 </style>
 </head>
 
 <body>
+
 <header>
-<div class="logo">FCM CAREER</div>
-<div style="font-size:12px;color:#aaa">BY HWTA</div>
+<div class="logo">FCM</div>
+<div class="header-right">FOOTBALL CAREER MANAGER<br>BY HWTA</div>
 </header>
 
 <div class="container">
 
 <section id="home">
+<div class="hero">
+<div class="hero-label">YOUR FOOTBALL JOURNEY</div>
 <h1>Build Your Football Legacy</h1>
-<p>Choose your club and begin your career.</p>
+<p>Choose your club. Manage your future.</p>
+</div>
 
 <div class="card">
 <h2>Select League</h2>
@@ -108,36 +205,54 @@ nav button{white-space:nowrap}
 </section>
 
 <section id="dashboard" class="hidden">
-<div class="card">
-<div style="display:flex;align-items:center;gap:15px">
-<div id="clubBadge" class="badge"></div>
-<div>
-<p>YOUR CLUB</p>
+
+<div class="hero">
+<div class="hero-label">MANAGER CAREER · 2026/27</div>
 <h1 id="clubTitle"></h1>
 <p id="clubLeague"></p>
+<div id="clubBadge" class="badge"></div>
 </div>
-</div>
+
+<div class="card">
 <div class="stats">
-<div class="stat">Budget<strong id="budget"></strong></div>
-<div class="stat">Season<strong>2026/27</strong></div>
-<div class="stat">Squad<strong id="squadCount"></strong></div>
-<div class="stat">Club Rating<strong>85</strong></div>
+<div class="stat">BUDGET<strong id="budget"></strong></div>
+<div class="stat">SEASON<strong>2026/27</strong></div>
+<div class="stat">SQUAD<strong id="squadCount"></strong></div>
+<div class="stat">LEAGUE POSITION<strong id="clubPosition">-</strong></div>
 </div>
 </div>
 
 <nav>
-<button onclick="openTab('overview',this)" class="active">Overview</button>
-<button onclick="openTab('squad',this)">Squad</button>
-<button onclick="openTab('tactics',this)">Tactics</button>
-<button onclick="openTab('transfers',this)">Transfers</button>
-<button onclick="openTab('academy',this)">Academy</button>
+<button onclick="openTab('overview',this)" class="active">HOME</button>
+<button onclick="openTab('squad',this)">SQUAD</button>
+<button onclick="openTab('tactics',this)">TACTICS</button>
+<button onclick="openTab('matches',this)">MATCHES</button>
+<button onclick="openTab('transfers',this)">TRANSFERS</button>
+<button onclick="openTab('academy',this)">ACADEMY</button>
 </nav>
 
 <div id="overview" class="tab">
 <div class="card">
 <h2>Club Overview</h2>
-<p>Welcome to your managerial career.</p>
+<p>Your journey starts here. Prepare your team for the next match.</p>
+<div class="stats">
+<div class="stat">MATCHES PLAYED<strong id="playedCount">0</strong></div>
+<div class="stat">WINS<strong id="winsCount">0</strong></div>
+<div class="stat">GOALS SCORED<strong id="goalsCount">0</strong></div>
+<div class="stat">POINTS<strong id="pointsCount">0</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Next Match</h2>
+<div id="nextMatch"></div>
+<button onclick="openTabByName('matches')">VIEW MATCH CENTER</button>
+</div>
+
+<div class="card">
+<h2>Quick Actions</h2>
 <button onclick="openTabByName('squad')">Manage Squad</button>
+<button class="secondary" onclick="openTabByName('tactics')">Team Tactics</button>
 </div>
 </div>
 
@@ -151,7 +266,6 @@ nav button{white-space:nowrap}
 <div id="tactics" class="tab hidden">
 <div class="card">
 <h2>Team Tactics</h2>
-
 <label>Formation</label>
 <select id="formation" onchange="changeFormation()">
 <option>4-3-3</option>
@@ -159,7 +273,6 @@ nav button{white-space:nowrap}
 <option>4-4-2</option>
 <option>3-4-3</option>
 </select>
-
 <label>Playing Style</label>
 <select id="style" onchange="saveTactics()">
 <option>Possession</option>
@@ -167,9 +280,7 @@ nav button{white-space:nowrap}
 <option>High Press</option>
 <option>Balanced</option>
 </select>
-
-<p>Touch and drag a player to move him.</p>
-
+<p>Touch and drag players to change their positions.</p>
 <div class="pitch" id="pitch">
 <svg viewBox="0 0 600 800" preserveAspectRatio="none">
 <rect x="10" y="10" width="580" height="780" fill="none" stroke="white" stroke-width="3"/>
@@ -183,23 +294,43 @@ nav button{white-space:nowrap}
 </svg>
 <div id="pitchPlayers"></div>
 </div>
-
-<div id="playerInfo">اضغط على لاعب لرؤية معلوماته.</div>
+<div id="playerInfo">Select a player to view information.</div>
 <p id="tacticsMessage"></p>
 </div>
-
 <div class="card">
 <h2>Bench</h2>
 <div id="bench" class="player-list"></div>
 </div>
 </div>
 
-<div id="transfers" class="tab">
-<div class="card"><h2>Transfer Market</h2><p>Coming soon.</p></div>
+<div id="matches" class="tab hidden">
+<div class="card">
+<h2>MATCH CENTER</h2>
+<p>Play your next league match. Results are simulated using your team rating.</p>
+<div id="matchCenter"></div>
+<button onclick="playMatch()">PLAY MATCH</button>
+<p id="matchMessage"></p>
+</div>
+<div class="card">
+<h2>Recent Results</h2>
+<div id="results"></div>
+</div>
+<div class="card">
+<h2>League Table</h2>
+<div id="leagueTable"></div>
+</div>
+<div class="card">
+<h2>Player Statistics</h2>
+<div id="playerStats"></div>
+</div>
 </div>
 
-<div id="academy" class="tab">
-<div class="card"><h2>Youth Academy</h2><p>Coming soon.</p></div>
+<div id="transfers" class="tab hidden">
+<div class="card"><h2>Transfer Market</h2><p>Transfer market development is coming soon.</p></div>
+</div>
+
+<div id="academy" class="tab hidden">
+<div class="card"><h2>Youth Academy</h2><p>Youth academy development is coming soon.</p></div>
 </div>
 
 <button class="secondary" onclick="backHome()">BACK TO CLUB SELECTION</button>
@@ -208,35 +339,24 @@ nav button{white-space:nowrap}
 
 <script>
 const clubs={
-Spain:["Barcelona","Real Madrid","Atletico Madrid","Sevilla","Valencia","Real Sociedad"],
-England:["Manchester City","Manchester United","Liverpool","Arsenal","Chelsea","Tottenham"],
-Germany:["Bayern Munich","Borussia Dortmund","RB Leipzig","Bayer Leverkusen"],
-Italy:["Inter Milan","AC Milan","Juventus","Napoli","Roma"],
-France:["Paris Saint-Germain","Marseille","Lyon","Monaco"]
+Spain:["Barcelona","Real Madrid","Atletico Madrid","Sevilla","Valencia","Real Sociedad","Villarreal","Athletic Bilbao"],
+England:["Manchester City","Manchester United","Liverpool","Arsenal","Chelsea","Tottenham","Newcastle United","Aston Villa"],
+Germany:["Bayern Munich","Borussia Dortmund","RB Leipzig","Bayer Leverkusen","Stuttgart"],
+Italy:["Inter Milan","AC Milan","Juventus","Napoli","Roma","Lazio"],
+France:["Paris Saint-Germain","Marseille","Lyon","Monaco","Lille"]
 };
 
-/* Official FC Barcelona player photos */
 const playerPhotos={
 "Joan García":"https://www.fcbarcelona.com/photo-resources/2026/07/21/5d0c5826-9ec5-4625-a97b-3b8d0ca98418/01-Joan_Garcia.png?height=790&width=670",
-
 "João Cancelo":"https://www.fcbarcelona.com/photo-resources/2026/08/19/7d3f20c8-d349-42e6-90a5-d70a6a2f86b7/00-Cancelo.png?height=790&width=670",
-
 "Pau Cubarsí":"https://www.fcbarcelona.com/photo-resources/2026/07/21/a321161c-87a5-4d8d-b05e-b547e0080e98/02-Cubarsi.png?height=790&width=670",
-
 "Jules Koundé":"https://www.fcbarcelona.com/photo-resources/2026/07/21/6e0885df-ddcc-44c7-b55f-a421606004c0/23-Kounde.png?height=790&width=670",
-
 "Alejandro Balde":"https://www.fcbarcelona.com/photo-resources/2026/07/21/e6ad1688-d559-4991-a2a0-3c7fbfd1b14f/03-Balde.png?height=790&width=670",
-
 "Pedri":"https://www.fcbarcelona.com/photo-resources/2026/07/21/02b47c57-d919-47b7-8e39-d744c58c68dd/08-Pedri.png?height=790&width=670",
-
 "Gavi":"https://www.fcbarcelona.com/photo-resources/2026/07/21/816698d5-5eb4-4947-bcdb-a3771ce71398/06-Gavi.png?height=790&width=670",
-
 "Frenkie de Jong":"https://www.fcbarcelona.com/photo-resources/2026/07/21/3aefde9a-9253-46c3-a88a-c4cb647a4869/21-De_Jong.png?height=790&width=670",
-
 "Raphinha":"https://www.fcbarcelona.com/photo-resources/2026/07/21/799c94b4-fa33-4472-bb6b-4b537baf219c/11-Raphinha.png?height=790&width=670",
-
 "Gabriel Jesus":"https://www.fcbarcelona.com/photo-resources/2026/09/03/f8d954d8-3841-490c-9db0-1614995ec68d/09-Gabriel_Jesus.png?height=790&width=670",
-
 "Lamine Yamal":"https://www.fcbarcelona.com/photo-resources/2026/07/21/d8c055dc-f43e-4125-9789-34c86fb99a1c/10-Lamine.png?height=790&width=670"
 };
 
@@ -270,7 +390,7 @@ const barcaPlayers=[
 ["Hamza Abdelkarim","ST",68,29]
 ];
 
-let selectedClub=null,career=null;
+let selectedClub=null,career=null,dragging=null;
 
 function badge(){
 return `<svg viewBox="0 0 100 115" width="65" height="65">
@@ -285,14 +405,12 @@ return `<svg viewBox="0 0 100 115" width="65" height="65">
 function showTeams(){
 let league=document.getElementById("league").value;
 let box=document.getElementById("teams");
-box.innerHTML="";
-selectedClub=null;
+box.innerHTML="";selectedClub=null;
 document.getElementById("selection").classList.add("hidden");
-
 clubs[league].forEach(name=>{
 let card=document.createElement("div");
 card.className="team";
-card.innerHTML=(name==="Barcelona"?badge():name.slice(0,3).toUpperCase())+"<br><b>"+name+"</b>";
+card.innerHTML=(name==="Barcelona"?badge():`<div class="badge" style="display:grid;place-items:center;font-weight:bold;color:#5bd7ff">${name.slice(0,3).toUpperCase()}</div>`)+`<br><b>${name}</b>`;
 card.onclick=()=>{
 document.querySelectorAll(".team").forEach(x=>x.classList.remove("selected"));
 card.classList.add("selected");
@@ -314,7 +432,6 @@ startCareer();
 
 function startCareer(){
 if(!selectedClub)return;
-
 let squad=selectedClub.name==="Barcelona"
 ?barcaPlayers.map(p=>({name:p[0],position:p[1],rating:p[2],number:p[3]}))
 :Array.from({length:11},(_,i)=>({
@@ -324,25 +441,31 @@ rating:75,number:i+1
 }));
 
 career={
-club:selectedClub,
-players:squad,
-captain:"Pedri",
-formation:"4-3-3",
-style:"Possession",
+club:selectedClub,players:squad,captain:"Pedri",
+formation:"4-3-3",style:"Possession",
 starters:selectedClub.name==="Barcelona"
 ?["Joan García","João Cancelo","Pau Cubarsí","Jules Koundé","Alejandro Balde","Pedri","Gavi","Frenkie de Jong","Raphinha","Gabriel Jesus","Lamine Yamal"]
 :squad.map(p=>p.name),
-positions:{}
+positions:{},played:0,wins:0,draws:0,losses:0,
+goalsFor:0,goalsAgainst:0,points:0,results:[],
+playerStats:{}
 };
-
-setDefaultPositions();
-saveCareer();
-showDashboard();
+career.players.forEach(p=>career.playerStats[p.name]={goals:0,assists:0,appearances:0,rating:6.5});
+setDefaultPositions();initLeague();saveCareer();showDashboard();
 }
 
 function setDefaultPositions(){
 let spots=[[50,91],[25,75],[42,78],[58,78],[75,75],[35,55],[50,61],[65,55],[20,27],[50,18],[80,27]];
 career.starters.forEach((name,i)=>{career.positions[name]=spots[i]||[50,50]});
+}
+
+function initLeague(){
+if(career.leagueTable&&career.leagueTable.length)return;
+let names=clubs[career.club.league]||[career.club.name,"City FC","United FC","Athletic FC","Sporting FC","Rovers FC","Dynamo FC","Olympic FC"];
+if(!names.includes(career.club.name))names=[career.club.name,...names];
+career.leagueTable=names.map(name=>({
+name,played:0,wins:0,draws:0,losses:0,gf:0,ga:0,points:0
+}));
 }
 
 function saveCareer(){
@@ -359,7 +482,19 @@ try{
 career=JSON.parse(saved);
 career.positions=career.positions||{};
 career.starters=career.starters||career.players.slice(0,11).map(p=>p.name);
-showDashboard();
+career.played=career.played||0;
+career.wins=career.wins||0;
+career.draws=career.draws||0;
+career.losses=career.losses||0;
+career.goalsFor=career.goalsFor||0;
+career.goalsAgainst=career.goalsAgainst||0;
+career.points=career.points||0;
+career.results=career.results||[];
+career.playerStats=career.playerStats||{};
+career.players.forEach(p=>{
+career.playerStats[p.name]=career.playerStats[p.name]||{goals:0,assists:0,appearances:0,rating:6.5};
+});
+initLeague();saveCareer();showDashboard();
 }catch(e){alert("Could not load career");}
 }
 
@@ -373,19 +508,16 @@ document.getElementById("squadCount").textContent=career.players.length;
 document.getElementById("clubBadge").innerHTML=career.club.name==="Barcelona"?badge():"FCM";
 document.getElementById("formation").value=career.formation||"4-3-3";
 document.getElementById("style").value=career.style||"Possession";
-renderPlayers();
-renderPitch();
+renderPlayers();renderPitch();updateOverview();renderMatchCenter();
 openTabByName("overview");
 }
 
 function renderPlayers(){
-let box=document.getElementById("players");
-box.innerHTML="";
+let box=document.getElementById("players");box.innerHTML="";
 career.players.forEach((p,i)=>{
-let row=document.createElement("div");
-row.className="player";
+let row=document.createElement("div");row.className="player";
 let info=document.createElement("div");
-info.innerHTML="<b>"+p.name+"</b><br><small>"+p.position+" · Rating "+p.rating+"</small>";
+info.innerHTML=`<b>${p.name}</b><br><small>${p.position} · Rating ${p.rating}</small>`;
 let controls=document.createElement("div");
 let number=document.createElement("input");
 number.type="number";number.min=1;number.max=99;
@@ -397,163 +529,4 @@ alert("Invalid shirt number");number.value=p.number;return;
 }
 p.number=v;saveCareer();renderPitch();
 };
-let captain=document.createElement("button");
-captain.className="secondary";
-captain.textContent=career.captain===p.name?"Captain ✓":"Make Captain";
-captain.onclick=()=>{
-career.captain=p.name;saveCareer();renderPlayers();renderPitch();
-};
-controls.append(number,captain);
-row.append(info,controls);
-box.appendChild(row);
-});
-}
-
-function renderPitch(){
-let box=document.getElementById("pitchPlayers");
-let bench=document.getElementById("bench");
-box.innerHTML="";
-bench.innerHTML="";
-
-career.starters.forEach(name=>{
-let p=career.players.find(x=>x.name===name);
-if(!p)return;
-if(!career.positions[name])career.positions[name]=[50,50];
-
-let pos=career.positions[name];
-let token=document.createElement("div");
-token.className="pitch-player"+(career.captain===name?" captain":"");
-token.style.left=pos[0]+"%";
-token.style.top=pos[1]+"%";
-token.dataset.name=name;
-
-let photo=playerPhotos[name];
-
-if(photo){
-let img=document.createElement("img");
-img.src=photo;
-img.alt=name;
-img.onerror=()=>{
-img.remove();
-let fallback=document.createElement("div");
-fallback.className="fallback";
-fallback.textContent=name.split(" ").map(x=>x[0]).join("").slice(0,2);
-token.insertBefore(fallback,token.firstChild);
-};
-token.appendChild(img);
-}else{
-let fallback=document.createElement("div");
-fallback.className="fallback";
-fallback.textContent=name.split(" ").map(x=>x[0]).join("").slice(0,2);
-token.appendChild(fallback);
-}
-
-let number=document.createElement("div");
-number.className="shirt-number";
-number.textContent=p.number+" · "+name.split(" ").slice(-1)[0];
-token.appendChild(number);
-
-token.addEventListener("click",()=>showPlayerInfo(name));
-box.appendChild(token);
-});
-
-career.players.filter(p=>!career.starters.includes(p.name)).forEach(p=>{
-let row=document.createElement("div");
-row.className="sub-player";
-row.innerHTML="<span>"+p.number+" · "+p.name+"</span>";
-let btn=document.createElement("button");
-btn.textContent="Add";
-btn.onclick=()=>{
-let old=career.starters.pop();
-delete career.positions[old];
-career.starters.push(p.name);
-career.positions[p.name]=[50,50];
-saveCareer();
-renderPitch();
-};
-row.appendChild(btn);
-bench.appendChild(row);
-});
-}
-
-function showPlayerInfo(name){
-let p=career.players.find(x=>x.name===name);
-if(!p)return;
-document.getElementById("playerInfo").innerHTML=
-"<b>"+p.name+"</b><br>"+
-"Position: "+p.position+
-"<br>Rating: "+p.rating+
-"<br>Shirt: "+p.number+
-"<br>Captain: "+(career.captain===name?"Yes":"No");
-}
-
-let dragging=null;
-const pitch=document.getElementById("pitch");
-
-pitch.addEventListener("pointerdown",e=>{
-let token=e.target.closest(".pitch-player");
-if(!token)return;
-dragging=token.dataset.name;
-token.classList.add("selected");
-pitch.setPointerCapture(e.pointerId);
-});
-
-pitch.addEventListener("pointermove",e=>{
-if(!dragging)return;
-let r=pitch.getBoundingClientRect();
-let x=Math.max(5,Math.min(95,(e.clientX-r.left)/r.width*100));
-let y=Math.max(5,Math.min(95,(e.clientY-r.top)/r.height*100));
-career.positions[dragging]=[x,y];
-let token=[...document.querySelectorAll(".pitch-player")].find(t=>t.dataset.name===dragging);
-if(token){
-token.style.left=x+"%";
-token.style.top=y+"%";
-}
-});
-
-pitch.addEventListener("pointerup",()=>{
-if(dragging){
-saveCareer();
-document.querySelectorAll(".pitch-player").forEach(t=>t.classList.remove("selected"));
-dragging=null;
-}
-});
-
-pitch.addEventListener("pointercancel",()=>{
-if(dragging){saveCareer();dragging=null}
-});
-
-function changeFormation(){
-career.formation=document.getElementById("formation").value;
-setDefaultPositions();
-saveCareer();
-renderPitch();
-document.getElementById("tacticsMessage").textContent="Formation saved.";
-}
-
-function saveTactics(){
-career.style=document.getElementById("style").value;
-saveCareer();
-}
-
-function openTab(name,button){
-document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
-document.getElementById(name).classList.remove("hidden");
-document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
-if(button)button.classList.add("active");
-}
-
-function openTabByName(name){
-let btn=[...document.querySelectorAll("nav button")].find(x=>x.getAttribute("onclick").includes("'"+name+"'"));
-openTab(name,btn);
-}
-
-function backHome(){
-document.getElementById("dashboard").classList.add("hidden");
-document.getElementById("home").classList.remove("hidden");
-}
-
-showTeams();
-</script>
-</body>
- </html>
+let captain=document.createElement("butto
