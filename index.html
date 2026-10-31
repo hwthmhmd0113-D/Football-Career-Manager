@@ -759,4 +759,17 @@ function renderTable(){
    <td>${t.wins}</td>
    <td>${t.draws}</td>
    <td>${t.losses}</td>
-   <td><strong>
+   <td><strong>${t.points}</strong></td>
+</tr>
+`).join("");
+}
+
+function backToMenu(){
+ saveGame();
+ document.getElementById("gameScreen").classList.add("hidden");
+ document.getElementById("startScreen").classList.remove("hidden");
+}
+
+</script>
+</body>
+</html>
