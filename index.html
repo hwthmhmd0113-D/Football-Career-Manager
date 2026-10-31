@@ -1375,47 +1375,38 @@ const clubs = [
 "ليغانيس","لاس بالماس","بلد الوليد","ليفانتي"
 ];
 
-// FCM — HWTA EDITION
-// Dynamic Barcelona Squad
+const barcaPlayers = [
+    {name:"خوان غارسيا",pos:"حارس"},
+    {name:"فويتشيك تشيزني",pos:"حارس"},
+    {name:"دومينيك ليفاكوفيتش",pos:"حارس"},
 
-let barcaPlayers = [];
+    {name:"جواو كانسيلو",pos:"دفاع"},
+    {name:"أليخاندرو بالدي",pos:"دفاع"},
+    {name:"باو كوبارسي",pos:"دفاع"},
+    {name:"إريك غارسيا",pos:"دفاع"},
+    {name:"أندرياس كريستنسن",pos:"دفاع"},
+    {name:"جيرارد مارتين",pos:"دفاع"},
+    {name:"جول كوندي",pos:"دفاع"},
+    {name:"تشافي إسبارت",pos:"دفاع"},
+    {name:"برايان فاريناس",pos:"وسط"},
 
-function loadCurrentBarcaSquad() {
-    const possibleLists = [
-        window.squad,
-        window.players,
-        window.teamPlayers,
-        window.barcelonaPlayers,
-        window.barcaSquad,
-        window.team
-    ];
+    {name:"غافي",pos:"وسط"},
+    {name:"فيرمين لوبيز",pos:"وسط"},
+    {name:"بيدري",pos:"وسط"},
+    {name:"رودري",pos:"وسط"},
+    {name:"داني أولمو",pos:"وسط"},
+    {name:"فرينكي دي يونغ",pos:"وسط"},
+    {name:"مارك بيرنال",pos:"وسط"},
 
-    let source = possibleLists.find(list =>
-        Array.isArray(list) &&
-        list.length > 0 &&
-        list.some(p => p && (p.name || p.playerName))
-    );
-
-    if (!source) {
-        console.error("لم يتم العثور على قائمة الفريق الأصلية.");
-        return;
-    }
-
-    barcaPlayers = source.map(p => ({
-        name: p.name || p.playerName,
-        pos: p.pos || p.position || "وسط"
-    }));
-}
-
-loadCurrentBarcaSquad();
-
-let match = {};
-let timer = null;
-let speed = 1;
-
-let match = {};
-let timer = null;
-let speed = 1;
+    {name:"غابرييل جيسوس",pos:"هجوم"},
+    {name:"لامين يامال",pos:"هجوم"},
+    {name:"رافينيا",pos:"هجوم"},
+    {name:"كريم أديمي",pos:"هجوم"},
+    {name:"أنتوني غوردون",pos:"هجوم"},
+    {name:"روني بردغجي",pos:"هجوم"},
+    {name:"جيسي بيسيوو",pos:"هجوم"},
+    {name:"حمزة عبد الكريم",pos:"هجوم"}
+];
 
 function resetMatch(){
     match = {
