@@ -941,6 +941,235 @@ async function loadPitchPhoto(slot,player){
  if(!url||!slot.isConnected)return;
 
  const img=document.createElement("img");
-
  img.className="slot-photo";
- img.src=
+ img.src=url;
+ img.alt=player.name;
+
+ img.onerror=()=>img.remove();
+
+ const shirt=slot.querySelector(".shirt");
+ if(shirt){
+  shirt.replaceWith(img);
+ }
+}
+
+/* DRAG PLAYERS */
+
+function makeDraggable(slot,pitch,number){
+
+ let dragging=false;
+
+ slot.addEventListener("pointerdown",e=>{
+  dragging=true;
+  slot.classList.add("dragging");
+
+  slot.setPointerCapture(e.pointerId);
+
+  e.preventDefault();
+ });
+
+ slot.addEventListener("pointermove",e=>{
+  if(!dragging)return;
+
+  const rect=pitch.getBoundingClientRect();
+
+  let x=((e.clientX-rect.left)/rect.width)*100;
+  let y=((e.clientY-rect.top)/rect.height)*100;
+
+  x=Math.max(5,Math.min(95,x));
+  y=Math.max(5,Math.min(95,y));
+
+  slot.style.left=x+"%";
+  slot.style.top=y+"%";
+
+  career.positions[number]=[x,y];
+ });
+
+ function stopDragging(){
+  if(!dragging)return;
+
+  dragging=false;
+  slot.classList.remove("dragging");
+
+  saveCareer();
+ }
+
+ slot.addEventListener("pointerup",stopDragging);
+ slot.addEventListener("pointercancel",stopDragging);
+}
+
+/* HOME DASHBOARD */
+
+function renderHome(){
+
+ $("played").textContent=career.played;
+ $("wins").textContent=career.wins;
+ $("points").textContent=career.points;
+
+ $("formationLabel").textContent=career.formation;
+
+ $("homeFormation").textContent=
+  career.lineup.map(number=>{
+   const p=getPlayer(number);
+   return p?p.name:"";
+  }).filter(Boolean).join(" · ");
+
+ $("teamChemistry").textContent=
+  getTeamChemistry()+"%";
+}
+
+/* CHEMISTRY DISPLAY */
+
+function renderChemistry(){
+
+ const container=$("chemistryPairs");
+ container.innerHTML="";
+
+ chemistryLinks.forEach(link=>{
+
+  const [a,b,value]=link;
+
+  if(!career.lineup.includes(a)||
+     !career.lineup.includes(b))return;
+
+  const p1=getPlayer(a);
+  const p2=getPlayer(b);
+
+  if(!p1||!p2)return;
+
+  const item=document.createElement("div");
+
+  item.className="chemistry-pair";
+
+  item.innerHTML=`
+   <span>${p1.name} + ${p2.name}</span>
+   <strong>+${value} OVR</strong>
+  `;
+
+  container.appendChild(item);
+ });
+
+ if(!container.children.length){
+  container.innerHTML=
+   '<p class="muted">No active chemistry links.</p>';
+ }
+}
+
+/* RENDER EVERYTHING */
+
+function renderAll(){
+
+ $("formation").value=career.formation;
+ $("style").value=career.style;
+ $("defense").value=career.defense;
+ $("pressure").value=career.pressure;
+
+ renderPlayers();
+ renderBench();
+ renderLineup();
+ renderPitch();
+ renderChemistry();
+ renderHome();
+}
+
+/* NAVIGATION */
+
+document.querySelectorAll("nav button").forEach(button=>{
+
+ button.addEventListener("click",()=>{
+
+  document.querySelectorAll("nav button")
+   .forEach(b=>b.classList.remove("active"));
+
+  document.querySelectorAll(".tabs")
+   .forEach(section=>section.classList.remove("active"));
+
+  button.classList.add("active");
+
+  const target=$(button.dataset.tab);
+
+  if(target){
+   target.classList.add("active");
+  }
+
+  if(button.dataset.tab==="tactics"){
+   renderPitch();
+  }
+
+ });
+});
+
+/* FORMATION SETTINGS */
+
+$("formation").addEventListener("change",e=>{
+
+ career.formation=e.target.value;
+ career.positions={};
+
+ saveCareer();
+ renderAll();
+
+});
+
+/* PLAYING STYLE */
+
+$("style").addEventListener("change",e=>{
+ career.style=e.target.value;
+ saveCareer();
+});
+
+/* DEFENSIVE LINE */
+
+$("defense").addEventListener("change",e=>{
+ career.defense=e.target.value;
+ saveCareer();
+});
+
+/* TEAM PRESSURE */
+
+$("pressure").addEventListener("change",e=>{
+ career.pressure=e.target.value;
+ saveCareer();
+});
+
+/* RESET POSITIONS */
+
+$("resetPositions").addEventListener("click",()=>{
+
+ career.positions={};
+
+ saveCareer();
+ renderPitch();
+
+});
+
+/* RESET CAREER */
+
+$("resetBtn").addEventListener("click",()=>{
+
+ const confirmed=confirm(
+  "Are you sure you want to reset your career?"
+ );
+
+ if(!confirmed)return;
+
+ career={
+  ...defaultCareer,
+  lineup:[...defaultLineup],
+  positions:{}
+ };
+
+ saveCareer();
+ renderAll();
+
+});
+
+/* START GAME */
+
+loadCareer();
+renderAll();
+
+</script>
+
+</body>
+</html>
