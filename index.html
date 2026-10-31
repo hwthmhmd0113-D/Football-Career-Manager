@@ -1,154 +1,281 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FCM - Football Career Manager</title>
+
 <style>
-:root{--bg:#080e1b;--panel:#111c30;--panel2:#17243b;--gold:#e8bd58;--text:#f4f6fb;--muted:#9aa9c0;--green:#37c98b}
+:root{
+ --bg:#080e1b;
+ --panel:#111c30;
+ --panel2:#1b2941;
+ --gold:#e8bd58;
+ --text:#f4f6fb;
+ --muted:#9aa9c0;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{padding:18px 5%;background:#0d1728;border-bottom:1px solid #26344c;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:25px;font-weight:900;color:var(--gold)}
-.logo span{color:white}
-.container{max-width:1100px;margin:30px auto;padding:0 16px}
-h1{font-size:28px}
-h2{font-size:20px}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,sans-serif
+}
+header{
+ background:#0d1728;padding:15px;
+ display:flex;justify-content:space-between;
+ align-items:center;border-bottom:1px solid #293951
+}
+.logo{font-size:23px;font-weight:bold;color:var(--gold)}
+.container{max-width:1100px;margin:25px auto;padding:0 14px}
+.card{
+ background:var(--panel);border:1px solid #293951;
+ border-radius:14px;padding:17px;margin-bottom:15px
+}
+h1{font-size:25px}
+h2{font-size:19px}
 p{color:var(--muted)}
 button,select,input{font:inherit}
-button{border:0;border-radius:9px;padding:12px 17px;background:var(--gold);color:#101827;font-weight:bold;cursor:pointer}
-button:hover{filter:brightness(1.1)}
-.secondary{background:#263750;color:white}
-.card{background:var(--panel);border:1px solid #263750;border-radius:14px;padding:18px;margin-bottom:16px}
-input,select{background:#0b1424;color:white;border:1px solid #34445e;border-radius:8px;padding:12px;width:100%;margin:7px 0 14px}
-label{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.team{background:var(--panel2);padding:17px;border:1px solid #34445e;border-radius:12px;text-align:center;cursor:pointer}
-.team.selected{border:2px solid var(--gold);background:#26334a}
-.badge{width:55px;height:55px;border-radius:50%;background:#263750;color:var(--gold);display:grid;place-items:center;margin:auto auto 12px;font-weight:900}
+button{
+ border:0;border-radius:8px;padding:11px 15px;
+ background:var(--gold);color:#101827;
+ font-weight:bold;cursor:pointer
+}
+.secondary{background:#293951;color:white}
+input,select{
+ width:100%;padding:11px;background:#0b1424;
+ color:white;border:1px solid #34445e;
+ border-radius:8px;margin:7px 0 13px
+}
 .hidden{display:none!important}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{background:var(--panel2);padding:17px;border-radius:12px}
-.stat strong{display:block;font-size:24px;color:var(--gold);margin-top:8px}
-nav{display:flex;gap:8px;overflow:auto;margin:20px 0}
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+ gap:10px
+}
+.team{
+ background:var(--panel2);padding:15px;
+ border-radius:12px;text-align:center;cursor:pointer;
+ border:2px solid transparent
+}
+.team.selected{border-color:var(--gold)}
+.badge{width:65px;height:65px;margin:auto auto 10px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:var(--panel2);padding:14px;border-radius:10px}
+.stat strong{display:block;color:var(--gold);font-size:22px;margin-top:7px}
+nav{display:flex;gap:8px;overflow:auto;margin:18px 0}
 nav button{white-space:nowrap}
 nav button.active{background:var(--gold)}
-table{width:100%;border-collapse:collapse;min-width:460px}
-th,td{text-align:left;padding:12px;border-bottom:1px solid #293951}
-th{color:var(--gold)}
-.table-wrap{overflow-x:auto}
-.player{background:var(--panel2);border-radius:10px;padding:12px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.player{
+ background:var(--panel2);padding:11px;border-radius:10px;
+ margin-bottom:9px;display:flex;align-items:center;
+ justify-content:space-between;gap:8px;flex-wrap:wrap
+}
 .player small{color:var(--muted)}
-.player button{padding:8px 11px}
-.notice{color:var(--green);margin-top:12px}
-@media(max-width:500px){header{padding:15px}.logo{font-size:21px}.container{margin:20px auto}h1{font-size:23px}}
+.player button{padding:8px 10px}
+.notice{color:#54d99a}
+.pitch{
+ position:relative;width:100%;max-width:520px;
+ margin:15px auto;background:#267b48;
+ aspect-ratio:600/800;border:4px solid white;
+ border-radius:5px;overflow:hidden;
+ touch-action:none;user-select:none
+}
+.pitch svg{
+ position:absolute;inset:0;width:100%;height:100%;
+ pointer-events:none
+}
+.pitch-player{
+ position:absolute;transform:translate(-50%,-50%);
+ width:48px;height:48px;border-radius:50%;
+ background:#a71940;border:2px solid white;
+ display:flex;flex-direction:column;align-items:center;
+ justify-content:center;color:white;font-size:11px;
+ font-weight:bold;text-align:center;
+ box-shadow:0 2px 6px #0009;touch-action:none;
+ cursor:grab;z-index:2
+}
+.pitch-player span{font-size:10px}
+.pitch-player.selected{border:3px solid var(--gold);z-index:5}
+.pitch-player.captain:after{
+ content:"C";position:absolute;right:-7px;top:-7px;
+ background:var(--gold);color:#111;border-radius:50%;
+ width:17px;height:17px;font-size:10px;
+ display:grid;place-items:center
+}
+.player-list{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+ gap:8px
+}
+.sub-player{
+ background:var(--panel2);padding:10px;border-radius:9px;
+ display:flex;justify-content:space-between;align-items:center;
+ gap:5px;font-size:13px
+}
+.sub-player button{padding:7px;font-size:11px}
+@media(max-width:500px){
+ .container{margin:15px auto}
+ h1{font-size:22px}
+ .pitch-player{width:40px;height:40px;font-size:10px}
+ .pitch-player span{font-size:9px}
+}
 </style>
 </head>
-<body>
-<header>
- <div class="logo">FCM <span>CAREER MANAGER</span></div>
- <div style="color:var(--muted);font-size:12px">BY HWTA</div>
-</header><div class="container"><section id="home">
- <h1>Build Your Football Legacy</h1>
- <p>Choose your club and begin your managerial journey.</p> <div class="card">
-  <h2>Select Your League</h2>
-  <select id="league" onchange="showTeams()">
-   <option value="Spain">Spain</option>
-   <option value="England">England</option>
-   <option value="Germany">Germany</option>
-   <option value="Italy">Italy</option>
-   <option value="France">France</option>
-  </select>
-  <div class="grid" id="teams"></div>
-  <div id="selection" class="hidden">
-   <p id="selectedName"></p>
-   <button onclick="startCareer()">START CAREER</button>
-  </div>
- </div> <div class="card">
-  <h2>Create Your Own Club</h2>
-  <label>Club Name</label>
-  <input id="customName" placeholder="Enter club name">
-  <label>Country</label>
-  <input id="customCountry" placeholder="Enter country">
-  <label>Starting Budget (€)</label>
-  <select id="customBudget">
-   <option value="10000000">€10 Million</option>
-   <option value="50000000">€50 Million</option>
-   <option value="100000000">€100 Million</option>
-   <option value="200000000">€200 Million</option>
-  </select>
-  <button onclick="createClub()">CREATE CLUB & START</button>
- </div>
- <button class="secondary" onclick="continueCareer()">CONTINUE CAREER</button>
- <p id="homeMessage"></p>
-</section><section id="dashboard" class="hidden">
- <div class="card">
-  <p>YOUR CLUB</p>
-  <h1 id="clubTitle">Club Name</h1>
-  <p id="clubLeague">League</p>
-  <div class="stats">
-   <div class="stat">Club Budget<strong id="budget">€50M</strong></div>
-   <div class="stat">Season<strong>2026/27</strong></div>
-   <div class="stat">Squad Size<strong id="squadCount">11</strong></div>
-   <div class="stat">Club Rating<strong>75</strong></div>
-  </div>
- </div> <nav>
-  <button class="active" onclick="openTab('overview',this)">Overview</button>
-  <button onclick="openTab('squad',this)">Squad</button>
-  <button onclick="openTab('tactics',this)">Tactics</button>
-  <button onclick="openTab('transfers',this)">Transfers</button>
-  <button onclick="openTab('academy',this)">Academy</button>
- </nav> <div id="overview" class="tab">
-  <div class="card">
-   <h2>Club Overview</h2>
-   <p>Welcome to your new managerial career.</p>
-   <p>Your objective: build a strong squad and win trophies.</p>
-   <div class="actions">
-    <button onclick="openTabByName('squad')">Manage Squad</button>
-    <button class="secondary" onclick="openTabByName('tactics')">Team Tactics</button>
-   </div>
-  </div>
-  <div class="card">
-   <h2>Next Match</h2>
-   <p>Your first fixture will be generated in a future update.</p>
-  </div>
- </div> <div id="squad" class="tab hidden">
-  <div class="card">
-   <h2>First Team Squad</h2>
-   <p>Manage shirt numbers and appoint your captain.</p>
-   <div id="players"></div>
-  </div>
- </div> <div id="tactics" class="tab hidden">
-  <div class="card">
-   <h2>Team Tactics</h2>
-   <label>Formation</label>
-   <select id="formation" onchange="saveTactics()">
-    <option>4-3-3</option><option>4-2-3-1</option>
-    <option>4-4-2</option><option>3-4-3</option>
-    <option>4-1-4-1</option>
-   </select>
-   <label>Playing Style</label>
-   <select id="style" onchange="saveTactics()">
-    <option>Possession</option><option>Counter Attack</option>
-    <option>High Press</option><option>Balanced</option>
-   </select>
-   <p id="tacticsMessage" class="notice"></p>
-  </div>
- </div> <div id="transfers" class="tab hidden">
-  <div class="card">
-   <h2>Transfer Market</h2>
-   <p>The transfer market will be developed in the next update.</p>
-  </div>
- </div> <div id="academy" class="tab hidden">
-  <div class="card">
-   <h2>Youth Academy</h2>
-   <p>Your academy will produce young talents in a future update.</p>
-  </div>
- </div><button class="secondary" onclick="backHome()">BACK TO CLUB SELECTION</button>
 
- <p id="saveMessage" class="notice">Career is saved automatically.</p>
+<body>
+
+<header>
+ <div class="logo">FCM <span style="color:white">CAREER</span></div>
+ <div style="font-size:12px;color:#aaa">BY HWTA</div>
+</header>
+
+<div class="container">
+
+<section id="home">
+<h1>Build Your Football Legacy</h1>
+<p>Choose your club and begin your career.</p>
+
+<div class="card">
+<h2>Select League</h2>
+<select id="league" onchange="showTeams()">
+<option>Spain</option>
+<option>England</option>
+<option>Germany</option>
+<option>Italy</option>
+<option>France</option>
+</select>
+<div class="grid" id="teams"></div>
+<div id="selection" class="hidden">
+<p id="selectedName"></p>
+<button onclick="startCareer()">START CAREER</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Create Your Own Club</h2>
+<input id="customName" placeholder="Club name">
+<input id="customCountry" placeholder="Country">
+<select id="customBudget">
+<option value="10000000">€10 Million</option>
+<option value="50000000">€50 Million</option>
+<option value="100000000">€100 Million</option>
+</select>
+<button onclick="createClub()">CREATE CLUB</button>
+</div>
+
+<button class="secondary" onclick="continueCareer()">CONTINUE CAREER</button>
+<p id="homeMessage"></p>
 </section>
-</div><script>
+
+<section id="dashboard" class="hidden">
+
+<div class="card">
+<div style="display:flex;align-items:center;gap:15px">
+<div id="clubBadge" class="badge"></div>
+<div>
+<p>YOUR CLUB</p>
+<h1 id="clubTitle"></h1>
+<p id="clubLeague"></p>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat">Budget<strong id="budget"></strong></div>
+<div class="stat">Season<strong>2026/27</strong></div>
+<div class="stat">Squad<strong id="squadCount"></strong></div>
+<div class="stat">Club Rating<strong>85</strong></div>
+</div>
+</div>
+
+<nav>
+<button class="active" onclick="openTab('overview',this)">Overview</button>
+<button onclick="openTab('squad',this)">Squad</button>
+<button onclick="openTab('tactics',this)">Tactics</button>
+<button onclick="openTab('transfers',this)">Transfers</button>
+<button onclick="openTab('academy',this)">Academy</button>
+</nav>
+
+<div id="overview" class="tab">
+<div class="card">
+<h2>Club Overview</h2>
+<p>Welcome to your managerial career.</p>
+<p>Build your team and win trophies.</p>
+<button onclick="openTabByName('squad')">Manage Squad</button>
+</div>
+</div>
+
+<div id="squad" class="tab hidden">
+<div class="card">
+<h2>First Team Squad</h2>
+<p>Change shirt numbers and appoint your captain.</p>
+<div id="players"></div>
+</div>
+</div>
+
+<div id="tactics" class="tab hidden">
+<div class="card">
+<h2>Team Tactics</h2>
+
+<label>Formation</label>
+<select id="formation" onchange="changeFormation()">
+<option>4-3-3</option>
+<option>4-2-3-1</option>
+<option>4-4-2</option>
+<option>3-4-3</option>
+</select>
+
+<label>Playing Style</label>
+<select id="style" onchange="saveTactics()">
+<option>Possession</option>
+<option>Counter Attack</option>
+<option>High Press</option>
+<option>Balanced</option>
+</select>
+
+<p>Drag players on the pitch to change their positions.</p>
+<div class="pitch" id="pitch">
+<svg viewBox="0 0 600 800" preserveAspectRatio="none">
+<rect x="10" y="10" width="580" height="780" fill="none" stroke="white" stroke-width="3"/>
+<line x1="10" y1="400" x2="590" y2="400" stroke="white" stroke-width="3"/>
+<circle cx="300" cy="400" r="75" fill="none" stroke="white" stroke-width="3"/>
+<circle cx="300" cy="400" r="4" fill="white"/>
+<rect x="150" y="10" width="300" height="120" fill="none" stroke="white" stroke-width="3"/>
+<rect x="220" y="10" width="160" height="45" fill="none" stroke="white" stroke-width="3"/>
+<rect x="150" y="670" width="300" height="120" fill="none" stroke="white" stroke-width="3"/>
+<rect x="220" y="745" width="160" height="45" fill="none" stroke="white" stroke-width="3"/>
+<circle cx="300" cy="105" r="4" fill="white"/>
+<circle cx="300" cy="695" r="4" fill="white"/>
+</svg>
+<div id="pitchPlayers"></div>
+</div>
+
+<p id="tacticsMessage" class="notice"></p>
+</div>
+
+<div class="card">
+<h2>Players outside the starting eleven</h2>
+<div id="bench" class="player-list"></div>
+</div>
+</div>
+
+<div id="transfers" class="tab hidden">
+<div class="card">
+<h2>Transfer Market</h2>
+<p>Transfer system will be added in a future update.</p>
+</div>
+</div>
+
+<div id="academy" class="tab hidden">
+<div class="card">
+<h2>Youth Academy</h2>
+<p>Youth development will be added in a future update.</p>
+</div>
+</div>
+
+<button class="secondary" onclick="backHome()">BACK TO CLUB SELECTION</button>
+<p class="notice">Career is saved automatically.</p>
+</section>
+</div>
+
+<script>
+
 const clubs={
  Spain:["Barcelona","Real Madrid","Atletico Madrid","Sevilla","Valencia","Real Sociedad"],
  England:["Manchester City","Manchester United","Liverpool","Arsenal","Chelsea","Tottenham"],
@@ -157,168 +284,291 @@ const clubs={
  France:["Paris Saint-Germain","Marseille","Lyon","Monaco"]
 };
 
+const barcaPlayers=[
+["Joan García","GK",82,1],
+["João Cancelo","RB",83,2],
+["Alejandro Balde","LB",82,3],
+["Brian Fariñas","CM",70,4],
+["Pau Cubarsí","CB",83,5],
+["Gavi","CM",84,6],
+["Fermín López","CAM",83,7],
+["Pedri","CM",90,8],
+["Gabriel Jesus","ST",84,9],
+["Lamine Yamal","RW",91,10],
+["Raphinha","LW",88,11],
+["Xavi Espart","RB",70,12],
+["Wojciech Szczęsny","GK",80,13],
+["Karim Adeyemi","LW",85,14],
+["Andreas Christensen","CB",81,15],
+["Rodri","CDM",90,16],
+["Anthony Gordon","LW",84,17],
+["Gerard Martín","LB",77,18],
+["Roony Bardghji","RW",78,19],
+["Dani Olmo","CAM",85,20],
+["Frenkie de Jong","CM",87,21],
+["Marc Bernal","CDM",80,22],
+["Jules Koundé","CB",85,23],
+["Eric García","CB",80,24],
+["Dominik Livaković","GK",80,25],
+["Jesse Bisiwu","RW",68,27],
+["Hamza Abdelkarim","ST",68,29]
+];
+
 let selectedClub=null;
 let career=null;
 
-const defaultPlayers=[
- {name:"Goalkeeper",position:"GK",rating:78,number:1},
- {name:"Defender 1",position:"CB",rating:76,number:2},
- {name:"Defender 2",position:"CB",rating:77,number:4},
- {name:"Defender 3",position:"LB",rating:75,number:3},
- {name:"Defender 4",position:"RB",rating:75,number:5},
- {name:"Midfielder 1",position:"CM",rating:82,number:8},
- {name:"Midfielder 2",position:"CM",rating:80,number:6},
- {name:"Midfielder 3",position:"CAM",rating:81,number:10},
- {name:"Forward 1",position:"LW",rating:83,number:11},
- {name:"Forward 2",position:"ST",rating:84,number:9},
- {name:"Forward 3",position:"RW",rating:82,number:7}
-];
+function badge(){
+return `<svg viewBox="0 0 100 115" width="65" height="65">
+<path d="M5 5 H95 V65 Q85 95 50 110 Q15 95 5 65Z" fill="#a50044" stroke="#edc34c" stroke-width="4"/>
+<path d="M8 8 H92 V35 H8Z" fill="#f5d34c"/>
+<path d="M8 38 H92 V65 H8Z" fill="#164078"/>
+<path d="M8 68 H92 V80 H8Z" fill="#a50044"/>
+<text x="50" y="29" text-anchor="middle" font-size="17" font-weight="bold" fill="#164078">FCB</text>
+<text x="50" y="61" text-anchor="middle" font-size="19" font-weight="bold" fill="white">BAR</text>
+</svg>`;
+}
 
 function showTeams(){
- const league=document.getElementById("league").value;
- const box=document.getElementById("teams");
- box.innerHTML="";
- document.getElementById("selection").classList.add("hidden");
- selectedClub=null;
+const league=document.getElementById("league").value;
+const box=document.getElementById("teams");
+box.innerHTML="";
+document.getElementById("selection").classList.add("hidden");
+selectedClub=null;
 
- clubs[league].forEach(name=>{
-  const card=document.createElement("div");
-  card.className="team";
-  card.innerHTML='<div class="badge">'+name.split(" ").map(x=>x[0]).join("").slice(0,3)+'</div><strong>'+name+'</strong>';
-  card.onclick=()=>{
-   document.querySelectorAll(".team").forEach(x=>x.classList.remove("selected"));
-   card.classList.add("selected");
-   selectedClub={name:name,league:league,budget:50000000};
-   document.getElementById("selectedName").textContent="Selected Club: "+name;
-   document.getElementById("selection").classList.remove("hidden");
-  };
-  box.appendChild(card);
- });
+clubs[league].forEach(name=>{
+const card=document.createElement("div");
+card.className="team";
+card.innerHTML=`<div class="badge">${name==="Barcelona"?badge():name.slice(0,3).toUpperCase()}</div><strong>${name}</strong>`;
+card.onclick=()=>{
+document.querySelectorAll(".team").forEach(x=>x.classList.remove("selected"));
+card.classList.add("selected");
+selectedClub={name,league,budget:50000000};
+document.getElementById("selectedName").textContent="Selected: "+name;
+document.getElementById("selection").classList.remove("hidden");
+};
+box.appendChild(card);
+});
 }
 
 function createClub(){
- const name=document.getElementById("customName").value.trim();
- const country=document.getElementById("customCountry").value.trim();
- const budget=Number(document.getElementById("customBudget").value);
- if(!name||!country){
-  alert("Please enter your club name and country.");
-  return;
- }
- selectedClub={name:name,league:country,budget:budget};
- startCareer();
+let name=document.getElementById("customName").value.trim();
+let country=document.getElementById("customCountry").value.trim();
+let budget=Number(document.getElementById("customBudget").value);
+if(!name||!country){alert("Enter club name and country.");return;}
+selectedClub={name,league:country,budget};
+startCareer();
 }
 
 function startCareer(){
- if(!selectedClub){alert("Please select a club first.");return;}
- career={
-  club:selectedClub,
-  players:JSON.parse(JSON.stringify(defaultPlayers)),
-  captain:defaultPlayers[5].name,
-  formation:"4-3-3",
-  style:"Possession"
- };
- saveCareer();
- showDashboard();
+if(!selectedClub){alert("Select a club first.");return;}
+
+let squad=selectedClub.name==="Barcelona"
+?barcaPlayers.map(p=>({name:p[0],position:p[1],rating:p[2],number:p[3]}))
+:Array.from({length:11},(_,i)=>({
+name:["Goalkeeper","Defender 1","Defender 2","Defender 3","Defender 4","Midfielder 1","Midfielder 2","Midfielder 3","Forward 1","Forward 2","Forward 3"][i],
+position:["GK","CB","CB","LB","RB","CM","CM","CAM","LW","ST","RW"][i],
+rating:75,number:i+1
+}));
+
+career={
+club:selectedClub,
+players:squad,
+captain:selectedClub.name==="Barcelona"?"Pedri":"Midfielder 1",
+formation:"4-3-3",
+style:"Possession",
+starters:selectedClub.name==="Barcelona"
+?["Joan García","João Cancelo","Pau Cubarsí","Jules Koundé","Alejandro Balde","Pedri","Gavi","Frenkie de Jong","Raphinha","Gabriel Jesus","Lamine Yamal"]
+:squad.slice(0,11).map(p=>p.name),
+positions:{}
+};
+
+setDefaultPositions();
+saveCareer();
+showDashboard();
+}
+
+function setDefaultPositions(){
+const spots=[
+[50,91],[25,75],[42,78],[58,78],[75,75],
+[35,55],[50,61],[65,55],
+[20,27],[50,18],[80,27]
+];
+career.starters.forEach((name,i)=>{
+career.positions[name]=spots[i]||[50,50];
+});
 }
 
 function saveCareer(){
- if(career){
-  localStorage.setItem("FCM_CAREER",JSON.stringify(career));
- }
+if(career)localStorage.setItem("FCM_CAREER",JSON.stringify(career));
 }
 
 function continueCareer(){
- const saved=localStorage.getItem("FCM_CAREER");
- if(!saved){
-  document.getElementById("homeMessage").textContent="No saved career found. Start a new career first.";
-  return;
- }
- try{
-  career=JSON.parse(saved);
-  showDashboard();
- }catch(e){
-  document.getElementById("homeMessage").textContent="Saved career could not be loaded.";
- }
+let saved=localStorage.getItem("FCM_CAREER");
+if(!saved){
+document.getElementById("homeMessage").textContent="No saved career found.";
+return;
+}
+try{
+career=JSON.parse(saved);
+if(!career.positions)career.positions={};
+if(!career.starters)career.starters=career.players.slice(0,11).map(p=>p.name);
+showDashboard();
+}catch(e){
+document.getElementById("homeMessage").textContent="Could not load career.";
+}
 }
 
 function showDashboard(){
- document.getElementById("home").classList.add("hidden");
- document.getElementById("dashboard").classList.remove("hidden");
- document.getElementById("clubTitle").textContent=career.club.name;
- document.getElementById("clubLeague").textContent=career.club.league;
- document.getElementById("budget").textContent="€"+(career.club.budget/1000000).toFixed(0)+"M";
- document.getElementById("squadCount").textContent=career.players.length;
- document.getElementById("formation").value=career.formation||"4-3-3";
- document.getElementById("style").value=career.style||"Possession";
- renderPlayers();
- openTabByName("overview");
+document.getElementById("home").classList.add("hidden");
+document.getElementById("dashboard").classList.remove("hidden");
+document.getElementById("clubTitle").textContent=career.club.name;
+document.getElementById("clubLeague").textContent=career.club.league;
+document.getElementById("budget").textContent="€"+(career.club.budget/1000000).toFixed(0)+"M";
+document.getElementById("squadCount").textContent=career.players.length;
+document.getElementById("clubBadge").innerHTML=career.club.name==="Barcelona"?badge():"FCM";
+document.getElementById("formation").value=career.formation||"4-3-3";
+document.getElementById("style").value=career.style||"Possession";
+renderPlayers();
+renderPitch();
+openTabByName("overview");
 }
 
 function renderPlayers(){
- const box=document.getElementById("players");
- box.innerHTML="";
- career.players.forEach((player,index)=>{
-  const row=document.createElement("div");
-  row.className="player";
-  const info=document.createElement("div");
-  info.innerHTML="<strong>"+player.name+"</strong><br><small>"+player.position+" · Rating "+player.rating+(career.captain===player.name?" · CAPTAIN":"")+"</small>";
-  const controls=document.createElement("div");
-  const number=document.createElement("input");
-  number.type="number";
-  number.min="1";
-  number.max="99";
-  number.value=player.number;
-  number.style.width="65px";
-  number.style.margin="0 5px";
-  number.setAttribute("aria-label","Shirt number");
-  number.onchange=()=>{
-   let value=Number(number.value);
-   if(value<1||value>99){alert("Choose a number from 1 to 99.");number.value=player.number;return;}
-   if(career.players.some((p,i)=>i!==index&&p.number===value)){
-    alert("This shirt number is already taken.");number.value=player.number;return;
-   }
-   player.number=value;
-   saveCareer();
-  };
-  const captain=document.createElement("button");
-  captain.className="secondary";
-  captain.textContent=career.captain===player.name?"Captain ✓":"Make Captain";
-  captain.onclick=()=>{
-   career.captain=player.name;
-   saveCareer();
-   renderPlayers();
-  };
-  controls.append(number,captain);
-  row.append(info,controls);
-  box.appendChild(row);
- });
+const box=document.getElementById("players");
+box.innerHTML="";
+career.players.forEach((p,index)=>{
+const row=document.createElement("div");
+row.className="player";
+const info=document.createElement("div");
+info.innerHTML=`<strong>${p.name}</strong><br><small>${p.position} · Rating ${p.rating}</small>`;
+const controls=document.createElement("div");
+const number=document.createElement("input");
+number.type="number";number.min=1;number.max=99;
+number.value=p.number;number.style.width="65px";
+number.onchange=()=>{
+let value=Number(number.value);
+if(value<1||value>99||career.players.some((x,i)=>i!==index&&x.number===value)){
+alert("Invalid or used shirt number.");
+number.value=p.number;return;
+}
+p.number=value;saveCareer();renderPitch();
+};
+const captain=document.createElement("button");
+captain.className="secondary";
+captain.textContent=career.captain===p.name?"Captain ✓":"Make Captain";
+captain.onclick=()=>{
+career.captain=p.name;saveCareer();renderPlayers();renderPitch();
+};
+controls.append(number,captain);
+row.append(info,controls);
+box.appendChild(row);
+});
+}
+
+function renderPitch(){
+const box=document.getElementById("pitchPlayers");
+const bench=document.getElementById("bench");
+box.innerHTML="";bench.innerHTML="";
+
+career.starters.forEach(name=>{
+let p=career.players.find(x=>x.name===name);
+if(!p)return;
+if(!career.positions[name])career.positions[name]=[50,50];
+
+let point=career.positions[name];
+let token=document.createElement("div");
+token.className="pitch-player"+(career.captain===name?" captain":"");
+token.style.left=point[0]+"%";
+token.style.top=point[1]+"%";
+token.innerHTML=`${p.number}<span>${p.name.split(" ").slice(-1)[0]}</span>`;
+token.dataset.name=name;
+box.appendChild(token);
+});
+
+career.players.filter(p=>!career.starters.includes(p.name)).forEach(p=>{
+let row=document.createElement("div");
+row.className="sub-player";
+row.innerHTML=`<span>${p.number} · ${p.name}</span>`;
+let btn=document.createElement("button");
+btn.textContent="Add";
+btn.onclick=()=>{
+let old=career.starters.pop();
+career.starters.push(p.name);
+delete career.positions[old];
+career.positions[p.name]=[50,50];
+saveCareer();renderPitch();
+};
+row.appendChild(btn);
+bench.appendChild(row);
+});
+}
+
+let dragging=null;
+
+document.getElementById("pitch").addEventListener("pointerdown",e=>{
+let token=e.target.closest(".pitch-player");
+if(!token)return;
+dragging=token.dataset.name;
+token.classList.add("selected");
+document.getElementById("pitch").setPointerCapture(e.pointerId);
+});
+
+document.getElementById("pitch").addEventListener("pointermove",e=>{
+if(!dragging)return;
+let rect=document.getElementById("pitch").getBoundingClientRect();
+let x=(e.clientX-rect.left)/rect.width*100;
+let y=(e.clientY-rect.top)/rect.height*100;
+x=Math.max(5,Math.min(95,x));
+y=Math.max(5,Math.min(95,y));
+career.positions[dragging]=[x,y];
+let token=[...document.querySelectorAll(".pitch-player")].find(t=>t.dataset.name===dragging);
+if(token){
+token.style.left=x+"%";
+token.style.top=y+"%";
+}
+});
+
+document.getElementById("pitch").addEventListener("pointerup",()=>{
+if(dragging){
+saveCareer();
+document.querySelectorAll(".pitch-player").forEach(t=>t.classList.remove("selected"));
+dragging=null;
+}
+});
+
+function changeFormation(){
+career.formation=document.getElementById("formation").value;
+setDefaultPositions();
+saveCareer();
+renderPitch();
+document.getElementById("tacticsMessage").textContent="Formation saved.";
+}
+
+function saveTactics(){
+career.style=document.getElementById("style").value;
+saveCareer();
+document.getElementById("tacticsMessage").textContent="Tactics saved.";
 }
 
 function openTab(name,button){
- document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
- document.getElementById(name).classList.remove("hidden");
- document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
- if(button)button.classList.add("active");
- else{
-  const btn=[...document.querySelectorAll("nav button")].find(x=>x.getAttribute("onclick").includes("'"+name+"'"));
-  if(btn)btn.classList.add("active");
- }
+document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
+document.getElementById(name).classList.remove("hidden");
+document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+if(button)button.classList.add("active");
+else{
+let btn=[...document.querySelectorAll("nav button")].find(x=>x.getAttribute("onclick").includes("'"+name+"'"));
+if(btn)btn.classList.add("active");
+}
 }
 
-function openTabByName(name){openTab(name,null);}
-
-function saveTactics(){
- career.formation=document.getElementById("formation").value;
- career.style=document.getElementById("style").value;
- saveCareer();
- document.getElementById("tacticsMessage").textContent="Tactics saved successfully.";
-}
+function openTabByName(name){openTab(name,null)}
 
 function backHome(){
- document.getElementById("dashboard").classList.add("hidden");
- document.getElementById("home").classList.remove("hidden");
+document.getElementById("dashboard").classList.add("hidden");
+document.getElementById("home").classList.remove("hidden");
 }
 
 showTeams();
-</script></body>
-    </html>
+</script>
+</body>
+ </html>
