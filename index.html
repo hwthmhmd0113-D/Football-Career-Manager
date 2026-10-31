@@ -8,229 +8,91 @@
 
 <style>
 :root{
- --bg:#0c1120;
- --panel:#171e30;
- --panel2:#202a40;
- --blue:#004d98;
- --red:#a50044;
- --gold:#e8c66a;
- --green:#20d69a;
- --text:#f5f6fa;
- --muted:#9aa8bd;
+ --bg:#0c1120;--panel:#171e30;--panel2:#202a40;
+ --blue:#004d98;--red:#a50044;--gold:#e8c66a;
+ --green:#20d69a;--text:#f5f6fa;--muted:#9aa8bd;
 }
 *{box-sizing:border-box}
-body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,sans-serif;
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 header{
- padding:17px;
- background:linear-gradient(110deg,#071c3b,#a50044);
- display:flex;justify-content:space-between;
- align-items:center;
+ padding:17px;background:linear-gradient(110deg,#071c3b,#a50044);
+ display:flex;justify-content:space-between;align-items:center;
  border-bottom:2px solid var(--gold);
 }
 .logo{font-size:27px;font-weight:900}
 .logo span{color:var(--gold)}
 header small{font-size:11px;letter-spacing:2px}
 .container{max-width:1000px;margin:auto;padding:13px}
-.hidden{display:none!important}
-.card{
- background:var(--panel);
- border:1px solid #2b3851;
- border-radius:13px;padding:15px;margin-bottom:13px;
-}
-.hero{
- padding:22px;
- background:linear-gradient(120deg,#071d40,#a50044);
- border-radius:14px;
- margin-bottom:14px;
-}
+.card{background:var(--panel);border:1px solid #2b3851;border-radius:13px;padding:15px;margin-bottom:13px}
+.hero{padding:22px;background:linear-gradient(120deg,#071d40,#a50044);border-radius:14px;margin-bottom:14px}
 .hero h1{font-size:25px;margin:0 0 8px}
 .hero p{color:#e4dce5;font-size:13px}
-.badge{
- display:inline-block;background:var(--gold);
- color:#20152a;padding:5px 9px;
- border-radius:5px;font-size:11px;font-weight:bold;
-}
-.stats{
- display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-}
-.stat{
- background:var(--panel2);padding:12px;
- border-radius:9px;text-align:center;
-}
+.badge{display:inline-block;background:var(--gold);color:#20152a;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:bold}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--panel2);padding:12px;border-radius:9px;text-align:center}
 .stat small{color:var(--muted);font-size:11px}
 .stat strong{display:block;font-size:21px;margin-top:6px}
-nav{
- display:flex;gap:7px;overflow-x:auto;
- margin:14px 0;padding-bottom:4px;
-}
-nav button{
- white-space:nowrap;background:var(--panel2);
- color:white;border:1px solid #35435d;
- border-radius:8px;padding:11px 15px;
-}
-nav button.active{
- background:var(--red);border-color:var(--gold);
-}
+nav{display:flex;gap:7px;overflow-x:auto;margin:14px 0;padding-bottom:4px}
+nav button{white-space:nowrap;background:var(--panel2);color:white;border:1px solid #35435d;border-radius:8px;padding:11px 15px}
+nav button.active{background:var(--red);border-color:var(--gold)}
 button,select{font-size:14px}
 button{cursor:pointer}
-.primary{
- background:var(--green);color:#071a12;
- border:0;border-radius:8px;padding:12px 16px;
- font-weight:bold;
-}
-.secondary{
- background:#29364e;color:white;
- border:1px solid #40516e;border-radius:8px;
- padding:10px 13px;
-}
-select{
- width:100%;padding:12px;
- background:#111a2b;color:white;
- border:1px solid #394966;border-radius:8px;
- margin:7px 0 13px;
-}
-.players{
- display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
-}
-.player{
- background:var(--panel2);
- border:1px solid #35435b;
- border-radius:11px;overflow:hidden;
- text-align:center;position:relative;
-}
-.player-photo{
- height:135px;
- background:linear-gradient(145deg,#071d40,#a50044);
- display:flex;align-items:center;justify-content:center;
- position:relative;
-}
-.player-photo img{
- width:100%;height:100%;object-fit:cover;
-}
-.player-photo .initial{
- font-size:38px;font-weight:bold;color:white;
-}
-.player-number{
- position:absolute;top:7px;left:7px;z-index:2;
- background:var(--gold);color:#171323;
- padding:5px 8px;border-radius:6px;
- font-weight:bold;
-}
+.primary{background:var(--green);color:#071a12;border:0;border-radius:8px;padding:12px 16px;font-weight:bold}
+.secondary{background:#29364e;color:white;border:1px solid #40516e;border-radius:8px;padding:10px 13px}
+select{width:100%;padding:12px;background:#111a2b;color:white;border:1px solid #394966;border-radius:8px;margin:7px 0 13px}
+.players{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.player{background:var(--panel2);border:1px solid #35435b;border-radius:11px;overflow:hidden;text-align:center;position:relative}
+.player-photo{height:135px;background:linear-gradient(145deg,#071d40,#a50044);display:flex;align-items:center;justify-content:center;position:relative}
+.player-photo img{width:100%;height:100%;object-fit:cover}
+.player-photo .initial{font-size:38px;font-weight:bold;color:white}
+.player-number{position:absolute;top:7px;left:7px;z-index:2;background:var(--gold);color:#171323;padding:5px 8px;border-radius:6px;font-weight:bold}
 .player-info{padding:9px}
 .player-info b{display:block;font-size:13px;min-height:30px}
 .player-info small{color:var(--muted)}
-.rating{
- display:inline-block;margin-top:7px;
- background:#102d28;color:var(--green);
- padding:4px 9px;border-radius:6px;font-weight:bold;
-}
+.rating{display:inline-block;margin-top:7px;background:#102d28;color:var(--green);padding:4px 9px;border-radius:6px;font-weight:bold}
+.chemistry-bonus{display:block;color:var(--gold);font-size:11px;margin-top:5px}
 .player-actions{padding:0 8px 10px}
 .player-actions button{width:100%;padding:8px;font-size:12px}
-.player.selected{
- border:2px solid var(--green);
-}
+.player.selected{border:2px solid var(--green)}
 .pitch{
- height:490px;position:relative;overflow:hidden;
- border:3px solid #eee;border-radius:9px;
- background:repeating-linear-gradient(
-  0deg,#17613e,#17613e 65px,
-  #1d7048 65px,#1d7048 130px
- );
- touch-action:none;
- user-select:none;
+ height:490px;position:relative;overflow:hidden;border:3px solid #eee;border-radius:9px;
+ background:repeating-linear-gradient(0deg,#17613e,#17613e 65px,#1d7048 65px,#1d7048 130px);
+ touch-action:none;user-select:none;
 }
-.pitch:before{
- content:"";position:absolute;
- left:0;right:0;top:50%;
- border-top:2px solid #ffffffa8;
- pointer-events:none;
-}
-.pitch:after{
- content:"";position:absolute;
- width:110px;height:110px;
- border:2px solid #ffffffa8;
- border-radius:50%;left:50%;top:50%;
- transform:translate(-50%,-50%);
- pointer-events:none;
-}
-.box{
- position:absolute;left:22%;width:56%;height:65px;
- border:2px solid #ffffffa8;
- pointer-events:none;
-}
+.pitch:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px solid #ffffffa8;pointer-events:none}
+.pitch:after{content:"";position:absolute;width:110px;height:110px;border:2px solid #ffffffa8;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+.box{position:absolute;left:22%;width:56%;height:65px;border:2px solid #ffffffa8;pointer-events:none}
 .box.top{top:0;border-top:0}
 .box.bottom{bottom:0;border-bottom:0}
 .slot{
- position:absolute;z-index:3;
- transform:translate(-50%,-50%);
- width:67px;min-height:59px;
- background:#101c29ef;
- border:2px solid white;border-radius:9px;
- text-align:center;padding:4px 2px;
- box-shadow:0 2px 8px #0008;
- cursor:grab;
- touch-action:none;
- user-select:none;
+ position:absolute;z-index:3;transform:translate(-50%,-50%);
+ width:67px;min-height:59px;background:#101c29ef;border:2px solid white;
+ border-radius:9px;text-align:center;padding:4px 2px;box-shadow:0 2px 8px #0008;
+ cursor:grab;touch-action:none;user-select:none;
 }
-.slot:active{cursor:grabbing}
-.slot.dragging{
- z-index:20;
- border-color:var(--gold);
- box-shadow:0 0 15px #e8c66a;
- transform:translate(-50%,-50%) scale(1.12);
-}
-.slot .shirt{
- width:25px;height:25px;margin:auto auto 3px;
- background:var(--red);border:1px solid white;
- border-radius:6px;display:grid;place-items:center;
- font-size:12px;font-weight:bold;
-}
+.slot.dragging{z-index:20;border-color:var(--gold);box-shadow:0 0 15px #e8c66a;transform:translate(-50%,-50%) scale(1.12)}
+.slot .shirt{width:25px;height:25px;margin:auto auto 3px;background:var(--red);border:1px solid white;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:bold}
 .slot b{display:block;font-size:10px}
 .slot small{font-size:9px;color:#c8d6e6}
-.slot.empty{border:2px dashed #e8c66a}
-.slot-photo{
- width:29px;height:29px;
- border-radius:50%;object-fit:cover;
- border:1px solid white;
- display:block;margin:0 auto 3px;
- background:var(--red);
-}
-.squad-list{
- display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
-}
-.squad-item{
- display:flex;align-items:center;gap:8px;
- padding:9px;background:var(--panel2);
- border-radius:8px;border:1px solid #35435b;
-}
-.squad-item .num{
- color:var(--gold);font-weight:bold;font-size:17px;
- min-width:25px;
-}
+.slot-photo{width:29px;height:29px;border-radius:50%;object-fit:cover;border:1px solid white;display:block;margin:0 auto 3px;background:var(--red)}
+.slot .mini-bonus{color:var(--gold);font-size:9px}
+.squad-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.squad-item{display:flex;align-items:center;gap:8px;padding:9px;background:var(--panel2);border-radius:8px;border:1px solid #35435b}
+.squad-item .num{color:var(--gold);font-weight:bold;font-size:17px;min-width:25px}
 .squad-item b{font-size:12px}
 .squad-item small{display:block;color:var(--muted);font-size:10px}
 .tabs{display:none}
 .tabs.active{display:block}
-.section-title{
- display:flex;justify-content:space-between;
- align-items:center;margin-bottom:12px;
-}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .section-title h3{margin:0}
 .muted{color:var(--muted);font-size:12px}
+.chemistry-card{background:linear-gradient(120deg,#152b2b,#202a40);border:1px solid #28765f}
+.chemistry-score{font-size:34px;font-weight:bold;color:var(--green)}
+.chemistry-pair{display:flex;justify-content:space-between;gap:8px;padding:10px;background:var(--panel2);border-radius:8px;margin-top:7px;font-size:12px}
+.chemistry-pair strong{color:var(--gold)}
 footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
-
-@media(min-width:600px){
- .players{grid-template-columns:repeat(4,1fr)}
- .squad-list{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:380px){
- .slot{width:58px}
- .slot b{font-size:9px}
- .pitch{height:440px}
-}
+@media(min-width:600px){.players{grid-template-columns:repeat(4,1fr)}.squad-list{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:380px){.slot{width:58px}.slot b{font-size:9px}.pitch{height:440px}}
 </style>
 </head>
 
@@ -263,12 +125,8 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
 </nav>
 
 <section id="dashboard" class="tabs active">
-
  <div class="card">
-  <div class="section-title">
-   <h3>CLUB DASHBOARD</h3>
-   <span class="badge">BARÇA</span>
-  </div>
+  <div class="section-title"><h3>CLUB DASHBOARD</h3><span class="badge">BARÇA</span></div>
   <p class="muted">Welcome to your Barcelona career.</p>
   <div class="stats">
    <div class="stat"><small>PLAYED</small><strong id="played">0</strong></div>
@@ -289,28 +147,27 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
   <h3>STARTING ELEVEN</h3>
   <div id="homeFormation" class="muted"></div>
  </div>
+
+ <div class="card chemistry-card">
+  <h3>TEAM CHEMISTRY</h3>
+  <div class="chemistry-score" id="teamChemistry">0%</div>
+  <p class="muted">Starting XI chemistry level</p>
+ </div>
 </section>
 
 <section id="squad" class="tabs">
-
  <div class="card">
-  <div class="section-title">
-   <h3>FIRST TEAM</h3>
-   <span class="badge">27 PLAYERS</span>
-  </div>
+  <div class="section-title"><h3>FIRST TEAM</h3><span class="badge">27 PLAYERS</span></div>
   <p class="muted">Select a player to add him to your starting lineup.</p>
   <div id="players" class="players"></div>
  </div>
-
  <div class="card">
   <h3>BENCH</h3>
   <div id="bench" class="squad-list"></div>
  </div>
-
 </section>
 
 <section id="tactics" class="tabs">
-
  <div class="card">
   <h3>TEAM FORMATION</h3>
   <select id="formation">
@@ -329,45 +186,41 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
 
   <h3>DEFENSIVE LINE</h3>
   <select id="defense">
-   <option>High</option>
-   <option>Medium</option>
-   <option>Low</option>
+   <option>High</option><option>Medium</option><option>Low</option>
   </select>
 
   <h3>TEAM PRESSURE</h3>
   <select id="pressure">
-   <option>Very High</option>
-   <option>High</option>
-   <option>Medium</option>
-   <option>Low</option>
+   <option>Very High</option><option>High</option><option>Medium</option><option>Low</option>
   </select>
  </div>
 
  <div class="card">
   <h3>TACTICAL BOARD</h3>
   <div class="pitch" id="pitch">
-   <div class="box top"></div>
-   <div class="box bottom"></div>
+   <div class="box top"></div><div class="box bottom"></div>
   </div>
   <p class="muted">Press and drag a player to change his position on the pitch.</p>
   <button class="secondary" id="resetPositions">RESET PLAYER POSITIONS</button>
+ </div>
+
+ <div class="card chemistry-card">
+  <h3>PLAYER CHEMISTRY</h3>
+  <p class="muted">Players gain ratings when they play with compatible teammates.</p>
+  <div id="chemistryPairs"></div>
  </div>
 
  <div class="card">
   <h3>STARTING LINEUP</h3>
   <div id="lineup" class="squad-list"></div>
  </div>
-
 </section>
 
 <section id="academy" class="tabs">
  <div class="card">
   <h3>LA MASIA</h3>
   <p class="muted">Youth development will be introduced in the next development stage.</p>
-  <div class="stat">
-   <small>ACADEMY STATUS</small>
-   <strong>READY</strong>
-  </div>
+  <div class="stat"><small>ACADEMY STATUS</small><strong>READY</strong></div>
  </div>
 </section>
 
@@ -417,40 +270,42 @@ const players=[
 ];
 
 const formations={
- "4-3-3":[
-  [50,91],[15,73],[38,79],[62,79],[85,73],
-  [50,57],[30,43],[70,43],
-  [18,19],[50,13],[82,19]
- ],
- "4-2-3-1":[
-  [50,91],[15,73],[38,79],[62,79],[85,73],
-  [35,59],[65,59],
-  [18,38],[50,34],[82,38],[50,13]
- ],
- "4-4-2":[
-  [50,91],[15,73],[38,79],[62,79],[85,73],
-  [15,49],[38,53],[62,53],[85,49],
-  [35,17],[65,17]
- ]
+ "4-3-3":[[50,91],[15,73],[38,79],[62,79],[85,73],[50,57],[30,43],[70,43],[18,19],[50,13],[82,19]],
+ "4-2-3-1":[[50,91],[15,73],[38,79],[62,79],[85,73],[35,59],[65,59],[18,38],[50,34],[82,38],[50,13]],
+ "4-4-2":[[50,91],[15,73],[38,79],[62,79],[85,73],[15,49],[38,53],[62,53],[85,49],[35,17],[65,17]]
 };
 
-const defaultLineup=[
- 1,3,5,23,2,16,8,21,11,9,10
-];
+const defaultLineup=[1,3,5,23,2,16,8,21,11,9,10];
 
 let career={
- formation:"4-3-3",
- style:"Possession",
- defense:"High",
- pressure:"High",
- lineup:defaultLineup,
- positions:{},
- played:0,
- wins:0,
- points:0
+ formation:"4-3-3",style:"Possession",defense:"High",pressure:"High",
+ lineup:defaultLineup,positions:{},played:0,wins:0,points:0
 };
 
 const $=id=>document.getElementById(id);
+
+/* CHEMISTRY PAIRS
+   Each pair gives both players the same bonus.
+*/
+
+const chemistryLinks=[
+ [8,21,3],  // Pedri + Frenkie
+ [8,6,2],   // Pedri + Gavi
+ [8,10,2],  // Pedri + Lamine
+ [8,20,2],  // Pedri + Dani Olmo
+ [10,11,2], // Lamine + Raphinha
+ [6,21,2],  // Gavi + Frenkie
+ [21,16,2], // Frenkie + Rodri
+ [5,24,2],  // Cubarsi + Eric
+ [2,23,2],  // Cancelo + Kounde
+ [3,18,2],  // Balde + Gerard
+ [9,11,1],  // Jesus + Raphinha
+ [7,8,1],   // Fermin + Pedri
+ [20,10,1], // Olmo + Lamine
+ [22,8,1],  // Bernal + Pedri
+ [16,8,1],  // Rodri + Pedri
+ [14,10,1]  // Adeyemi + Lamine
+];
 
 function loadCareer(){
  try{
@@ -472,6 +327,81 @@ function getPlayer(number){
 
 function initials(name){
  return name.split(" ").map(x=>x[0]).slice(0,2).join("");
+}
+
+/* CALCULATE CHEMISTRY */
+
+function getChemistry(number){
+ let bonus=0;
+ let partners=[];
+
+ chemistryLinks.forEach(link=>{
+  const [a,b,value]=link;
+
+  if(number===a && career.lineup.includes(b)){
+   bonus+=value;
+   partners.push({number:b,value});
+  }
+
+  if(number===b && career.lineup.includes(a)){
+   bonus+=value;
+   partners.push({number:a,value});
+  }
+ });
+
+ bonus=Math.min(5,bonus);
+
+ return {bonus,partners};
+}
+
+function getOverall(player){
+ return Math.min(99,player.rating+getChemistry(player.number).bonus);
+}
+
+function getTeamChemistry(){
+ let total=0;
+
+ career.lineup.forEach(number=>{
+  total+=getChemistry(number).bonus;
+ });
+
+ if(!career.lineup.length)return 0;
+
+ return Math.round((total/(career.lineup.length*5))*100);
+}
+
+function renderChemistry(){
+ $("teamChemistry").textContent=getTeamChemistry()+"%";
+
+ const container=$("chemistryPairs");
+ container.innerHTML="";
+
+ let found=0;
+
+ chemistryLinks.forEach(link=>{
+  const [a,b,value]=link;
+
+  if(career.lineup.includes(a)&&career.lineup.includes(b)){
+   found++;
+
+   const p1=getPlayer(a);
+   const p2=getPlayer(b);
+
+   const item=document.createElement("div");
+   item.className="chemistry-pair";
+
+   item.innerHTML=`
+    <span>${p1.name} + ${p2.name}</span>
+    <strong>+${value} OVR</strong>
+   `;
+
+   container.appendChild(item);
+  }
+ });
+
+ if(found===0){
+  container.innerHTML='<p class="muted">No chemistry partnerships active. Try selecting compatible players.</p>';
+ }
 }
 
 /* PLAYER PHOTOS */
@@ -505,7 +435,7 @@ async function loadPlayerPhoto(player){
 
 function setPlayerImage(container,player){
  loadPlayerPhoto(player).then(url=>{
-  if(!url || !container.isConnected)return;
+  if(!url||!container.isConnected)return;
 
   const img=document.createElement("img");
   img.src=url;
@@ -522,6 +452,9 @@ function renderPlayers(){
 
  players.forEach(p=>{
   const selected=career.lineup.includes(p.number);
+  const chemistry=getChemistry(p.number);
+  const overall=getOverall(p);
+
   const card=document.createElement("div");
   card.className="player"+(selected?" selected":"");
 
@@ -533,7 +466,10 @@ function renderPlayers(){
    <div class="player-info">
     <b>${p.name}</b>
     <small>${p.pos}</small><br>
-    <span class="rating">${p.rating} OVR</span>
+    <span class="rating">${overall} OVR</span>
+    ${chemistry.bonus>0?
+     `<span class="chemistry-bonus">CHEMISTRY +${chemistry.bonus}</span>`:
+     `<span class="chemistry-bonus">NO CHEMISTRY BONUS</span>`}
    </div>
    <div class="player-actions">
     <button class="${selected?"secondary":"primary"}">
@@ -542,10 +478,9 @@ function renderPlayers(){
    </div>
   `;
 
-  const photo=card.querySelector(".player-photo");
-  setPlayerImage(photo,p);
-
+  setPlayerImage(card.querySelector(".player-photo"),p);
   card.querySelector("button").onclick=()=>togglePlayer(p.number);
+
   $("players").appendChild(card);
  });
 }
@@ -556,6 +491,7 @@ function togglePlayer(number){
    alert("Choose another player before removing this one.");
    return;
   }
+
   career.lineup=career.lineup.filter(n=>n!==number);
   delete career.positions[number];
  }else{
@@ -563,6 +499,7 @@ function togglePlayer(number){
    alert("Your starting lineup already has 11 players.");
    return;
   }
+
   career.lineup.push(number);
  }
 
@@ -573,9 +510,7 @@ function togglePlayer(number){
 /* TACTICAL PITCH */
 
 function getPosition(number,index){
- if(career.positions[number]){
-  return career.positions[number];
- }
+ if(career.positions[number])return career.positions[number];
 
  const coords=formations[career.formation];
  return coords[index]||[50,50];
@@ -592,6 +527,7 @@ function renderPitch(){
   if(!p)return;
 
   const pos=getPosition(number,i);
+  const chemistry=getChemistry(number);
 
   const slot=document.createElement("div");
   slot.className="slot";
@@ -602,7 +538,8 @@ function renderPitch(){
   slot.innerHTML=`
    <div class="shirt">${p.number}</div>
    <b>${p.name.split(" ")[0]}</b>
-   <small>${p.pos}</small>
+   <small>${getOverall(p)} OVR</small>
+   ${chemistry.bonus>0?`<div class="mini-bonus">+${chemistry.bonus}</div>`:""}
   `;
 
   pitch.appendChild(slot);
@@ -614,13 +551,12 @@ function renderPitch(){
 
 async function loadPitchPhoto(slot,player){
  const url=await loadPlayerPhoto(player);
- if(!url || !slot.isConnected)return;
+ if(!url||!slot.isConnected)return;
 
  const img=document.createElement("img");
  img.className="slot-photo";
  img.src=url;
  img.alt=player.name;
-
  img.onerror=()=>img.remove();
 
  const shirt=slot.querySelector(".shirt");
@@ -634,7 +570,6 @@ function makeDraggable(slot,pitch,number){
 
  slot.addEventListener("pointerdown",e=>{
   e.preventDefault();
-
   dragging=true;
   slot.classList.add("dragging");
   slot.setPointerCapture(e.pointerId);
@@ -679,106 +614,4 @@ function resetPositions(){
 }
 
 function renderLineup(){
- $("lineup").innerHTML="";
-
- career.lineup.forEach(number=>{
-  const p=getPlayer(number);
-  if(!p)return;
-
-  const item=document.createElement("div");
-  item.className="squad-item";
-
-  item.innerHTML=`
-   <span class="num">${p.number}</span>
-   <div><b>${p.name}</b><small>${p.pos} · ${p.rating} OVR</small></div>
-  `;
-
-  $("lineup").appendChild(item);
- });
-
- $("homeFormation").textContent=
-  career.lineup.map(n=>getPlayer(n)?.name).filter(Boolean).join(" · ");
-}
-
-function renderBench(){
- $("bench").innerHTML="";
-
- players.filter(p=>!career.lineup.includes(p.number)).forEach(p=>{
-  const item=document.createElement("div");
-  item.className="squad-item";
-
-  item.innerHTML=`
-   <span class="num">${p.number}</span>
-   <div><b>${p.name}</b><small>${p.pos} · ${p.rating} OVR</small></div>
-  `;
-
-  $("bench").appendChild(item);
- });
-}
-
-function renderAll(){
- $("formation").value=career.formation;
- $("style").value=career.style;
- $("defense").value=career.defense;
- $("pressure").value=career.pressure;
- $("formationLabel").textContent=career.formation;
-
- $("played").textContent=career.played;
- $("wins").textContent=career.wins;
- $("points").textContent=career.points;
-
- renderPlayers();
- renderPitch();
- renderLineup();
- renderBench();
-}
-
-function changeFormation(){
- career.formation=$("formation").value;
- saveCareer();
- renderAll();
-}
-
-document.querySelectorAll("nav button").forEach(btn=>{
- btn.onclick=()=>{
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".tabs").forEach(t=>t.classList.remove("active"));
-
-  btn.classList.add("active");
-  $(btn.dataset.tab).classList.add("active");
- };
-});
-
-$("formation").onchange=changeFormation;
-
-$("style").onchange=()=>{
- career.style=$("style").value;
- saveCareer();
-};
-
-$("defense").onchange=()=>{
- career.defense=$("defense").value;
- saveCareer();
-};
-
-$("pressure").onchange=()=>{
- career.pressure=$("pressure").value;
- saveCareer();
-};
-
-$("resetPositions").onclick=resetPositions;
-
-$("resetBtn").onclick=()=>{
- if(confirm("Delete your saved career and reset the team?")){
-  localStorage.removeItem("FCM_BARCA_2627");
-  location.reload();
- }
-};
-
-loadCareer();
-renderAll();
-
-</script>
-
-</body>
-   </html>
+ $("lineup"
