@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101525">
+<title>FCM | La Masia Academy 26/27</title>
+
+<style>
+:root{
+ --bg:#0c1120;
+ --panel:#171e30;
+ --panel2:#202a40;
+ --blue:#004d98;
+ --red:#a50044;
+ --gold:#e8c66a;
+ --green:#20d69a;
+ --text:#f5f6fa;
+ --muted:#9aa8bd;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:20px;
+ background:linear-gradient(110deg,#071c3b,#a50044);
+ border-bottom:2px solid var(--gold);
+}
+.logo{font-size:25px;font-weight:900}
+.logo span{color:var(--gold)}
+header small{
+ display:block;
+ margin-top:5px;
+ letter-spacing:2px;
+ font-size:11px;
+}
+.container{
+ max-width:1000px;
+ margin:auto;
+ padding:14px;
+}
+.hero{
+ background:linear-gradient(120deg,#071d40,#a50044);
+ padding:22px;
+ border-radius:14px;
+ margin-bottom:14px;
+}
+.hero h1{margin:0 0 8px}
+.hero p{font-size:13px;color:#e4dce5}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
+}
+.stat{
+ background:var(--panel2);
+ padding:13px;
+ border-radius:9px;
+ text-align:center;
+}
+.stat small{color:var(--muted);font-size:11px}
+.stat strong{
+ display:block;
+ font-size:22px;
+ margin-top:6px;
+}
+.card{
+ background:var(--panel);
+ border:1px solid #2b3851;
+ border-radius:13px;
+ padding:15px;
+ margin-bottom:13px;
+}
+.players{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:10px;
+}
+.player{
+ background:var(--panel2);
+ border:1px solid #35435b;
+ border-radius:11px;
+ padding:13px;
+ text-align:center;
+}
+.avatar{
+ width:65px;
+ height:65px;
+ border-radius:50%;
+ margin:auto auto 10px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(145deg,#071d40,#a50044);
+ border:2px solid var(--gold);
+ font-size:23px;
+ font-weight:bold;
+}
+.player h3{font-size:14px;margin:7px 0}
+.player small{color:var(--muted)}
+.rating{
+ display:block;
+ color:var(--green);
+ font-size:20px;
+ font-weight:bold;
+ margin:10px;
+}
+.potential{
+ color:var(--gold);
+ font-size:12px;
+ margin-bottom:10px;
+}
+button{
+ border:0;
+ border-radius:8px;
+ padding:10px;
+ cursor:pointer;
+ font-weight:bold;
+}
+.primary{
+ background:var(--green);
+ color:#071a12;
+ width:100%;
+ margin-top:6px;
+}
+.secondary{
+ background:#29364e;
+ color:white;
+ width:100%;
+ margin-top:6px;
+ border:1px solid #40516e;
+}
+.badge{
+ display:inline-block;
+ background:var(--gold);
+ color:#20152a;
+ padding:5px 9px;
+ border-radius:5px;
+ font-size:11px;
+ font-weight:bold;
+}
+.empty{
+ color:var(--muted);
+ text-align:center;
+ padding:20px;
+}
+@media(min-width:600px){
+ .players{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">LA <span>MASIA</span></div>
+ <small>FC BARCELONA · YOUTH ACADEMY 26/27</small>
+</header>
+
+<div class="container">
+
+<div class="hero">
+ <span class="badge">YOUTH DEVELOPMENT</span>
+ <h1>THE FUTURE OF BARÇA</h1>
+ <p>Develop young talents. Train the next generation. Build legends.</p>
+
+ <div class="stats">
+  <div class="stat">
+   <small>YOUNG PLAYERS</small>
+   <strong id="total">0</strong>
+  </div>
+  <div class="stat">
+   <small>AVERAGE RATING</small>
+   <strong id="average">0</strong>
+  </div>
+  <div class="stat">
+   <small>PROMOTED</small>
+   <strong id="promoted">0</strong>
+  </div>
+ </div>
+</div>
+
+<div class="card">
+ <h3>ACADEMY SQUAD</h3>
+ <p style="color:var(--muted);font-size:12px">
+  Train your young players and prepare them for the first team.
+ </p>
+ <div id="players" class="players"></div>
+</div>
+
+<div class="card">
+ <h3>PLAYER DEVELOPMENT</h3>
+ <div id="details" class="empty">
+  Select a player to view his development.
+ </div>
+</div>
+
+<div class="card">
+ <h3>PROMOTION HISTORY</h3>
+ <div id="history" class="empty">
+  No players promoted yet.
+ </div>
+</div>
+
+</div>
+
+<footer style="text-align:center;color:#9aa8bd;padding:20px;font-size:11px">
+ FCM · LA MASIA ACADEMY · BY HWTA
+</footer>
+
+<script>
+"use strict";
+
+const defaultPlayers=[
+ {id:1,name:"Marc Guiu",pos:"ST",rating:74,potential:88,age:20},
+ {id:2,name:"Andrés Cuenca",pos:"CB",rating:69,potential:85,age:19},
+ {id:3,name:"Toni Fernández",pos:"RW",rating:68,potential:87,age:17},
+ {id:4,name:"Pedro Fernández",pos:"CM",rating:70,potential:89,age:18},
+ {id:5,name:"Quim Junyent",pos:"CAM",rating:71,potential:86,age:19},
+ {id:6,name:"Juan Hernández",pos:"GK",rating:65,potential:84,age:18}
+];
+
+const KEY="FCM_ACADEMY_2627";
+
+let data={
+ players:defaultPlayers.map(p=>({...p})),
+ promoted:[]
+};
+
+let selected=null;
+
+function load(){
+ try{
+  const saved=localStorage.getItem(KEY);
+  if(saved){
+   const parsed=JSON.parse(saved);
+   if(Array.isArray(parsed.players)&&Array.isArray(parsed.promoted)){
+    data=parsed;
+   }
+  }
+ }catch(e){
+  console.error(e);
+ }
+}
+
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(data));
+}
+
+function render(){
+
+ const container=document.getElementById("players");
+ container.innerHTML="";
+
+ data.players.forEach(player=>{
+
+  const card=document.createElement("div");
+  card.className="player";
+
+  card.innerHTML=`
+   <div class="avatar">${player.name.split(" ").map(x=>x[0]).slice(0,2).join("")}</div>
+   <h3>${player.name}</h3>
+   <small>${player.pos} · Age ${player.age}</small>
+   <span class="rating">${player.rating} OVR</span>
+   <div class="potential">POTENTIAL ${player.potential}</div>
+   <button class="secondary">VIEW PLAYER</button>
+  `;
+
+  card.querySelector("button").onclick=()=>{
+   selected=player.id;
+   renderDetails();
+  };
+
+  container.appendChild(card);
+ });
+
+ const total=data.players.length;
+
+ const average=total
+  ?Math.round(data.players.reduce((s,p)=>s+p.rating,0)/total)
+  :0;
+
+ document.getElementById("total").textContent=total;
+ document.getElementById("average").textContent=average;
+ document.getElementById("promoted").textContent=data.promoted.length;
+
+ renderHistory();
+}
+
+function renderDetails(){
+
+ const box=document.getElementById("details");
+ const player=data.players.find(p=>p.id===selected);
+
+ if(!player){
+  box.textContent="Select a player to view his development.";
+  return;
+ }
+
+ box.innerHTML=`
+  <div class="avatar">${player.name.split(" ").map(x=>x[0]).slice(0,2).join("")}</div>
+  <h2>${player.name}</h2>
+  <p>Position: ${player.pos}</p>
+  <p>Age: ${player.age}</p>
+  <p>Current Rating: <strong>${player.rating}</strong></p>
+  <p>Potential: <strong style="color:var(--gold)">${player.potential}</strong></p>
+  <button class="primary" id="train">TRAIN PLAYER</button>
+  <button class="secondary" id="promote">PROMOTE TO FIRST TEAM</button>
+ `;
+
+ document.getElementById("train").onclick=()=>train(player.id);
+ document.getElementById("promote").onclick=()=>promote(player.id);
+}
+
+function train(id){
+
+ const player=data.players.find(p=>p.id===id);
+ if(!player)return;
+
+ if(player.rating>=player.potential){
+  alert("This player has reached his potential!");
+  return;
+ }
+
+ player.rating=Math.min(player.rating+1,player.potential);
+
+ save();
+ render();
+ renderDetails();
+
+}
+
+function promote(id){
+
+ const index=data.players.findIndex(p=>p.id===id);
+ if(index===-1)return;
+
+ const player=data.players[index];
+
+ if(!confirm("Promote "+player.name+" to the first team?"))return;
+
+ data.promoted.push({
+  ...player,
+  promotedAt:new Date().toISOString()
+ });
+
+ data.players.splice(index,1);
+
+ selected=null;
+
+ save();
+ render();
+
+ document.getElementById("details").textContent=
+  player.name+" has been promoted successfully!";
+}
+
+function renderHistory(){
+
+ const box=document.getElementById("history");
+ box.innerHTML="";
+
+ if(!data.promoted.length){
+  box.textContent="No players promoted yet.";
+  return;
+ }
+
+ data.promoted.forEach(player=>{
+  const item=document.createElement("p");
+
+  item.textContent=
+   player.name+" · "+player.pos+" · "+player.rating+" OVR";
+
+  box.appendChild(item);
+ });
+
+}
+
+load();
+render();
+</script>
+
+</body>
+   </html>
