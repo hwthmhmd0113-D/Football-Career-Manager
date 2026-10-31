@@ -1375,19 +1375,43 @@ const clubs = [
 "ليغانيس","لاس بالماس","بلد الوليد","ليفانتي"
 ];
 
-const barcaPlayers = [
-{name:"تير شتيغن",pos:"حارس"},
-{name:"جول كوندي",pos:"دفاع"},
-{name:"باو كوبارسي",pos:"دفاع"},
-{name:"رونالد أراوخو",pos:"دفاع"},
-{name:"أليخاندرو بالدي",pos:"دفاع"},
-{name:"بيدري",pos:"وسط"},
-{name:"فرينكي دي يونغ",pos:"وسط"},
-{name:"غافي",pos:"وسط"},
-{name:"لامين يامال",pos:"هجوم"},
-{name:"رافينيا",pos:"هجوم"},
-{name:"روبرت ليفاندوفسكي",pos:"هجوم"}
-];
+// FCM — HWTA EDITION
+// Dynamic Barcelona Squad
+
+let barcaPlayers = [];
+
+function loadCurrentBarcaSquad() {
+    const possibleLists = [
+        window.squad,
+        window.players,
+        window.teamPlayers,
+        window.barcelonaPlayers,
+        window.barcaSquad,
+        window.team
+    ];
+
+    let source = possibleLists.find(list =>
+        Array.isArray(list) &&
+        list.length > 0 &&
+        list.some(p => p && (p.name || p.playerName))
+    );
+
+    if (!source) {
+        console.error("لم يتم العثور على قائمة الفريق الأصلية.");
+        return;
+    }
+
+    barcaPlayers = source.map(p => ({
+        name: p.name || p.playerName,
+        pos: p.pos || p.position || "وسط"
+    }));
+}
+
+loadCurrentBarcaSquad();
+
+let match = {};
+let timer = null;
+let speed = 1;
 
 let match = {};
 let timer = null;
