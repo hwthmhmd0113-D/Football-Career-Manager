@@ -3,576 +3,616 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0c121c">
-<title>FCM - Football Career Manager</title>
+<meta name="theme-color" content="#101525">
+<title>FCM | Barcelona Career 26/27</title>
 
 <style>
+:root{
+ --bg:#0c1120;
+ --panel:#171e30;
+ --panel2:#202a40;
+ --blue:#004d98;
+ --red:#a50044;
+ --gold:#e8c66a;
+ --green:#20d69a;
+ --text:#f5f6fa;
+ --muted:#9aa8bd;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#0c121c;color:white;font-family:Arial,sans-serif}
-header{background:#151f2d;padding:18px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:26px;font-weight:bold}
-.logo span{color:#20d69a}
-.container{max-width:850px;margin:auto;padding:13px}
-.card{background:#172231;border:1px solid #2b394b;border-radius:12px;padding:15px;margin-bottom:13px}
-h2,h3{margin-top:0}
-.muted{color:#91a0b3;font-size:13px}
-button,select{font-size:15px}
-button{border:0;border-radius:8px;padding:12px;cursor:pointer}
-.primary{background:#20d69a;color:#06150f;font-weight:bold}
-.secondary{background:#29384c;color:white}
-select{width:100%;padding:12px;background:#0e1927;color:white;border:1px solid #34445a;border-radius:8px;margin:8px 0 14px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.club{background:#223044;color:white;border:1px solid #3b4c62;padding:13px;text-align:center;border-radius:10px}
-.club.selected{border:2px solid #20d69a}
-.crest{width:45px;height:45px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-weight:bold}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:17px;
+ background:linear-gradient(110deg,#071c3b,#a50044);
+ display:flex;justify-content:space-between;
+ align-items:center;
+ border-bottom:2px solid var(--gold);
+}
+.logo{font-size:27px;font-weight:900}
+.logo span{color:var(--gold)}
+header small{font-size:11px;letter-spacing:2px}
+.container{max-width:1000px;margin:auto;padding:13px}
 .hidden{display:none!important}
-nav{display:flex;gap:7px;overflow-x:auto;margin:13px 0}
-nav button{background:#253348;color:white;white-space:nowrap}
-nav button.active{background:#20d69a;color:#06150f}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.stat{background:#223044;padding:12px;border-radius:9px}
-.stat small{color:#9eacc0}
-.stat strong{display:block;font-size:22px;margin-top:5px}
-.players{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.player{background:#223044;border-radius:10px;overflow:hidden;text-align:center;padding-bottom:10px}
-.player img{width:100%;height:145px;object-fit:contain;background:#192638}
-.player .number{color:#20d69a;font-weight:bold}
-.player b{display:block;font-size:13px;padding:5px}
-.player small{color:#aab8ca}
-.match{display:flex;justify-content:space-between;align-items:center;background:#223044;padding:13px;border-radius:8px;margin:8px 0}
-
-/* PITCH */
-.pitch{
+.card{
+ background:var(--panel);
+ border:1px solid #2b3851;
+ border-radius:13px;padding:15px;margin-bottom:13px;
+}
+.hero{
+ padding:22px;
+ background:linear-gradient(120deg,#071d40,#a50044);
+ border-radius:14px;
+ margin-bottom:14px;
+}
+.hero h1{font-size:25px;margin:0 0 8px}
+.hero p{color:#e4dce5;font-size:13px}
+.badge{
+ display:inline-block;background:var(--gold);
+ color:#20152a;padding:5px 9px;
+ border-radius:5px;font-size:11px;font-weight:bold;
+}
+.stats{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+}
+.stat{
+ background:var(--panel2);padding:12px;
+ border-radius:9px;text-align:center;
+}
+.stat small{color:var(--muted);font-size:11px}
+.stat strong{display:block;font-size:21px;margin-top:6px}
+nav{
+ display:flex;gap:7px;overflow-x:auto;
+ margin:14px 0;padding-bottom:4px;
+}
+nav button{
+ white-space:nowrap;background:var(--panel2);
+ color:white;border:1px solid #35435d;
+ border-radius:8px;padding:11px 15px;
+}
+nav button.active{
+ background:var(--red);border-color:var(--gold);
+}
+button,select{font-size:14px}
+button{cursor:pointer}
+.primary{
+ background:var(--green);color:#071a12;
+ border:0;border-radius:8px;padding:12px 16px;
+ font-weight:bold;
+}
+.secondary{
+ background:#29364e;color:white;
+ border:1px solid #40516e;border-radius:8px;
+ padding:10px 13px;
+}
+select{
+ width:100%;padding:12px;
+ background:#111a2b;color:white;
+ border:1px solid #394966;border-radius:8px;
+ margin:7px 0 13px;
+}
+.players{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+.player{
+ background:var(--panel2);
+ border:1px solid #35435b;
+ border-radius:11px;overflow:hidden;
+ text-align:center;position:relative;
+}
+.player-photo{
+ height:135px;
+ background:linear-gradient(145deg,#071d40,#a50044);
+ display:flex;align-items:center;justify-content:center;
  position:relative;
- width:100%;
- height:490px;
- overflow:hidden;
- border:3px solid white;
- border-radius:8px;
+}
+.player-photo img{
+ width:100%;height:100%;object-fit:contain;
+}
+.player-photo .initial{
+ font-size:38px;font-weight:bold;color:white;
+}
+.player-number{
+ position:absolute;top:7px;left:7px;
+ background:var(--gold);color:#171323;
+ padding:5px 8px;border-radius:6px;
+ font-weight:bold;
+}
+.player-info{padding:9px}
+.player-info b{display:block;font-size:13px;min-height:30px}
+.player-info small{color:var(--muted)}
+.rating{
+ display:inline-block;margin-top:7px;
+ background:#102d28;color:var(--green);
+ padding:4px 9px;border-radius:6px;font-weight:bold;
+}
+.player-actions{padding:0 8px 10px}
+.player-actions button{width:100%;padding:8px;font-size:12px}
+.player.selected{
+ border:2px solid var(--green);
+}
+.pitch{
+ height:490px;position:relative;overflow:hidden;
+ border:3px solid #eee;border-radius:9px;
  background:repeating-linear-gradient(
-  0deg,#17613e,#17613e 70px,
-  #1d7048 70px,#1d7048 140px
+  0deg,#17613e,#17613e 65px,
+  #1d7048 65px,#1d7048 130px
  );
 }
 .pitch:before{
- content:"";
- position:absolute;
+ content:"";position:absolute;
  left:0;right:0;top:50%;
- border-top:2px solid rgba(255,255,255,.8);
+ border-top:2px solid #ffffffa8;
 }
 .pitch:after{
- content:"";
- position:absolute;
- width:125px;height:125px;
- border:2px solid rgba(255,255,255,.8);
- border-radius:50%;
- left:50%;top:50%;
+ content:"";position:absolute;
+ width:110px;height:110px;
+ border:2px solid #ffffffa8;
+ border-radius:50%;left:50%;top:50%;
  transform:translate(-50%,-50%);
 }
-.penalty{
- position:absolute;
- width:55%;height:65px;
- left:22.5%;
- border:2px solid rgba(255,255,255,.8);
+.box{
+ position:absolute;left:22%;width:56%;height:65px;
+ border:2px solid #ffffffa8;
 }
-.penalty.top{top:0;border-top:0}
-.penalty.bottom{bottom:0;border-bottom:0}
-
-.position{
- position:absolute;
- z-index:2;
+.box.top{top:0;border-top:0}
+.box.bottom{bottom:0;border-bottom:0}
+.slot{
+ position:absolute;z-index:3;
  transform:translate(-50%,-50%);
- width:67px;
- min-height:58px;
- border-radius:9px;
- background:#10251b;
- border:2px solid white;
- text-align:center;
- padding:5px 2px;
- box-shadow:0 2px 7px #0008;
+ width:67px;min-height:59px;
+ background:#101c29eF;
+ border:2px solid white;border-radius:9px;
+ text-align:center;padding:4px 2px;
+ box-shadow:0 2px 8px #0008;
 }
-.position .shirt{
- width:23px;height:25px;
- margin:0 auto 2px;
- display:grid;place-items:center;
- background:#20d69a;
- color:#071a12;
- font-weight:bold;
- border-radius:5px 5px 3px 3px;
- font-size:12px;
+.slot .shirt{
+ width:25px;height:25px;margin:auto auto 3px;
+ background:var(--red);border:1px solid white;
+ border-radius:6px;display:grid;place-items:center;
+ font-size:12px;font-weight:bold;
 }
-.position b{display:block;font-size:10px;white-space:nowrap}
-.position small{font-size:9px;color:#d7e5dc}
-footer{text-align:center;color:#8998ac;padding:20px}
-
-@media(max-width:400px){
+.slot b{display:block;font-size:10px}
+.slot small{font-size:9px;color:#c8d6e6}
+.slot.empty{border:2px dashed #e8c66a}
+.squad-list{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
+}
+.squad-item{
+ display:flex;align-items:center;gap:8px;
+ padding:9px;background:var(--panel2);
+ border-radius:8px;border:1px solid #35435b;
+}
+.squad-item .num{
+ color:var(--gold);font-weight:bold;font-size:17px;
+ min-width:25px;
+}
+.squad-item b{font-size:12px}
+.squad-item small{display:block;color:var(--muted);font-size:10px}
+.tabs{display:none}
+.tabs.active{display:block}
+.section-title{
+ display:flex;justify-content:space-between;
+ align-items:center;margin-bottom:12px;
+}
+.section-title h3{margin:0}
+.muted{color:var(--muted);font-size:12px}
+footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
+@media(min-width:600px){
+ .players{grid-template-columns:repeat(4,1fr)}
+ .squad-list{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:380px){
+ .slot{width:58px}
+ .slot b{font-size:9px}
  .pitch{height:440px}
- .position{width:59px;min-height:54px}
- .position b{font-size:9px}
- .player img{height:120px}
 }
 </style>
 </head>
 
 <body>
+
 <header>
  <div class="logo">FC<span>M</span></div>
- <small>BY HWTA</small>
+ <small>BARCELONA CAREER 26/27</small>
 </header>
 
 <div class="container">
 
-<section id="start">
- <div class="card">
-  <h2>FOOTBALL CAREER</h2>
-  <p class="muted">Choose your Spanish club.</p>
-  <div id="clubs" class="grid"></div>
-  <br>
-  <button class="primary" id="startBtn" style="width:100%">START CAREER</button>
-  <br><br>
-  <button class="secondary" id="continueBtn" style="width:100%">CONTINUE CAREER</button>
-  <p id="message" class="muted"></p>
+<div class="hero">
+ <span class="badge">SEASON 2026 / 2027</span>
+ <h1>FC BARCELONA</h1>
+ <p>Build your team. Control your tactics. Create your legacy.</p>
+ <div class="stats">
+  <div class="stat"><small>SQUAD</small><strong>27</strong></div>
+  <div class="stat"><small>MANAGER</small><strong>FLICK</strong></div>
+  <div class="stat"><small>FORMATION</small><strong id="formationLabel">4-3-3</strong></div>
  </div>
-</section>
-
-<section id="game" class="hidden">
- <div class="card">
-  <h2 id="clubName"></h2>
-  <div class="stats">
-   <div class="stat"><small>Played</small><strong id="played">0</strong></div>
-   <div class="stat"><small>Points</small><strong id="points">0</strong></div>
-  </div>
- </div>
-
- <nav>
-  <button class="active" data-tab="home">HOME</button>
-  <button data-tab="squad">SQUAD</button>
-  <button data-tab="tactics">TACTICS</button>
-  <button data-tab="matches">MATCHES</button>
-  <button data-tab="table">TABLE</button>
- </nav>
-
- <div id="homeTab" class="tab">
-  <div class="card">
-   <h3>NEXT MATCH</h3>
-   <div id="nextMatch"></div>
-   <button class="primary" id="playBtn" style="width:100%">PLAY MATCH</button>
-  </div>
-  <div class="card">
-   <h3>CLUB INFORMATION</h3>
-   <p class="muted" id="clubInfo"></p>
-  </div>
- </div>
-
- <div id="squadTab" class="tab hidden">
-  <div class="card">
-   <h3>FIRST TEAM PLAYERS</h3>
-   <div id="players" class="players"></div>
-  </div>
- </div>
-
- <div id="tacticsTab" class="tab hidden">
-  <div class="card">
-   <h3>FORMATION</h3>
-   <select id="formation">
-    <option>4-3-3</option>
-    <option>4-2-3-1</option>
-    <option>4-4-2</option>
-   </select>
-
-   <h3>PLAYING STYLE</h3>
-   <select id="style">
-    <option>Possession</option>
-    <option>High Pressing</option>
-    <option>Counter Attack</option>
-    <option>Balanced</option>
-   </select>
-  </div>
-
-  <div class="card">
-   <h3>FORMATION PREVIEW</h3>
-   <div class="pitch" id="pitch">
-    <div class="penalty top"></div>
-    <div class="penalty bottom"></div>
-   </div>
-   <p class="muted">11 players · Starting Formation</p>
-  </div>
- </div>
-
- <div id="matchesTab" class="tab hidden">
-  <div class="card">
-   <h3>MATCH HISTORY</h3>
-   <div id="history"></div>
-  </div>
- </div>
-
- <div id="tableTab" class="tab hidden">
-  <div class="card">
-   <h3>LA LIGA TABLE</h3>
-   <div id="table"></div>
-  </div>
- </div>
-
- <button class="secondary" id="backBtn">BACK TO MENU</button>
-</section>
 </div>
 
-<footer>FCM · FOOTBALL CAREER MANAGER</footer>
+<nav>
+ <button class="active" data-tab="dashboard">HOME</button>
+ <button data-tab="squad">SQUAD</button>
+ <button data-tab="tactics">TACTICS</button>
+ <button data-tab="academy">ACADEMY</button>
+ <button data-tab="settings">SETTINGS</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="tabs active">
+
+ <div class="card">
+  <div class="section-title">
+   <h3>CLUB DASHBOARD</h3>
+   <span class="badge">BARÇA</span>
+  </div>
+  <p class="muted">Welcome to your Barcelona career.</p>
+  <div class="stats">
+   <div class="stat"><small>PLAYED</small><strong id="played">0</strong></div>
+   <div class="stat"><small>WINS</small><strong id="wins">0</strong></div>
+   <div class="stat"><small>POINTS</small><strong id="points">0</strong></div>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>TEAM INFORMATION</h3>
+  <p class="muted">Manager: Hansi Flick</p>
+  <p class="muted">Stadium: Spotify Camp Nou</p>
+  <p class="muted">Competition: La Liga · Champions League</p>
+  <p class="muted">Season: 2026/2027</p>
+ </div>
+
+ <div class="card">
+  <h3>STARTING ELEVEN</h3>
+  <div id="homeFormation" class="muted"></div>
+ </div>
+</section>
+
+<!-- SQUAD -->
+<section id="squad" class="tabs">
+
+ <div class="card">
+  <div class="section-title">
+   <h3>FIRST TEAM</h3>
+   <span class="badge">27 PLAYERS</span>
+  </div>
+  <p class="muted">Select a player to add him to your starting lineup.</p>
+  <div id="players" class="players"></div>
+ </div>
+
+ <div class="card">
+  <h3>BENCH</h3>
+  <div id="bench" class="squad-list"></div>
+ </div>
+
+</section>
+
+<!-- TACTICS -->
+<section id="tactics" class="tabs">
+
+ <div class="card">
+  <h3>TEAM FORMATION</h3>
+  <select id="formation">
+   <option value="4-3-3">4-3-3</option>
+   <option value="4-2-3-1">4-2-3-1</option>
+   <option value="4-4-2">4-4-2</option>
+  </select>
+
+  <h3>PLAYING STYLE</h3>
+  <select id="style">
+   <option>Possession</option>
+   <option>High Pressing</option>
+   <option>Counter Attack</option>
+   <option>Balanced</option>
+  </select>
+
+  <h3>DEFENSIVE LINE</h3>
+  <select id="defense">
+   <option>High</option>
+   <option>Medium</option>
+   <option>Low</option>
+  </select>
+
+  <h3>TEAM PRESSURE</h3>
+  <select id="pressure">
+   <option>Very High</option>
+   <option>High</option>
+   <option>Medium</option>
+   <option>Low</option>
+  </select>
+ </div>
+
+ <div class="card">
+  <h3>TACTICAL BOARD</h3>
+  <div class="pitch" id="pitch">
+   <div class="box top"></div>
+   <div class="box bottom"></div>
+  </div>
+  <p class="muted">Select a player from the squad to change your lineup.</p>
+ </div>
+
+ <div class="card">
+  <h3>STARTING LINEUP</h3>
+  <div id="lineup" class="squad-list"></div>
+ </div>
+
+</section>
+
+<!-- ACADEMY -->
+<section id="academy" class="tabs">
+ <div class="card">
+  <h3>LA MASIA</h3>
+  <p class="muted">Youth development will be introduced in the next development stage.</p>
+  <div class="stat">
+   <small>ACADEMY STATUS</small>
+   <strong>READY</strong>
+  </div>
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="tabs">
+ <div class="card">
+  <h3>CAREER SETTINGS</h3>
+  <p class="muted">Your career is saved automatically on this device.</p>
+  <button class="secondary" id="resetBtn">RESET CAREER</button>
+ </div>
+</section>
+
+</div>
+
+<footer>FCM · BARCELONA CAREER · BY HWTA</footer>
 
 <script>
 "use strict";
 
-const clubs=[
- {name:"Barcelona",code:"BAR",color:"#a50044"},
- {name:"Real Madrid",code:"RMA",color:"#d6b64c"},
- {name:"Real Betis",code:"BET",color:"#168c56"},
- {name:"Espanyol",code:"ESP",color:"#2871bb"},
- {name:"Getafe",code:"GET",color:"#2460a7"},
- {name:"Atletico Madrid",code:"ATM",color:"#bd202b"},
- {name:"Athletic Bilbao",code:"ATH",color:"#d52b35"}
+const players=[
+ {name:"Joan Garcia",number:1,pos:"GK",rating:84},
+ {name:"João Cancelo",number:2,pos:"RB",rating:85},
+ {name:"Alejandro Balde",number:3,pos:"LB",rating:84},
+ {name:"Brian Fariñas",number:4,pos:"CM",rating:74},
+ {name:"Pau Cubarsí",number:5,pos:"CB",rating:85},
+ {name:"Gavi",number:6,pos:"CM",rating:86},
+ {name:"Fermín López",number:7,pos:"CAM",rating:85},
+ {name:"Pedri",number:8,pos:"CM",rating:92},
+ {name:"Gabriel Jesus",number:9,pos:"ST",rating:85},
+ {name:"Lamine Yamal",number:10,pos:"RW",rating:93},
+ {name:"Raphinha",number:11,pos:"LW",rating:90},
+ {name:"Xavi Espart",number:12,pos:"RB",rating:72},
+ {name:"Wojciech Szczęsny",number:13,pos:"GK",rating:82},
+ {name:"Karim Adeyemi",number:14,pos:"LW",rating:86},
+ {name:"Andreas Christensen",number:15,pos:"CB",rating:82},
+ {name:"Rodri",number:16,pos:"CDM",rating:91},
+ {name:"Anthony Gordon",number:17,pos:"LW",rating:86},
+ {name:"Gerard Martín",number:18,pos:"LB",rating:79},
+ {name:"Roony Bardghji",number:19,pos:"RW",rating:79},
+ {name:"Dani Olmo",number:20,pos:"CAM",rating:87},
+ {name:"Frenkie de Jong",number:21,pos:"CM",rating:89},
+ {name:"Marc Bernal",number:22,pos:"CDM",rating:80},
+ {name:"Jules Koundé",number:23,pos:"RB",rating:87},
+ {name:"Eric García",number:24,pos:"CB",rating:82},
+ {name:"Dominik Livaković",number:25,pos:"GK",rating:82},
+ {name:"Jesse Bisiwu",number:27,pos:"LW",rating:70},
+ {name:"Hamza Abdelkarim",number:29,pos:"ST",rating:72}
 ];
 
-const barcelonaPlayers=[
- ["Joan Garcia","GK",13,80],
- ["Wojciech Szczesny","GK",25,80],
- ["Alejandro Balde","LB",3,82],
- ["Ronald Araujo","CB",4,84],
- ["Pau Cubarsi","CB",5,83],
- ["Jules Kounde","RB",23,85],
- ["Eric Garcia","CB",24,80],
- ["Gerard Martin","LB",18,78],
- ["Andreas Christensen","CB",15,82],
- ["Pedri","CM",8,91],
- ["Frenkie de Jong","CM",21,88],
- ["Gavi","CM",6,85],
- ["Dani Olmo","CAM",20,86],
- ["Marc Casado","CDM",17,80],
- ["Fermin Lopez","CM",16,84],
- ["Raphinha","LW",11,89],
- ["Lamine Yamal","RW",10,92],
- ["Robert Lewandowski","ST",9,87],
- ["Ferran Torres","ST",7,83],
- ["Marcus Rashford","LW",14,84],
- ["Roony Bardghji","RW",28,77],
- ["Marc Bernal","CDM",22,78]
-];
-
-const otherNames=[
- "Alex Morgan","Daniel Silva","Lucas Martin","David Costa",
- "Marco Rossi","Samuel Garcia","Leo Santos","Adam Wilson",
- "Ryan Walker","Noah Brown","Thomas Miller","Gabriel Lopez",
- "Mateo Fernandez","Ethan Clarke","Oliver Scott","Luis Romero",
- "Carlos Diaz","Nico Alvarez","Victor Torres","Ben Carter",
- "Andreas Meyer","Julian Weber"
-];
-
-let selected=null;
-let career=null;
-const $=id=>document.getElementById(id);
-
-function showClubs(){
- $("clubs").innerHTML="";
- clubs.forEach(club=>{
-  const button=document.createElement("button");
-  button.className="club";
-  button.innerHTML='<div class="crest" style="background:'+club.color+'">'+club.code+'</div><b>'+club.name+'</b>';
-  button.onclick=()=>{
-   selected=club;
-   document.querySelectorAll(".club").forEach(x=>x.classList.remove("selected"));
-   button.classList.add("selected");
-   $("message").textContent="Selected: "+club.name;
-  };
-  $("clubs").appendChild(button);
- });
-}
-
-function createPlayers(){
- if(selected.name==="Barcelona"){
-  return barcelonaPlayers.map(p=>({
-   name:p[0],position:p[1],number:p[2],rating:p[3]
-  }));
- }
- return otherNames.map((name,i)=>({
-  name,
-  position:["GK","GK","LB","CB","CB","RB","CB","LB","RB","CDM","CM","CM","CAM","CM","CDM","LW","RW","ST","ST","LW","RW","ST"][i],
-  number:i+1,
-  rating:70+(i%12)
- }));
-}
-
-function startCareer(){
- if(!selected){
-  $("message").textContent="Choose a club first.";
-  return;
- }
- career={
-  club:selected.name,
-  players:createPlayers(),
-  played:0,points:0,wins:0,draws:0,losses:0,
-  index:0,history:[],
-  formation:"4-3-3",
-  style:"Possession",
-  table:clubs.map(c=>({name:c.name,p:0,w:0,d:0,l:0,pts:0}))
- };
- openGame();
-}
-
-function openGame(){
- $("start").classList.add("hidden");
- $("game").classList.remove("hidden");
- $("clubName").textContent=career.club;
- $("formation").value=career.formation||"4-3-3";
- $("style").value=career.style||"Possession";
- update();
-}
-
-function save(){
- if(career)localStorage.setItem("FCM_SIMPLE",JSON.stringify(career));
-}
-
-function load(){
- try{
-  const data=localStorage.getItem("FCM_SIMPLE");
-  if(!data)throw Error();
-  career=JSON.parse(data);
-  openGame();
- }catch(e){
-  $("message").textContent="No saved career found.";
- }
-}
-
-function update(){
- $("played").textContent=career.played;
- $("points").textContent=career.points;
- $("clubInfo").textContent=career.club+" · Spanish League · "+career.players.length+" players";
-
- const opponents=clubs.filter(c=>c.name!==career.club);
- const opponent=opponents[career.index%opponents.length];
-
- $("nextMatch").innerHTML='<div class="match"><b>'+career.club+'</b><b>VS</b><b>'+opponent.name+'</b></div>';
-
- renderPlayers();
- renderPitch();
- renderHistory();
- renderTable();
- save();
-}
-
-function renderPlayers(){
- $("players").innerHTML="";
- career.players.forEach(p=>{
-  const card=document.createElement("div");
-  card.className="player";
-
-  const photo=document.createElement("img");
-  photo.alt=p.name;
-  photo.loading="lazy";
-
-  /*
-   * Individual player images are loaded by name.
-   * If an image cannot load, a clean fallback is shown.
-   */
-  if(career.club==="Barcelona"){
-   photo.src="https://ui-avatars.com/api/?name="+encodeURIComponent(p.name)+"&background=172231&color=20d69a&size=300&bold=true";
-  }else{
-   photo.src="https://ui-avatars.com/api/?name="+encodeURIComponent(p.name)+"&background=223044&color=ffffff&size=300";
-  }
-
-  photo.onerror=()=>{
-   photo.onerror=null;
-   photo.src="https://ui-avatars.com/api/?name=FCM&background=223044&color=20d69a&size=300";
-  };
-
-  card.appendChild(photo);
-  card.innerHTML+=
-   '<div class="number">#'+p.number+'</div>'+
-   '<b>'+p.name+'</b>'+
-   '<small>'+p.position+' · '+p.rating+'</small>';
-
-  $("players").appendChild(card);
- });
-}
-
-/* Formation coordinates: percentage positions on the pitch */
 const formations={
  "4-3-3":[
-  [50,91],
-  [15,72],[38,78],[62,78],[85,72],
+  [50,91],[15,73],[38,79],[62,79],[85,73],
   [50,57],[30,43],[70,43],
   [18,19],[50,13],[82,19]
  ],
  "4-2-3-1":[
-  [50,91],
-  [15,72],[38,78],[62,78],[85,72],
-  [35,58],[65,58],
-  [18,39],[50,34],[82,39],
-  [50,13]
+  [50,91],[15,73],[38,79],[62,79],[85,73],
+  [35,59],[65,59],
+  [18,38],[50,34],[82,38],[50,13]
  ],
  "4-4-2":[
-  [50,91],
-  [15,72],[38,78],[62,78],[85,72],
-  [15,48],[38,52],[62,52],[85,48],
+  [50,91],[15,73],[38,79],[62,79],[85,73],
+  [15,49],[38,53],[62,53],[85,49],
   [35,17],[65,17]
  ]
 };
 
-function getStartingPlayers(){
- const byPosition={
-  GK:career.players.filter(p=>p.position==="GK"),
-  DEF:career.players.filter(p=>["CB","LB","RB"].includes(p.position)),
-  MID:career.players.filter(p=>["CM","CDM","CAM"].includes(p.position)),
-  ATT:career.players.filter(p=>["LW","RW","ST"].includes(p.position))
- };
+const defaultLineup=[
+ 1,3,5,23,2,16,8,21,11,9,10
+];
 
- const keeper=byPosition.GK[0]||career.players[0];
- const defenders=byPosition.DEF;
- const midfielders=byPosition.MID;
- const attackers=byPosition.ATT;
+let career={
+ formation:"4-3-3",
+ style:"Possession",
+ defense:"High",
+ pressure:"High",
+ lineup:defaultLineup,
+ played:0,
+ wins:0,
+ points:0
+};
 
- const formation=$("formation").value;
- let result=[keeper];
+const $=id=>document.getElementById(id);
 
- function take(list,count){
-  const chosen=list.slice(0,count);
-  result.push(...chosen);
- }
+function loadCareer(){
+ try{
+  const saved=localStorage.getItem("FCM_BARCA_2627");
+  if(saved){
+   const data=JSON.parse(saved);
+   career={...career,...data};
+  }
+ }catch(e){}
+}
 
- take(defenders,4);
+function saveCareer(){
+ localStorage.setItem("FCM_BARCA_2627",JSON.stringify(career));
+}
 
- if(formation==="4-2-3-1"){
-  take(midfielders,5);
-  take(attackers,1);
- }else if(formation==="4-4-2"){
-  take(midfielders,4);
-  take(attackers,2);
+function getPlayer(number){
+ return players.find(p=>p.number===number);
+}
+
+function initials(name){
+ return name.split(" ").map(x=>x[0]).slice(0,2).join("");
+}
+
+function renderPlayers(){
+ $("players").innerHTML="";
+
+ players.forEach(p=>{
+  const selected=career.lineup.includes(p.number);
+  const card=document.createElement("div");
+  card.className="player"+(selected?" selected":"");
+
+  card.innerHTML=`
+   <div class="player-photo">
+    <span class="player-number">${p.number}</span>
+    <span class="initial">${initials(p.name)}</span>
+   </div>
+   <div class="player-info">
+    <b>${p.name}</b>
+    <small>${p.pos}</small><br>
+    <span class="rating">${p.rating} OVR</span>
+   </div>
+   <div class="player-actions">
+    <button class="${selected?"secondary":"primary"}">
+     ${selected?"REMOVE FROM XI":"ADD TO STARTING XI"}
+    </button>
+   </div>
+  `;
+
+  card.querySelector("button").onclick=()=>togglePlayer(p.number);
+  $("players").appendChild(card);
+ });
+}
+
+function togglePlayer(number){
+ if(career.lineup.includes(number)){
+  if(career.lineup.length<=11){
+   alert("Choose another player before removing this one.");
+   return;
+  }
+  career.lineup=career.lineup.filter(n=>n!==number);
  }else{
-  take(midfielders,3);
-  take(attackers,3);
+  if(career.lineup.length>=11){
+   alert("Your starting lineup already has 11 players.");
+   return;
+  }
+  career.lineup.push(number);
  }
-
- while(result.length<11){
-  const extra=career.players.find(p=>!result.includes(p));
-  if(!extra)break;
-  result.push(extra);
- }
-
- return result.slice(0,11);
+ saveCareer();
+ renderAll();
 }
 
 function renderPitch(){
  const pitch=$("pitch");
- pitch.innerHTML='<div class="penalty top"></div><div class="penalty bottom"></div>';
+ pitch.innerHTML='<div class="box top"></div><div class="box bottom"></div>';
 
- const formation=$("formation").value;
- const positions=formations[formation]||formations["4-3-3"];
- const players=getStartingPlayers();
+ const coords=formations[career.formation];
+ career.lineup.forEach((number,i)=>{
+  if(i>=11)return;
+  const p=getPlayer(number);
+  const pos=coords[i];
 
- players.forEach((p,i)=>{
-  const pos=positions[i];
-  const el=document.createElement("div");
-  el.className="position";
-  el.style.left=pos[0]+"%";
-  el.style.top=pos[1]+"%";
-
-  el.innerHTML=
-   '<div class="shirt">'+p.number+'</div>'+
-   '<b>'+p.name.split(" ")[0]+'</b>'+
-   '<small>'+p.position+'</small>';
-
-  pitch.appendChild(el);
+  const slot=document.createElement("div");
+  slot.className="slot";
+  slot.style.left=pos[0]+"%";
+  slot.style.top=pos[1]+"%";
+  slot.innerHTML=`
+   <div class="shirt">${p.number}</div>
+   <b>${p.name.split(" ")[0]}</b>
+   <small>${p.pos}</small>
+  `;
+  pitch.appendChild(slot);
  });
 }
 
-function playMatch(){
- const opponents=clubs.filter(c=>c.name!==career.club);
- const opponent=opponents[career.index%opponents.length];
+function renderLineup(){
+ $("lineup").innerHTML="";
+ career.lineup.forEach(number=>{
+  const p=getPlayer(number);
+  if(!p)return;
+  const item=document.createElement("div");
+  item.className="squad-item";
+  item.innerHTML=`
+   <span class="num">${p.number}</span>
+   <div><b>${p.name}</b><small>${p.pos} · ${p.rating} OVR</small></div>
+  `;
+  $("lineup").appendChild(item);
+ });
 
- let strength=career.players.reduce((a,p)=>a+p.rating,0)/career.players.length;
- let bonus=$("style").value==="Possession"?2:$("style").value==="High Pressing"?3:0;
-
- let home=Math.floor(Math.random()*4)+Math.floor((strength+bonus)/30);
- let away=Math.floor(Math.random()*4)+1;
-
- let result=home>away?"W":home===away?"D":"L";
- career.played++;
-
- if(result==="W"){career.wins++;career.points+=3}
- else if(result==="D"){career.draws++;career.points++}
- else{career.losses++}
-
- let own=career.table.find(t=>t.name===career.club);
- let rival=career.table.find(t=>t.name===opponent.name);
- own.p++;rival.p++;
-
- if(result==="W"){own.w++;own.pts+=3;rival.l++}
- else if(result==="D"){own.d++;rival.d++;own.pts++;rival.pts++}
- else{own.l++;rival.w++;rival.pts+=3}
-
- career.history.unshift({opponent:opponent.name,home,away});
- career.index++;
- update();
- showTab("matches",document.querySelector('[data-tab="matches"]'));
+ $("homeFormation").textContent=
+  career.lineup.map(n=>getPlayer(n)?.name).filter(Boolean).join(" · ");
 }
 
-function renderHistory(){
- $("history").innerHTML="";
- if(!career.history.length){
-  $("history").textContent="No matches played.";
-  return;
- }
- career.history.forEach(m=>{
-  const row=document.createElement("div");
-  row.className="match";
-  row.innerHTML="<b>"+career.club+"</b><strong>"+m.home+" - "+m.away+"</strong><b>"+m.opponent+"</b>";
-  $("history").appendChild(row);
+function renderBench(){
+ $("bench").innerHTML="";
+ players.filter(p=>!career.lineup.includes(p.number)).forEach(p=>{
+  const item=document.createElement("div");
+  item.className="squad-item";
+  item.innerHTML=`
+   <span class="num">${p.number}</span>
+   <div><b>${p.name}</b><small>${p.pos} · ${p.rating} OVR</small></div>
+  `;
+  $("bench").appendChild(item);
  });
 }
 
-function renderTable(){
- $("table").innerHTML="";
- [...career.table].sort((a,b)=>b.pts-a.pts||b.w-a.w).forEach((t,i)=>{
-  const row=document.createElement("div");
-  row.className="match";
-  row.innerHTML="<b>"+(i+1)+". "+t.name+"</b><span>"+t.p+" MP</span><strong>"+t.pts+" PTS</strong>";
-  $("table").appendChild(row);
- });
+function renderAll(){
+ $("formation").value=career.formation;
+ $("style").value=career.style;
+ $("defense").value=career.defense;
+ $("pressure").value=career.pressure;
+ $("formationLabel").textContent=career.formation;
+
+ $("played").textContent=career.played;
+ $("wins").textContent=career.wins;
+ $("points").textContent=career.points;
+
+ renderPlayers();
+ renderPitch();
+ renderLineup();
+ renderBench();
 }
 
-function showTab(name,button){
- document.querySelectorAll(".tab").forEach(t=>t.classList.add("hidden"));
- $(name+"Tab").classList.remove("hidden");
- document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
+function changeFormation(){
+ career.formation=$("formation").value;
+ saveCareer();
+ renderAll();
 }
 
-function back(){
- save();
- $("game").classList.add("hidden");
- $("start").classList.remove("hidden");
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
- showClubs();
- $("startBtn").onclick=startCareer;
- $("continueBtn").onclick=load;
- $("playBtn").onclick=playMatch;
- $("backBtn").onclick=back;
-
- document.querySelectorAll("nav button").forEach(button=>{
-  button.onclick=()=>showTab(button.dataset.tab,button);
- });
-
- $("formation").onchange=()=>{
-  career.formation=$("formation").value;
-  renderPitch();
-  save();
- };
-
- $("style").onchange=()=>{
-  career.style=$("style").value;
-  save();
+document.querySelectorAll("nav button").forEach(btn=>{
+ btn.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".tabs").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  $(btn.dataset.tab).classList.add("active");
  };
 });
+
+$("formation").onchange=changeFormation;
+
+$("style").onchange=()=>{
+ career.style=$("style").value;
+ saveCareer();
+};
+$("defense").onchange=()=>{
+ career.defense=$("defense").value;
+ saveCareer();
+};
+$("pressure").onchange=()=>{
+ career.pressure=$("pressure").value;
+ saveCareer();
+};
+
+$("resetBtn").onclick=()=>{
+ if(confirm("Delete your saved career and reset the team?")){
+  localStorage.removeItem("FCM_BARCA_2627");
+  location.reload();
+ }
+};
+
+loadCareer();
+renderAll();
 </script>
+
 </body>
- </html>
+</html>
