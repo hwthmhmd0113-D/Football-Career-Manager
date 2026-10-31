@@ -1173,3 +1173,578 @@ renderAll();
 
 </body>
 </html>
+<!-- FCM MATCH SYSTEM - HWTA EDITION -->
+<section id="hwta-match-system" dir="rtl">
+
+<style>
+#hwta-match-system {
+    background:#101522;
+    color:#fff;
+    padding:16px;
+    border-radius:16px;
+    font-family:Arial,sans-serif;
+    margin:15px 0;
+}
+#hwta-match-system * {box-sizing:border-box}
+#hwta-match-system h2 {color:#e7bd55;text-align:center}
+#hwta-match-system select,
+#hwta-match-system button {
+    padding:12px;
+    border-radius:9px;
+    border:1px solid #46516a;
+    margin:4px;
+    background:#202b40;
+    color:white;
+    font-size:14px;
+}
+#hwta-match-system button:active {transform:scale(.97)}
+#hwta-match-system .match-score {
+    background:linear-gradient(120deg,#101c42,#6b102c);
+    padding:22px;
+    border-radius:14px;
+    text-align:center;
+    margin:12px 0;
+}
+#hwta-match-system .score {
+    font-size:38px;
+    font-weight:bold;
+    margin:10px;
+}
+#hwta-match-system .match-clock {
+    color:#e7bd55;
+    font-size:24px;
+    font-weight:bold;
+}
+#hwta-match-system .match-panel {
+    background:#1b2639;
+    padding:13px;
+    border-radius:12px;
+    margin:10px 0;
+}
+#hwta-match-system .event {
+    padding:9px;
+    border-bottom:1px solid #39445a;
+    font-size:13px;
+}
+#hwta-match-system .stat-row {
+    display:flex;
+    justify-content:space-between;
+    margin:9px 0;
+    font-size:13px;
+}
+#hwta-match-system .bar {
+    height:8px;
+    background:#39445a;
+    border-radius:10px;
+    overflow:hidden;
+}
+#hwta-match-system .bar span {
+    display:block;
+    height:100%;
+    background:#e7bd55;
+}
+#hwta-match-system .hidden {display:none}
+#hwta-match-system .gold {color:#e7bd55}
+#hwta-match-system .controls {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+#hwta-match-system button.primary {
+    background:#a51d42;
+    border-color:#e7bd55;
+}
+#hwta-match-system .player-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px;
+    border-bottom:1px solid #39445a;
+    font-size:13px;
+}
+#hwta-match-system .small {font-size:12px;color:#aebbd0}
+</style>
+
+<h2>⚽ مركز المباريات</h2>
+
+<div class="match-panel">
+    <label>اختر المنافس:</label>
+    <select id="hwtaOpponent"></select>
+    <button class="primary" id="hwtaStart">بدء مباراة جديدة</button>
+</div>
+
+<div class="match-score">
+    <div id="hwtaTeams">برشلونة × المنافس</div>
+    <div class="score">
+        <span id="hwtaHomeScore">0</span>
+        -
+        <span id="hwtaAwayScore">0</span>
+    </div>
+    <div class="match-clock" id="hwtaClock">00:00</div>
+    <div class="small" id="hwtaStatus">المباراة لم تبدأ</div>
+</div>
+
+<div class="controls">
+    <button id="hwtaPause">⏸ إيقاف</button>
+    <button id="hwtaSpeed1">1x</button>
+    <button id="hwtaSpeed2">2x</button>
+    <button id="hwtaSpeed4">4x</button>
+</div>
+
+<div class="match-panel">
+    <h3 class="gold">⚙️ أسلوب اللعب</h3>
+    <select id="hwtaTactic">
+        <option value="possession">الاستحواذ</option>
+        <option value="counter">الهجمات المرتدة</option>
+        <option value="pressing">الضغط العالي</option>
+        <option value="balanced">متوازن</option>
+        <option value="attacking">هجومي</option>
+        <option value="defensive">دفاعي</option>
+    </select>
+</div>
+
+<div class="match-panel">
+    <h3 class="gold">📊 إحصائيات المباراة</h3>
+
+    <div class="stat-row">
+        <span id="hwtaPossHome">50%</span>
+        <b>الاستحواذ</b>
+        <span id="hwtaPossAway">50%</span>
+    </div>
+    <div class="bar"><span id="hwtaPossBar" style="width:50%"></span></div>
+
+    <div class="stat-row">
+        <span id="hwtaShotsHome">0</span>
+        <b>التسديدات</b>
+        <span id="hwtaShotsAway">0</span>
+    </div>
+
+    <div class="stat-row">
+        <span id="hwtaPassHome">0</span>
+        <b>التمريرات</b>
+        <span id="hwtaPassAway">0</span>
+    </div>
+
+    <div class="stat-row">
+        <span id="hwtaCornersHome">0</span>
+        <b>الركنيات</b>
+        <span id="hwtaCornersAway">0</span>
+    </div>
+</div>
+
+<div class="match-panel">
+    <h3 class="gold">🔄 التبديلات</h3>
+    <div id="hwtaSubstitution"></div>
+    <div class="small" id="hwtaSubCount">التبديلات: 0 / 5</div>
+</div>
+
+<div class="match-panel">
+    <h3 class="gold">📋 أحداث المباراة</h3>
+    <div id="hwtaEvents" aria-live="polite">
+        <div class="event">ستظهر أحداث المباراة هنا.</div>
+    </div>
+</div>
+
+<div class="match-panel">
+    <h3 class="gold">⭐ تقييم اللاعبين</h3>
+    <div id="hwtaRatings">لم تبدأ المباراة بعد.</div>
+</div>
+
+<div class="match-panel hidden" id="hwtaFinal">
+    <h3 class="gold">🏁 نهاية المباراة</h3>
+    <div id="hwtaFinalText"></div>
+    <button onclick="hwtaNewMatch()">مباراة جديدة</button>
+</div>
+
+</section>
+
+<script>
+(function(){
+
+const root = document.getElementById("hwta-match-system");
+if (!root || root.dataset.initialized) return;
+root.dataset.initialized = "yes";
+
+const $ = id => root.querySelector("#" + id);
+
+const clubs = [
+"ريال مدريد","أتلتيكو مدريد","جيرونا","أتلتيك بلباو",
+"ريال سوسيداد","فياريال","ريال بيتيس","إشبيلية",
+"فالنسيا","أوساسونا","سيلتا فيغو","خيتافي",
+"ريال مايوركا","رايو فاييكانو","إسبانيول","ديبورتيفو ألافيس",
+"ليغانيس","لاس بالماس","بلد الوليد","ليفانتي"
+];
+
+const barcaPlayers = [
+{name:"تير شتيغن",pos:"حارس"},
+{name:"جول كوندي",pos:"دفاع"},
+{name:"باو كوبارسي",pos:"دفاع"},
+{name:"رونالد أراوخو",pos:"دفاع"},
+{name:"أليخاندرو بالدي",pos:"دفاع"},
+{name:"بيدري",pos:"وسط"},
+{name:"فرينكي دي يونغ",pos:"وسط"},
+{name:"غافي",pos:"وسط"},
+{name:"لامين يامال",pos:"هجوم"},
+{name:"رافينيا",pos:"هجوم"},
+{name:"روبرت ليفاندوفسكي",pos:"هجوم"}
+];
+
+let match = {};
+let timer = null;
+let speed = 1;
+
+function resetMatch(){
+    match = {
+        running:false,
+        paused:false,
+        finished:false,
+        time:0,
+        home:0,
+        away:0,
+        subs:0,
+        homeShots:0,
+        awayShots:0,
+        homePass:0,
+        awayPass:0,
+        homeCorners:0,
+        awayCorners:0,
+        homePoss:50,
+        awayPoss:50,
+        events:[],
+        ratings:{},
+        usedPlayers:[...barcaPlayers]
+    };
+
+    barcaPlayers.forEach(p => {
+        match.ratings[p.name] = 6.5;
+    });
+}
+
+const opponentSelect = $("hwtaOpponent");
+
+clubs.forEach(club=>{
+    const option = document.createElement("option");
+    option.value = club;
+    option.textContent = club;
+    opponentSelect.appendChild(option);
+});
+
+function event(text){
+    match.events.unshift({
+        minute:Math.floor(match.time/60),
+        text:text
+    });
+    match.events = match.events.slice(0,60);
+    renderEvents();
+}
+
+function renderEvents(){
+    $("hwtaEvents").innerHTML = "";
+
+    match.events.forEach(e=>{
+        const div = document.createElement("div");
+        div.className = "event";
+        div.textContent = e.minute + "' — " + e.text;
+        $("hwtaEvents").appendChild(div);
+    });
+}
+
+function updateScore(){
+    $("hwtaHomeScore").textContent = match.home;
+    $("hwtaAwayScore").textContent = match.away;
+
+    const m = Math.floor(match.time/60);
+    const s = match.time%60;
+
+    $("hwtaClock").textContent =
+        String(m).padStart(2,"0") + ":" +
+        String(s).padStart(2,"0");
+
+    $("hwtaPossHome").textContent = match.homePoss + "%";
+    $("hwtaPossAway").textContent = match.awayPoss + "%";
+    $("hwtaPossBar").style.width = match.homePoss + "%";
+
+    $("hwtaShotsHome").textContent = match.homeShots;
+    $("hwtaShotsAway").textContent = match.awayShots;
+
+    $("hwtaPassHome").textContent = match.homePass;
+    $("hwtaPassAway").textContent = match.awayPass;
+
+    $("hwtaCornersHome").textContent = match.homeCorners;
+    $("hwtaCornersAway").textContent = match.awayCorners;
+
+    $("hwtaSubCount").textContent =
+        "التبديلات: " + match.subs + " / 5";
+}
+
+function renderRatings(){
+    $("hwtaRatings").innerHTML = "";
+
+    Object.entries(match.ratings).forEach(([name,rating])=>{
+        const div = document.createElement("div");
+        div.className = "player-row";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = name;
+
+        const ratingSpan = document.createElement("b");
+        ratingSpan.className = "gold";
+        ratingSpan.textContent = rating.toFixed(1);
+
+        div.append(nameSpan,ratingSpan);
+        $("hwtaRatings").appendChild(div);
+    });
+}
+
+function randomPlayer(){
+    return barcaPlayers[
+        Math.floor(Math.random()*barcaPlayers.length)
+    ].name;
+}
+
+function opponentScorer(){
+    const club = opponentSelect.value;
+
+    const players = {
+        "ريال مدريد":["كيليان مبابي","فينيسيوس جونيور","جود بيلينغهام","رودريغو"],
+        "أتلتيكو مدريد":["أنطوان غريزمان","جوليان ألفاريز","ألكسندر سورلوث"],
+        "جيرونا":["مهاجم الفريق","لاعب الوسط","الجناح"],
+        "أتلتيك بلباو":["إينياكي ويليامز","نيكو ويليامز","غوركا غوروزيتا"],
+        "ريال سوسيداد":["ميكيل أويارزابال","تاكيفوسا كوبو"],
+        "فياريال":["جيرارد مورينو","أيوزي بيريز"],
+        "ريال بيتيس":["إيسكو","أيوزي بيريز"],
+        "إشبيلية":["مهاجم الفريق","الجناح"],
+        "فالنسيا":["هوغو دورو","دييغو لوبيز"]
+    };
+
+    const list = players[club] || [
+        "مهاجم الفريق","لاعب الوسط","الجناح الأيمن"
+    ];
+
+    return list[Math.floor(Math.random()*list.length)];
+}
+
+function goal(home){
+    if(home){
+        match.home++;
+        const scorer = randomPlayer();
+        match.ratings[scorer] =
+            Math.min(10,match.ratings[scorer]+0.5);
+
+        event("⚽ هدف لبرشلونة! سجّل " + scorer + ".");
+    } else {
+        match.away++;
+        const scorer = opponentScorer();
+
+        event("⚽ هدف لـ " + opponentSelect.value +
+              "! سجّل " + scorer + ".");
+    }
+
+    updateScore();
+    renderRatings();
+}
+
+function simulationStep(){
+    if(!match.running || match.paused || match.finished) return;
+
+    match.time += speed;
+
+    const tactic = $("hwtaTactic").value;
+
+    let homeChance = 0.50;
+
+    if(tactic==="attacking") homeChance=0.61;
+    if(tactic==="defensive") homeChance=0.39;
+    if(tactic==="possession") homeChance=0.56;
+    if(tactic==="counter") homeChance=0.52;
+    if(tactic==="pressing") homeChance=0.55;
+
+    match.homePoss = Math.max(25,Math.min(75,
+        Math.round(match.homePoss + (Math.random()-0.5)*3)
+    ));
+    match.awayPoss = 100-match.homePoss;
+
+    if(Math.random()<homeChance){
+        match.homeShots++;
+        match.homePass+=Math.floor(Math.random()*5)+2;
+
+        if(Math.random()<0.025) goal(true);
+        else if(Math.random()<0.04) event("تسديدة خطيرة لبرشلونة!");
+        else if(Math.random()<0.06) event("هجمة منظمة لبرشلونة.");
+    } else {
+        match.awayShots++;
+        match.awayPass+=Math.floor(Math.random()*5)+2;
+
+        if(Math.random()<0.025) goal(false);
+        else if(Math.random()<0.04) event("تسديدة خطيرة من المنافس!");
+        else if(Math.random()<0.06) event("هجمة خطيرة للمنافس.");
+    }
+
+    if(Math.random()<0.025){
+        if(Math.random()<0.5){
+            match.homeCorners++;
+            event("ركنية لبرشلونة.");
+        }else{
+            match.awayCorners++;
+            event("ركنية للمنافس.");
+        }
+    }
+
+    if(match.time===300){
+        event("⏱️ نهاية الشوط الأول.");
+    }
+
+    updateScore();
+
+    if(match.time>=600){
+        finishMatch();
+    }
+}
+
+function startMatch(){
+    if(match.running && !match.finished) return;
+
+    resetMatch();
+
+    $("hwtaFinal").classList.add("hidden");
+
+    $("hwtaTeams").textContent =
+        "برشلونة × " + opponentSelect.value;
+
+    $("hwtaStatus").textContent = "المباراة جارية";
+
+    match.running=true;
+    event("انطلقت المباراة!");
+
+    renderRatings();
+    updateScore();
+    renderSubstitutions();
+
+    clearInterval(timer);
+    timer=setInterval(simulationStep,1000);
+}
+
+function finishMatch(){
+    match.running=false;
+    match.finished=true;
+    match.paused=false;
+
+    clearInterval(timer);
+
+    $("hwtaStatus").textContent="انتهت المباراة";
+
+    event("🏁 أطلق الحكم صافرة النهاية.");
+
+    $("hwtaFinal").classList.remove("hidden");
+
+    $("hwtaFinalText").textContent =
+        "برشلونة " + match.home + " - " +
+        match.away + " " + opponentSelect.value;
+
+    renderRatings();
+    updateScore();
+}
+
+function pauseMatch(){
+    if(!match.running || match.finished) return;
+
+    match.paused=!match.paused;
+
+    $("hwtaPause").textContent =
+        match.paused ? "▶️ استئناف" : "⏸ إيقاف";
+
+    $("hwtaStatus").textContent =
+        match.paused ? "المباراة متوقفة" : "المباراة جارية";
+}
+
+function setSpeed(value){
+    speed=value;
+}
+
+function renderSubstitutions(){
+    const box=$("hwtaSubstitution");
+    box.innerHTML="";
+
+    const selectOut=document.createElement("select");
+    const selectIn=document.createElement("select");
+    const button=document.createElement("button");
+
+    selectOut.id="hwtaSubOut";
+    selectIn.id="hwtaSubIn";
+
+    barcaPlayers.forEach(p=>{
+        const option=document.createElement("option");
+        option.value=p.name;
+        option.textContent=p.name;
+        selectOut.appendChild(option);
+    });
+
+    const substitutes=[
+        "لاعب بديل 1","لاعب بديل 2","لاعب بديل 3",
+        "لاعب بديل 4","لاعب بديل 5","لاعب بديل 6"
+    ];
+
+    substitutes.forEach(name=>{
+        const option=document.createElement("option");
+        option.value=name;
+        option.textContent=name;
+        selectIn.appendChild(option);
+    });
+
+    button.textContent="تنفيذ التبديل";
+    button.className="primary";
+
+    button.addEventListener("click",()=>{
+        if(!match.running || match.finished || match.paused){
+            alert("يجب أن تكون المباراة جارية لتنفيذ التبديل.");
+            return;
+        }
+
+        if(match.subs>=5){
+            alert("لقد استنفدت التبديلات الخمسة.");
+            return;
+        }
+
+        const out=selectOut.value;
+        const incoming=selectIn.value;
+
+        if(match.ratings[out]===undefined){
+            alert("اللاعب المختار غير موجود في الملعب.");
+            return;
+        }
+
+        delete match.ratings[out];
+        match.ratings[incoming]=6.5;
+
+        match.subs++;
+
+        event("🔄 تبديل: خروج "+out+" ودخول "+incoming+".");
+
+        renderRatings();
+        updateScore();
+    });
+
+    box.append(selectOut,selectIn,button);
+}
+
+function newMatch(){
+    clearInterval(timer);
+    startMatch();
+}
+
+$("hwtaStart").addEventListener("click",startMatch);
+$("hwtaPause").addEventListener("click",pauseMatch);
+$("hwtaSpeed1").addEventListener("click",()=>setSpeed(1));
+$("hwtaSpeed2").addEventListener("click",()=>setSpeed(2));
+$("hwtaSpeed4").addEventListener("click",()=>setSpeed(4));
+
+window.hwtaNewMatch=newMatch;
+
+resetMatch();
+renderRatings();
+renderSubstitutions();
+updateScore();
+
+})();
+</script>
+<!-- END FCM MATCH SYSTEM -->
