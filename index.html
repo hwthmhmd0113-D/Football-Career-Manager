@@ -614,4 +614,206 @@ function resetPositions(){
 }
 
 function renderLineup(){
- $("lineup"
+ ).innerHTML="";
+
+ career.lineup.forEach(number=>{
+  const p=getPlayer(number);
+  if(!p)return;
+
+  const item=document.createElement("div");
+  item.className="squad-item";
+
+  item.innerHTML=`
+   <span class="num">${p.number}</span>
+   <div>
+    <b>${p.name}</b>
+    <small>${p.pos} · ${getOverall(p)} OVR</small>
+   </div>
+  `;
+
+  $("lineup").appendChild(item);
+ });
+}
+
+function renderBench(){
+ const bench=$("bench");
+ bench.innerHTML="";
+
+ players.filter(p=>!career.lineup.includes(p.number))
+ .forEach(p=>{
+  const item=document.createElement("div");
+  item.className="squad-item";
+
+  item.innerHTML=`
+   <span class="num">${p.number}</span>
+   <div>
+    <b>${p.name}</b>
+    <small>${p.pos} · ${p.rating} OVR</small>
+   </div>
+  `;
+
+  bench.appendChild(item);
+ });
+}
+
+function renderHome(){
+ $("played").textContent=career.played;
+ $("wins").textContent=career.wins;
+ $("points").textContent=career.points;
+
+ $("formationLabel").textContent=career.formation;
+
+ $("homeFormation").innerHTML="";
+
+ career.lineup.forEach(number=>{
+  const p=getPlayer(number);
+  if(!p)return;
+
+  const row=document.createElement("p");
+  row.textContent=`${p.number} · ${p.name} · ${getOverall(p)} OVR`;
+  $("homeFormation").appendChild(row);
+ });
+}
+
+function renderAll(){
+ renderHome();
+ renderPlayers();
+ renderBench();
+ renderPitch();
+ renderLineup();
+ renderChemistry();
+
+ $("formation").value=career.formation;
+ $("style").value=career.style;
+ $("defense").value=career.defense;
+ $("pressure").value=career.pressure;
+}
+
+/* NAVIGATION */
+
+document.querySelectorAll("nav button").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(b=>{
+   b.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tabs").forEach(tab=>{
+   tab.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  const target=$(button.dataset.tab);
+  if(target)target.classList.add("active");
+
+  renderAll();
+ });
+});
+
+/* FORMATION AND TACTICS */
+
+$("formation").addEventListener("change",e=>{
+ career.formation=e.target.value;
+ career.positions={};
+ saveCareer();
+ renderAll();
+});
+
+$("style").addEventListener("change",e=>{
+ career.style=e.target.value;
+ saveCareer();
+});
+
+$("defense").addEventListener("change",e=>{
+ career.defense=e.target.value;
+ saveCareer();
+});
+
+$("pressure").addEventListener("change",e=>{
+ career.pressure=e.target.value;
+ saveCareer();
+});
+
+/* PLAYER SELECTION */
+
+function togglePlayer(number){
+ if(career.lineup.includes(number)){
+  career.lineup=career.lineup.filter(n=>n!==number);
+  delete career.positions[number];
+ }else{
+  if(career.lineup.length>=11){
+   alert("Your starting lineup already has 11 players.");
+   return;
+  }
+
+  career.lineup.push(number);
+ }
+
+ saveCareer();
+ renderAll();
+}
+
+/* RESET POSITIONS */
+
+$("resetPositions").addEventListener("click",()=>{
+ resetPositions();
+});
+
+/* RESET CAREER */
+
+$("resetBtn").addEventListener("click",()=>{
+ const confirmReset=confirm(
+  "Are you sure you want to reset your Barcelona career?"
+ );
+
+ if(!confirmReset)return;
+
+ localStorage.removeItem("FCM_BARCA_2627");
+
+ career={
+  formation:"4-3-3",
+  style:"Possession",
+  defense:"High",
+  pressure:"High",
+  lineup:[...defaultLineup],
+  positions:{},
+  played:0,
+  wins:0,
+  points:0
+ };
+
+ saveCareer();
+ renderAll();
+
+ document.querySelectorAll("nav button").forEach(b=>{
+  b.classList.remove("active");
+ });
+
+ document.querySelector('[data-tab="dashboard"]').classList.add("active");
+
+ document.querySelectorAll(".tabs").forEach(tab=>{
+  tab.classList.remove("active");
+ });
+
+ $("dashboard").classList.add("active");
+
+ alert("Career successfully reset.");
+});
+
+/* START APPLICATION */
+
+loadCareer();
+
+if(!formations[career.formation]){
+ career.formation="4-3-3";
+}
+
+career.lineup=career.lineup
+ .filter(number=>getPlayer(number))
+ .slice(0,11);
+
+renderAll();
+
+</script>
+</body>
+</html>
