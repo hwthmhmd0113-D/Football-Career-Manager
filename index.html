@@ -108,13 +108,13 @@ select{
  position:relative;
 }
 .player-photo img{
- width:100%;height:100%;object-fit:contain;
+ width:100%;height:100%;object-fit:cover;
 }
 .player-photo .initial{
  font-size:38px;font-weight:bold;color:white;
 }
 .player-number{
- position:absolute;top:7px;left:7px;
+ position:absolute;top:7px;left:7px;z-index:2;
  background:var(--gold);color:#171323;
  padding:5px 8px;border-radius:6px;
  font-weight:bold;
@@ -139,11 +139,14 @@ select{
   0deg,#17613e,#17613e 65px,
   #1d7048 65px,#1d7048 130px
  );
+ touch-action:none;
+ user-select:none;
 }
 .pitch:before{
  content:"";position:absolute;
  left:0;right:0;top:50%;
  border-top:2px solid #ffffffa8;
+ pointer-events:none;
 }
 .pitch:after{
  content:"";position:absolute;
@@ -151,10 +154,12 @@ select{
  border:2px solid #ffffffa8;
  border-radius:50%;left:50%;top:50%;
  transform:translate(-50%,-50%);
+ pointer-events:none;
 }
 .box{
  position:absolute;left:22%;width:56%;height:65px;
  border:2px solid #ffffffa8;
+ pointer-events:none;
 }
 .box.top{top:0;border-top:0}
 .box.bottom{bottom:0;border-bottom:0}
@@ -162,10 +167,20 @@ select{
  position:absolute;z-index:3;
  transform:translate(-50%,-50%);
  width:67px;min-height:59px;
- background:#101c29eF;
+ background:#101c29ef;
  border:2px solid white;border-radius:9px;
  text-align:center;padding:4px 2px;
  box-shadow:0 2px 8px #0008;
+ cursor:grab;
+ touch-action:none;
+ user-select:none;
+}
+.slot:active{cursor:grabbing}
+.slot.dragging{
+ z-index:20;
+ border-color:var(--gold);
+ box-shadow:0 0 15px #e8c66a;
+ transform:translate(-50%,-50%) scale(1.12);
 }
 .slot .shirt{
  width:25px;height:25px;margin:auto auto 3px;
@@ -176,6 +191,13 @@ select{
 .slot b{display:block;font-size:10px}
 .slot small{font-size:9px;color:#c8d6e6}
 .slot.empty{border:2px dashed #e8c66a}
+.slot-photo{
+ width:29px;height:29px;
+ border-radius:50%;object-fit:cover;
+ border:1px solid white;
+ display:block;margin:0 auto 3px;
+ background:var(--red);
+}
 .squad-list{
  display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
 }
@@ -199,6 +221,7 @@ select{
 .section-title h3{margin:0}
 .muted{color:var(--muted);font-size:12px}
 footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
+
 @media(min-width:600px){
  .players{grid-template-columns:repeat(4,1fr)}
  .squad-list{grid-template-columns:repeat(3,1fr)}
@@ -239,7 +262,6 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
  <button data-tab="settings">SETTINGS</button>
 </nav>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="tabs active">
 
  <div class="card">
@@ -269,7 +291,6 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
  </div>
 </section>
 
-<!-- SQUAD -->
 <section id="squad" class="tabs">
 
  <div class="card">
@@ -288,7 +309,6 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
 
 </section>
 
-<!-- TACTICS -->
 <section id="tactics" class="tabs">
 
  <div class="card">
@@ -329,7 +349,8 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
    <div class="box top"></div>
    <div class="box bottom"></div>
   </div>
-  <p class="muted">Select a player from the squad to change your lineup.</p>
+  <p class="muted">Press and drag a player to change his position on the pitch.</p>
+  <button class="secondary" id="resetPositions">RESET PLAYER POSITIONS</button>
  </div>
 
  <div class="card">
@@ -339,7 +360,6 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
 
 </section>
 
-<!-- ACADEMY -->
 <section id="academy" class="tabs">
  <div class="card">
   <h3>LA MASIA</h3>
@@ -351,7 +371,6 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
  </div>
 </section>
 
-<!-- SETTINGS -->
 <section id="settings" class="tabs">
  <div class="card">
   <h3>CAREER SETTINGS</h3>
@@ -368,31 +387,31 @@ footer{text-align:center;color:var(--muted);padding:22px;font-size:11px}
 "use strict";
 
 const players=[
- {name:"Joan Garcia",number:1,pos:"GK",rating:84},
- {name:"João Cancelo",number:2,pos:"RB",rating:85},
- {name:"Alejandro Balde",number:3,pos:"LB",rating:84},
+ {name:"Joan Garcia",number:1,pos:"GK",rating:84,wiki:"Joan García"},
+ {name:"João Cancelo",number:2,pos:"RB",rating:85,wiki:"João Cancelo"},
+ {name:"Alejandro Balde",number:3,pos:"LB",rating:84,wiki:"Alejandro Balde"},
  {name:"Brian Fariñas",number:4,pos:"CM",rating:74},
- {name:"Pau Cubarsí",number:5,pos:"CB",rating:85},
- {name:"Gavi",number:6,pos:"CM",rating:86},
- {name:"Fermín López",number:7,pos:"CAM",rating:85},
- {name:"Pedri",number:8,pos:"CM",rating:92},
- {name:"Gabriel Jesus",number:9,pos:"ST",rating:85},
- {name:"Lamine Yamal",number:10,pos:"RW",rating:93},
- {name:"Raphinha",number:11,pos:"LW",rating:90},
+ {name:"Pau Cubarsí",number:5,pos:"CB",rating:85,wiki:"Pau Cubarsí"},
+ {name:"Gavi",number:6,pos:"CM",rating:86,wiki:"Gavi"},
+ {name:"Fermín López",number:7,pos:"CAM",rating:85,wiki:"Fermín López"},
+ {name:"Pedri",number:8,pos:"CM",rating:92,wiki:"Pedri"},
+ {name:"Gabriel Jesus",number:9,pos:"ST",rating:85,wiki:"Gabriel Jesus"},
+ {name:"Lamine Yamal",number:10,pos:"RW",rating:93,wiki:"Lamine Yamal"},
+ {name:"Raphinha",number:11,pos:"LW",rating:90,wiki:"Raphinha"},
  {name:"Xavi Espart",number:12,pos:"RB",rating:72},
- {name:"Wojciech Szczęsny",number:13,pos:"GK",rating:82},
- {name:"Karim Adeyemi",number:14,pos:"LW",rating:86},
- {name:"Andreas Christensen",number:15,pos:"CB",rating:82},
- {name:"Rodri",number:16,pos:"CDM",rating:91},
- {name:"Anthony Gordon",number:17,pos:"LW",rating:86},
- {name:"Gerard Martín",number:18,pos:"LB",rating:79},
- {name:"Roony Bardghji",number:19,pos:"RW",rating:79},
- {name:"Dani Olmo",number:20,pos:"CAM",rating:87},
- {name:"Frenkie de Jong",number:21,pos:"CM",rating:89},
- {name:"Marc Bernal",number:22,pos:"CDM",rating:80},
- {name:"Jules Koundé",number:23,pos:"RB",rating:87},
- {name:"Eric García",number:24,pos:"CB",rating:82},
- {name:"Dominik Livaković",number:25,pos:"GK",rating:82},
+ {name:"Wojciech Szczęsny",number:13,pos:"GK",rating:82,wiki:"Wojciech Szczęsny"},
+ {name:"Karim Adeyemi",number:14,pos:"LW",rating:86,wiki:"Karim Adeyemi"},
+ {name:"Andreas Christensen",number:15,pos:"CB",rating:82,wiki:"Andreas Christensen"},
+ {name:"Rodri",number:16,pos:"CDM",rating:91,wiki:"Rodri footballer"},
+ {name:"Anthony Gordon",number:17,pos:"LW",rating:86,wiki:"Anthony Gordon footballer"},
+ {name:"Gerard Martín",number:18,pos:"LB",rating:79,wiki:"Gerard Martín"},
+ {name:"Roony Bardghji",number:19,pos:"RW",rating:79,wiki:"Roony Bardghji"},
+ {name:"Dani Olmo",number:20,pos:"CAM",rating:87,wiki:"Dani Olmo"},
+ {name:"Frenkie de Jong",number:21,pos:"CM",rating:89,wiki:"Frenkie de Jong"},
+ {name:"Marc Bernal",number:22,pos:"CDM",rating:80,wiki:"Marc Bernal"},
+ {name:"Jules Koundé",number:23,pos:"RB",rating:87,wiki:"Jules Koundé"},
+ {name:"Eric García",number:24,pos:"CB",rating:82,wiki:"Eric García"},
+ {name:"Dominik Livaković",number:25,pos:"GK",rating:82,wiki:"Dominik Livaković"},
  {name:"Jesse Bisiwu",number:27,pos:"LW",rating:70},
  {name:"Hamza Abdelkarim",number:29,pos:"ST",rating:72}
 ];
@@ -425,6 +444,7 @@ let career={
  defense:"High",
  pressure:"High",
  lineup:defaultLineup,
+ positions:{},
  played:0,
  wins:0,
  points:0
@@ -454,6 +474,49 @@ function initials(name){
  return name.split(" ").map(x=>x[0]).slice(0,2).join("");
 }
 
+/* PLAYER PHOTOS */
+
+const photoCache={};
+
+async function loadPlayerPhoto(player){
+ if(!player.wiki)return null;
+
+ if(photoCache[player.number]!==undefined){
+  return photoCache[player.number];
+ }
+
+ try{
+  const url="https://en.wikipedia.org/api/rest_v1/page/summary/"+
+   encodeURIComponent(player.wiki);
+
+  const response=await fetch(url);
+  if(!response.ok)throw new Error("Image unavailable");
+
+  const data=await response.json();
+  const image=data.thumbnail?.source||null;
+
+  photoCache[player.number]=image;
+  return image;
+ }catch(e){
+  photoCache[player.number]=null;
+  return null;
+ }
+}
+
+function setPlayerImage(container,player){
+ loadPlayerPhoto(player).then(url=>{
+  if(!url || !container.isConnected)return;
+
+  const img=document.createElement("img");
+  img.src=url;
+  img.alt=player.name;
+  img.onerror=()=>img.remove();
+
+  container.innerHTML="";
+  container.appendChild(img);
+ });
+}
+
 function renderPlayers(){
  $("players").innerHTML="";
 
@@ -479,6 +542,9 @@ function renderPlayers(){
    </div>
   `;
 
+  const photo=card.querySelector(".player-photo");
+  setPlayerImage(photo,p);
+
   card.querySelector("button").onclick=()=>togglePlayer(p.number);
   $("players").appendChild(card);
  });
@@ -491,6 +557,7 @@ function togglePlayer(number){
    return;
   }
   career.lineup=career.lineup.filter(n=>n!==number);
+  delete career.positions[number];
  }else{
   if(career.lineup.length>=11){
    alert("Your starting lineup already has 11 players.");
@@ -498,44 +565,134 @@ function togglePlayer(number){
   }
   career.lineup.push(number);
  }
+
  saveCareer();
  renderAll();
+}
+
+/* TACTICAL PITCH */
+
+function getPosition(number,index){
+ if(career.positions[number]){
+  return career.positions[number];
+ }
+
+ const coords=formations[career.formation];
+ return coords[index]||[50,50];
 }
 
 function renderPitch(){
  const pitch=$("pitch");
  pitch.innerHTML='<div class="box top"></div><div class="box bottom"></div>';
 
- const coords=formations[career.formation];
  career.lineup.forEach((number,i)=>{
   if(i>=11)return;
+
   const p=getPlayer(number);
-  const pos=coords[i];
+  if(!p)return;
+
+  const pos=getPosition(number,i);
 
   const slot=document.createElement("div");
   slot.className="slot";
+  slot.dataset.number=number;
   slot.style.left=pos[0]+"%";
   slot.style.top=pos[1]+"%";
+
   slot.innerHTML=`
    <div class="shirt">${p.number}</div>
    <b>${p.name.split(" ")[0]}</b>
    <small>${p.pos}</small>
   `;
+
   pitch.appendChild(slot);
+
+  makeDraggable(slot,pitch,number);
+  loadPitchPhoto(slot,p);
  });
+}
+
+async function loadPitchPhoto(slot,player){
+ const url=await loadPlayerPhoto(player);
+ if(!url || !slot.isConnected)return;
+
+ const img=document.createElement("img");
+ img.className="slot-photo";
+ img.src=url;
+ img.alt=player.name;
+
+ img.onerror=()=>img.remove();
+
+ const shirt=slot.querySelector(".shirt");
+ if(shirt)shirt.replaceWith(img);
+}
+
+/* TOUCH AND MOUSE DRAGGING */
+
+function makeDraggable(slot,pitch,number){
+ let dragging=false;
+
+ slot.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+
+  dragging=true;
+  slot.classList.add("dragging");
+  slot.setPointerCapture(e.pointerId);
+ });
+
+ slot.addEventListener("pointermove",e=>{
+  if(!dragging)return;
+
+  const rect=pitch.getBoundingClientRect();
+
+  let x=((e.clientX-rect.left)/rect.width)*100;
+  let y=((e.clientY-rect.top)/rect.height)*100;
+
+  x=Math.max(5,Math.min(95,x));
+  y=Math.max(5,Math.min(95,y));
+
+  slot.style.left=x+"%";
+  slot.style.top=y+"%";
+
+  career.positions[number]=[
+   Math.round(x*10)/10,
+   Math.round(y*10)/10
+  ];
+ });
+
+ function finishDrag(){
+  if(!dragging)return;
+
+  dragging=false;
+  slot.classList.remove("dragging");
+  saveCareer();
+ }
+
+ slot.addEventListener("pointerup",finishDrag);
+ slot.addEventListener("pointercancel",finishDrag);
+}
+
+function resetPositions(){
+ career.positions={};
+ saveCareer();
+ renderPitch();
 }
 
 function renderLineup(){
  $("lineup").innerHTML="";
+
  career.lineup.forEach(number=>{
   const p=getPlayer(number);
   if(!p)return;
+
   const item=document.createElement("div");
   item.className="squad-item";
+
   item.innerHTML=`
    <span class="num">${p.number}</span>
    <div><b>${p.name}</b><small>${p.pos} · ${p.rating} OVR</small></div>
   `;
+
   $("lineup").appendChild(item);
  });
 
@@ -545,13 +702,16 @@ function renderLineup(){
 
 function renderBench(){
  $("bench").innerHTML="";
+
  players.filter(p=>!career.lineup.includes(p.number)).forEach(p=>{
   const item=document.createElement("div");
   item.className="squad-item";
+
   item.innerHTML=`
    <span class="num">${p.number}</span>
    <div><b>${p.name}</b><small>${p.pos} · ${p.rating} OVR</small></div>
   `;
+
   $("bench").appendChild(item);
  });
 }
@@ -583,6 +743,7 @@ document.querySelectorAll("nav button").forEach(btn=>{
  btn.onclick=()=>{
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll(".tabs").forEach(t=>t.classList.remove("active"));
+
   btn.classList.add("active");
   $(btn.dataset.tab).classList.add("active");
  };
@@ -594,14 +755,18 @@ $("style").onchange=()=>{
  career.style=$("style").value;
  saveCareer();
 };
+
 $("defense").onchange=()=>{
  career.defense=$("defense").value;
  saveCareer();
 };
+
 $("pressure").onchange=()=>{
  career.pressure=$("pressure").value;
  saveCareer();
 };
+
+$("resetPositions").onclick=resetPositions;
 
 $("resetBtn").onclick=()=>{
  if(confirm("Delete your saved career and reset the team?")){
@@ -612,7 +777,8 @@ $("resetBtn").onclick=()=>{
 
 loadCareer();
 renderAll();
+
 </script>
 
 </body>
-</html>
+   </html>
