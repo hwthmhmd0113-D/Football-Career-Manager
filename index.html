@@ -1,370 +1,324 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Football Career Manager</title>
-
+<title>FCM - Football Career Manager</title>
 <style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #07111e;
-    color: white;
-}
-
-header {
-    padding: 25px 15px;
-    text-align: center;
-    background: linear-gradient(120deg,#071b38,#102e50);
-    border-bottom: 2px solid #d5a83d;
-}
-
-.logo {
-    font-size: 38px;
-    font-weight: 900;
-    color: #e7bd55;
-    letter-spacing: 3px;
-}
-
-header p {
-    color: #aebdd0;
-    letter-spacing: 3px;
-}
-
-.container {
-    max-width: 950px;
-    margin: auto;
-    padding: 20px;
-}
-
-h2 {
-    color: #e7bd55;
-}
-
-.menu {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 25px 0;
-}
-
-button {
-    background: #d5a83d;
-    color: #07111e;
-    border: none;
-    padding: 13px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    filter: brightness(1.15);
-}
-
-.secondary {
-    background: #193451;
-    color: white;
-    border: 1px solid #45627e;
-}
-
-select, input {
-    width: 100%;
-    padding: 14px;
-    margin: 10px 0;
-    background: #12263b;
-    color: white;
-    border: 1px solid #34516e;
-    border-radius: 8px;
-}
-
-.teams {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(145px,1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.team {
-    background: #11263b;
-    border: 1px solid #29445f;
-    border-radius: 12px;
-    padding: 20px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.team:hover {
-    border-color: #e7bd55;
-    transform: translateY(-4px);
-}
-
-.badge {
-    width: 65px;
-    height: 65px;
-    margin: auto auto 12px;
-    border-radius: 50%;
-    background: #203e60;
-    border: 2px solid #e7bd55;
-    display: grid;
-    place-items: center;
-    font-size: 21px;
-    font-weight: bold;
-}
-
-.team h3 {
-    font-size: 15px;
-}
-
-.team p {
-    color: #9db1c7;
-    font-size: 12px;
-}
-
-#selected {
-    display: none;
-    margin-top: 25px;
-    padding: 20px;
-    border: 1px solid #d5a83d;
-    border-radius: 12px;
-    background: #10243a;
-    text-align: center;
-}
-
-#selected h2 {
-    color: white;
-}
-
-.hidden {
-    display: none;
-}
-
-footer {
-    text-align: center;
-    padding: 25px;
-    color: #758ba3;
-    font-size: 12px;
-}
+:root{--bg:#080e1b;--panel:#111c30;--panel2:#17243b;--gold:#e8bd58;--text:#f4f6fb;--muted:#9aa9c0;--green:#37c98b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:18px 5%;background:#0d1728;border-bottom:1px solid #26344c;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:900;color:var(--gold)}
+.logo span{color:white}
+.container{max-width:1100px;margin:30px auto;padding:0 16px}
+h1{font-size:28px}
+h2{font-size:20px}
+p{color:var(--muted)}
+button,select,input{font:inherit}
+button{border:0;border-radius:9px;padding:12px 17px;background:var(--gold);color:#101827;font-weight:bold;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+.secondary{background:#263750;color:white}
+.card{background:var(--panel);border:1px solid #263750;border-radius:14px;padding:18px;margin-bottom:16px}
+input,select{background:#0b1424;color:white;border:1px solid #34445e;border-radius:8px;padding:12px;width:100%;margin:7px 0 14px}
+label{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.team{background:var(--panel2);padding:17px;border:1px solid #34445e;border-radius:12px;text-align:center;cursor:pointer}
+.team.selected{border:2px solid var(--gold);background:#26334a}
+.badge{width:55px;height:55px;border-radius:50%;background:#263750;color:var(--gold);display:grid;place-items:center;margin:auto auto 12px;font-weight:900}
+.hidden{display:none!important}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:var(--panel2);padding:17px;border-radius:12px}
+.stat strong{display:block;font-size:24px;color:var(--gold);margin-top:8px}
+nav{display:flex;gap:8px;overflow:auto;margin:20px 0}
+nav button{white-space:nowrap}
+nav button.active{background:var(--gold)}
+table{width:100%;border-collapse:collapse;min-width:460px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #293951}
+th{color:var(--gold)}
+.table-wrap{overflow-x:auto}
+.player{background:var(--panel2);border-radius:10px;padding:12px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.player small{color:var(--muted)}
+.player button{padding:8px 11px}
+.notice{color:var(--green);margin-top:12px}
+@media(max-width:500px){header{padding:15px}.logo{font-size:21px}.container{margin:20px auto}h1{font-size:23px}}
 </style>
 </head>
-
 <body>
-
 <header>
-    <div class="logo">FCM</div>
-    <p>FOOTBALL CAREER MANAGER</p>
-    <small>BUILD YOUR LEGACY</small>
-</header>
+ <div class="logo">FCM <span>CAREER MANAGER</span></div>
+ <div style="color:var(--muted);font-size:12px">BY HWTA</div>
+</header><div class="container"><section id="home">
+ <h1>Build Your Football Legacy</h1>
+ <p>Choose your club and begin your managerial journey.</p> <div class="card">
+  <h2>Select Your League</h2>
+  <select id="league" onchange="showTeams()">
+   <option value="Spain">Spain</option>
+   <option value="England">England</option>
+   <option value="Germany">Germany</option>
+   <option value="Italy">Italy</option>
+   <option value="France">France</option>
+  </select>
+  <div class="grid" id="teams"></div>
+  <div id="selection" class="hidden">
+   <p id="selectedName"></p>
+   <button onclick="startCareer()">START CAREER</button>
+  </div>
+ </div> <div class="card">
+  <h2>Create Your Own Club</h2>
+  <label>Club Name</label>
+  <input id="customName" placeholder="Enter club name">
+  <label>Country</label>
+  <input id="customCountry" placeholder="Enter country">
+  <label>Starting Budget (€)</label>
+  <select id="customBudget">
+   <option value="10000000">€10 Million</option>
+   <option value="50000000">€50 Million</option>
+   <option value="100000000">€100 Million</option>
+   <option value="200000000">€200 Million</option>
+  </select>
+  <button onclick="createClub()">CREATE CLUB & START</button>
+ </div>
+ <button class="secondary" onclick="continueCareer()">CONTINUE CAREER</button>
+ <p id="homeMessage"></p>
+</section><section id="dashboard" class="hidden">
+ <div class="card">
+  <p>YOUR CLUB</p>
+  <h1 id="clubTitle">Club Name</h1>
+  <p id="clubLeague">League</p>
+  <div class="stats">
+   <div class="stat">Club Budget<strong id="budget">€50M</strong></div>
+   <div class="stat">Season<strong>2026/27</strong></div>
+   <div class="stat">Squad Size<strong id="squadCount">11</strong></div>
+   <div class="stat">Club Rating<strong>75</strong></div>
+  </div>
+ </div> <nav>
+  <button class="active" onclick="openTab('overview',this)">Overview</button>
+  <button onclick="openTab('squad',this)">Squad</button>
+  <button onclick="openTab('tactics',this)">Tactics</button>
+  <button onclick="openTab('transfers',this)">Transfers</button>
+  <button onclick="openTab('academy',this)">Academy</button>
+ </nav> <div id="overview" class="tab">
+  <div class="card">
+   <h2>Club Overview</h2>
+   <p>Welcome to your new managerial career.</p>
+   <p>Your objective: build a strong squad and win trophies.</p>
+   <div class="actions">
+    <button onclick="openTabByName('squad')">Manage Squad</button>
+    <button class="secondary" onclick="openTabByName('tactics')">Team Tactics</button>
+   </div>
+  </div>
+  <div class="card">
+   <h2>Next Match</h2>
+   <p>Your first fixture will be generated in a future update.</p>
+  </div>
+ </div> <div id="squad" class="tab hidden">
+  <div class="card">
+   <h2>First Team Squad</h2>
+   <p>Manage shirt numbers and appoint your captain.</p>
+   <div id="players"></div>
+  </div>
+ </div> <div id="tactics" class="tab hidden">
+  <div class="card">
+   <h2>Team Tactics</h2>
+   <label>Formation</label>
+   <select id="formation" onchange="saveTactics()">
+    <option>4-3-3</option><option>4-2-3-1</option>
+    <option>4-4-2</option><option>3-4-3</option>
+    <option>4-1-4-1</option>
+   </select>
+   <label>Playing Style</label>
+   <select id="style" onchange="saveTactics()">
+    <option>Possession</option><option>Counter Attack</option>
+    <option>High Press</option><option>Balanced</option>
+   </select>
+   <p id="tacticsMessage" class="notice"></p>
+  </div>
+ </div> <div id="transfers" class="tab hidden">
+  <div class="card">
+   <h2>Transfer Market</h2>
+   <p>The transfer market will be developed in the next update.</p>
+  </div>
+ </div> <div id="academy" class="tab hidden">
+  <div class="card">
+   <h2>Youth Academy</h2>
+   <p>Your academy will produce young talents in a future update.</p>
+  </div>
+ </div><button class="secondary" onclick="backHome()">BACK TO CLUB SELECTION</button>
 
-<div class="container">
-
-    <div class="menu">
-        <button onclick="showSelection()">NEW CAREER</button>
-        <button class="secondary" onclick="continueCareer()">CONTINUE CAREER</button>
-        <button class="secondary" onclick="showCustom()">CREATE CLUB</button>
-    </div>
-
-    <section id="selection">
-
-        <h2>Choose Your League</h2>
-
-        <select id="league" onchange="showTeams()">
-            <option value="Spain">Spanish League 🇪🇸</option>
-            <option value="England">English League 🏴</option>
-            <option value="Germany">German League 🇩🇪</option>
-            <option value="Italy">Italian League 🇮🇹</option>
-            <option value="France">French League 🇫🇷</option>
-        </select>
-
-        <h2>Choose Your Club</h2>
-
-        <div class="teams" id="teams"></div>
-
-    </section>
-
-    <section id="custom" class="hidden">
-        <h2>Create Your Club</h2>
-
-        <input id="clubName" placeholder="Club Name">
-        <input id="clubCountry" placeholder="Country">
-        <input id="clubBudget" type="number" placeholder="Starting Budget">
-
-        <button onclick="createClub()">CREATE CLUB</button>
-        <button class="secondary" onclick="showSelection()">BACK</button>
-    </section>
-
-    <section id="selected">
-        <h2 id="clubTitle"></h2>
-        <p id="clubInfo"></p>
-        <button onclick="startCareer()">START CAREER</button>
-    </section>
-
-</div>
-
-<footer>
-    FCM © 2026 | BY HWTA
-</footer>
-
-<script>
-
-const clubs = {
-    Spain: [
-        ["Barcelona","BAR"],
-        ["Real Madrid","RMA"],
-        ["Atletico Madrid","ATM"],
-        ["Sevilla","SEV"],
-        ["Valencia","VAL"],
-        ["Real Sociedad","RSO"]
-    ],
-
-    England: [
-        ["Manchester City","MCI"],
-        ["Manchester United","MUN"],
-        ["Liverpool","LIV"],
-        ["Arsenal","ARS"],
-        ["Chelsea","CHE"],
-        ["Tottenham","TOT"]
-    ],
-
-    Germany: [
-        ["Bayern Munich","BAY"],
-        ["Borussia Dortmund","BVB"],
-        ["RB Leipzig","RBL"],
-        ["Bayer Leverkusen","LEV"]
-    ],
-
-    Italy: [
-        ["Inter Milan","INT"],
-        ["AC Milan","MIL"],
-        ["Juventus","JUV"],
-        ["Napoli","NAP"],
-        ["Roma","ROM"]
-    ],
-
-    France: [
-        ["Paris Saint-Germain","PSG"],
-        ["Marseille","MAR"],
-        ["Lyon","LYO"],
-        ["Monaco","MON"]
-    ]
+ <p id="saveMessage" class="notice">Career is saved automatically.</p>
+</section>
+</div><script>
+const clubs={
+ Spain:["Barcelona","Real Madrid","Atletico Madrid","Sevilla","Valencia","Real Sociedad"],
+ England:["Manchester City","Manchester United","Liverpool","Arsenal","Chelsea","Tottenham"],
+ Germany:["Bayern Munich","Borussia Dortmund","RB Leipzig","Bayer Leverkusen"],
+ Italy:["Inter Milan","AC Milan","Juventus","Napoli","Roma"],
+ France:["Paris Saint-Germain","Marseille","Lyon","Monaco"]
 };
 
-let selectedClub = null;
+let selectedClub=null;
+let career=null;
 
-function showSelection() {
-    document.getElementById("selection").classList.remove("hidden");
-    document.getElementById("custom").classList.add("hidden");
-    showTeams();
+const defaultPlayers=[
+ {name:"Goalkeeper",position:"GK",rating:78,number:1},
+ {name:"Defender 1",position:"CB",rating:76,number:2},
+ {name:"Defender 2",position:"CB",rating:77,number:4},
+ {name:"Defender 3",position:"LB",rating:75,number:3},
+ {name:"Defender 4",position:"RB",rating:75,number:5},
+ {name:"Midfielder 1",position:"CM",rating:82,number:8},
+ {name:"Midfielder 2",position:"CM",rating:80,number:6},
+ {name:"Midfielder 3",position:"CAM",rating:81,number:10},
+ {name:"Forward 1",position:"LW",rating:83,number:11},
+ {name:"Forward 2",position:"ST",rating:84,number:9},
+ {name:"Forward 3",position:"RW",rating:82,number:7}
+];
+
+function showTeams(){
+ const league=document.getElementById("league").value;
+ const box=document.getElementById("teams");
+ box.innerHTML="";
+ document.getElementById("selection").classList.add("hidden");
+ selectedClub=null;
+
+ clubs[league].forEach(name=>{
+  const card=document.createElement("div");
+  card.className="team";
+  card.innerHTML='<div class="badge">'+name.split(" ").map(x=>x[0]).join("").slice(0,3)+'</div><strong>'+name+'</strong>';
+  card.onclick=()=>{
+   document.querySelectorAll(".team").forEach(x=>x.classList.remove("selected"));
+   card.classList.add("selected");
+   selectedClub={name:name,league:league,budget:50000000};
+   document.getElementById("selectedName").textContent="Selected Club: "+name;
+   document.getElementById("selection").classList.remove("hidden");
+  };
+  box.appendChild(card);
+ });
 }
 
-function showTeams() {
-
-    const league = document.getElementById("league").value;
-    const area = document.getElementById("teams");
-
-    area.innerHTML = "";
-
-    clubs[league].forEach(club => {
-
-        const card = document.createElement("div");
-        card.className = "team";
-
-        card.innerHTML = `
-            <div class="badge">${club[1]}</div>
-            <h3>${club[0]}</h3>
-            <p>${league}</p>
-        `;
-
-        card.onclick = () => selectClub(club[0], league);
-
-        area.appendChild(card);
-    });
+function createClub(){
+ const name=document.getElementById("customName").value.trim();
+ const country=document.getElementById("customCountry").value.trim();
+ const budget=Number(document.getElementById("customBudget").value);
+ if(!name||!country){
+  alert("Please enter your club name and country.");
+  return;
+ }
+ selectedClub={name:name,league:country,budget:budget};
+ startCareer();
 }
 
-function selectClub(name, league) {
-
-    selectedClub = {
-        name: name,
-        league: league,
-        budget: 50000000
-    };
-
-    document.getElementById("selected").style.display = "block";
-    document.getElementById("clubTitle").textContent = name;
-    document.getElementById("clubInfo").textContent =
-        league + " | Starting Budget: €50M";
-
-    document.getElementById("selected").scrollIntoView({
-        behavior: "smooth"
-    });
+function startCareer(){
+ if(!selectedClub){alert("Please select a club first.");return;}
+ career={
+  club:selectedClub,
+  players:JSON.parse(JSON.stringify(defaultPlayers)),
+  captain:defaultPlayers[5].name,
+  formation:"4-3-3",
+  style:"Possession"
+ };
+ saveCareer();
+ showDashboard();
 }
 
-function showCustom() {
-    document.getElementById("selection").classList.add("hidden");
-    document.getElementById("custom").classList.remove("hidden");
-    document.getElementById("selected").style.display = "none";
+function saveCareer(){
+ if(career){
+  localStorage.setItem("FCM_CAREER",JSON.stringify(career));
+ }
 }
 
-function createClub() {
-
-    const name = document.getElementById("clubName").value.trim();
-    const country = document.getElementById("clubCountry").value.trim();
-    const budget = Number(document.getElementById("clubBudget").value);
-
-    if (!name || !country || !budget || budget < 0) {
-        alert("Please enter valid club information.");
-        return;
-    }
-
-    selectedClub = {
-        name: name,
-        league: country,
-        budget: budget * 1000000
-    };
-
-    startCareer();
+function continueCareer(){
+ const saved=localStorage.getItem("FCM_CAREER");
+ if(!saved){
+  document.getElementById("homeMessage").textContent="No saved career found. Start a new career first.";
+  return;
+ }
+ try{
+  career=JSON.parse(saved);
+  showDashboard();
+ }catch(e){
+  document.getElementById("homeMessage").textContent="Saved career could not be loaded.";
+ }
 }
 
-function startCareer() {
-
-    if (!selectedClub) {
-        alert("Choose a club first!");
-        return;
-    }
-
-    localStorage.setItem(
-        "FCM_CAREER",
-        JSON.stringify(selectedClub)
-    );
-
-    alert("Welcome to " + selectedClub.name + "! Your career has started.");
-
+function showDashboard(){
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("dashboard").classList.remove("hidden");
+ document.getElementById("clubTitle").textContent=career.club.name;
+ document.getElementById("clubLeague").textContent=career.club.league;
+ document.getElementById("budget").textContent="€"+(career.club.budget/1000000).toFixed(0)+"M";
+ document.getElementById("squadCount").textContent=career.players.length;
+ document.getElementById("formation").value=career.formation||"4-3-3";
+ document.getElementById("style").value=career.style||"Possession";
+ renderPlayers();
+ openTabByName("overview");
 }
 
-function continueCareer() {
+function renderPlayers(){
+ const box=document.getElementById("players");
+ box.innerHTML="";
+ career.players.forEach((player,index)=>{
+  const row=document.createElement("div");
+  row.className="player";
+  const info=document.createElement("div");
+  info.innerHTML="<strong>"+player.name+"</strong><br><small>"+player.position+" · Rating "+player.rating+(career.captain===player.name?" · CAPTAIN":"")+"</small>";
+  const controls=document.createElement("div");
+  const number=document.createElement("input");
+  number.type="number";
+  number.min="1";
+  number.max="99";
+  number.value=player.number;
+  number.style.width="65px";
+  number.style.margin="0 5px";
+  number.setAttribute("aria-label","Shirt number");
+  number.onchange=()=>{
+   let value=Number(number.value);
+   if(value<1||value>99){alert("Choose a number from 1 to 99.");number.value=player.number;return;}
+   if(career.players.some((p,i)=>i!==index&&p.number===value)){
+    alert("This shirt number is already taken.");number.value=player.number;return;
+   }
+   player.number=value;
+   saveCareer();
+  };
+  const captain=document.createElement("button");
+  captain.className="secondary";
+  captain.textContent=career.captain===player.name?"Captain ✓":"Make Captain";
+  captain.onclick=()=>{
+   career.captain=player.name;
+   saveCareer();
+   renderPlayers();
+  };
+  controls.append(number,captain);
+  row.append(info,controls);
+  box.appendChild(row);
+ });
+}
 
-    const saved = localStorage.getItem("FCM_CAREER");
+function openTab(name,button){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(name).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+ if(button)button.classList.add("active");
+ else{
+  const btn=[...document.querySelectorAll("nav button")].find(x=>x.getAttribute("onclick").includes("'"+name+"'"));
+  if(btn)btn.classList.add("active");
+ }
+}
 
-    if (!saved) {
-        alert("No saved career found. Start a new career first.");
-        return;
-    }
+function openTabByName(name){openTab(name,null);}
 
-    selectedClub = JSON.parse(saved);
+function saveTactics(){
+ career.formation=document.getElementById("formation").value;
+ career.style=document.getElementById("style").value;
+ saveCareer();
+ document.getElementById("tacticsMessage").textContent="Tactics saved successfully.";
+}
 
-    alert("Welcome back to " + selectedClub.name + "!");
+function backHome(){
+ document.getElementById("dashboard").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
 }
 
 showTeams();
-
-</script>
-
-</body>
-  </html>
+</script></body>
+    </html>
